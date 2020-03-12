@@ -1,0 +1,30 @@
+admin_username: admin
+admin_password: 'SEE SECRETS'
+access_token_lifespan: 300
+use_external_database: false 
+
+tls_secret:
+
+image:
+  registry: ""
+  repository: "jboss/keycloak"
+  tag: "9.0.0"
+  db_client_repository: "postgres"
+  db_client_tag: "9.6-alpine"
+
+db:
+  database: 'sso'
+  username: 'sso'
+  password: 'SEE SECRETS'
+  host: 'postgresql'
+  
+replicas: 1
+
+resources:
+  requests:
+    memory: "2Gi"
+    cpu: "200m"
+  limits:
+    memory: "2Gi"
+    cpu: "2000m"
+    

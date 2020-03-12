@@ -1,0 +1,67 @@
+{{- if not (.Values.global.use_external_database | default .Values.use_external_database) }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-{{ .Chart.Name }}
+  labels: {{ include "postgresql.labels" $ | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: {{ .Release.Name }}-{{ .Chart.Name }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        name: {{ .Release.Name }}-{{ .Chart.Name }}
+    spec:
+      containers:
+      - name: {{ .Release.Name }}-{{ .Chart.Name }}
+        resources:
+          requests:
+            memory: {{ .Values.resources.requests.memory }}
+            cpu: {{ .Values.resources.requests.cpu }}
+          limits:
+            memory: {{ .Values.resources.limits.memory }}
+            cpu: {{ .Values.resources.limits.cpu }}
+        env:
+{{ include "postgresql.env" $ | indent 8 }}
+        image: '{{ include "image.location" $ }}'
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5432
+          protocol: TCP
+        volumeMounts:
+          -
+            mountPath: {{ include "mount.dir" $ }}
+            name: {{ .Release.Name }}-{{ .Chart.Name }}-data
+        livenessProbe:
+          tcpSocket:
+            port: 5432
+          initialDelaySeconds: 120
+          periodSeconds: 10
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 3
+        readinessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -c
+            - pg_isready -U {{ .Values.global.db.database | default .Values.database }}
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 3
+          successThreshold: 1
+          failureThreshold: 3
+
+      volumes:
+        -
+          name: {{ .Release.Name }}-{{ .Chart.Name }}-data
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-{{ .Chart.Name }}-data
+      restartPolicy: Always
+
+{{- end }}
+

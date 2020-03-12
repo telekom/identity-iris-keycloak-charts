@@ -1,0 +1,100 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  labels: {{ include "rhsso.labels" $ | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      deployment: {{ .Release.Name }}
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap-config.yml") . | sha256sum }}
+        checksum/realm: {{ include (print $.Template.BasePath "/configmap-realm.yml") . | sha256sum }}
+      labels:
+        application: {{ .Release.Name }}
+        deployment: {{ .Release.Name }}
+      name: {{ .Release.Name }}
+    spec:
+      containers:
+      - image: '{{ include "image.location" $ }}'
+        imagePullPolicy: Always
+        #command: ["/opt/jboss/tools/docker-entrypoint.sh", "-b", "0.0.0.0", "-c", "/tmp/keycloak/configs/standalone-ha.xml"]
+        env:
+        - name: DB_VENDOR
+          value: "postgres"
+        - name: DB_ADDR
+          value: {{ include "db.host" $ | default .Values.db.host }}
+        - name: DB_PORT
+          value: "5432"
+        - name: DB_USER
+          value: {{ include "db.username" $ | default .Values.db.username }}
+        - name: DB_PASSWORD
+          value: {{ include "db.password" $ | default .Values.db.password }}
+        - name: DB_DATABASE
+          value: {{ include "db.database" $ | default .Values.db.database }} 
+        - name: KEYCLOAK_USER
+          value: {{ .Values.admin_username }}
+        - name: KEYCLOAK_PASSWORD
+          value: {{ .Values.admin_password }}
+        - name: KEYCLOAK_IMPORT
+          value: "/tmp/keycloak/realms/tif-realm.json"
+        - name: PROXY_ADDRESS_FORWARDING
+          value: "true"
+        livenessProbe:
+          httpGet:
+            path: httpGet
+            port: 8080
+        name: rhsso
+        ports:
+        - { containerPort: 8080, protocol: TCP, name: http }
+        - { containerPort: 8443, protocol: TCP, name: https }
+        readinessProbe:
+          httpGet:
+            path: httpGet
+            port: 8080
+        resources:
+          limits:
+            memory: {{ .Values.resources.limits.memory }}
+            cpu: {{ .Values.resources.limits.cpu }}
+          requests:
+            memory: {{ .Values.resources.requests.memory }}
+            cpu: {{ .Values.resources.requests.cpu }}
+        volumeMounts:
+        - name: realm-volume
+          mountPath: /tmp/keycloak/realms
+        - name: config-volume
+          mountPath: /tmp/keycloak/configs
+      volumes:
+      - name: realm-volume
+        configMap:
+          name: {{ .Release.Name }}
+          items:
+          - key: tif-realm.json
+            path: tif-realm.json
+      - name: config-volume
+        configMap:
+          name: {{ .Release.Name }}
+          items:
+          - key: standalone-ha.xml
+            path: standalone-ha.xml
+      initContainers:
+        - name: "checkdb"
+          image: '{{ include "image.init.location" $ }}'
+          command:
+          - /bin/bash
+          - -c
+          - until pg_isready; do echo waiting for database; sleep 2; done;
+          env:
+          - name: PGUSER
+            value: {{ include "db.username" $ | default .Values.db.username }}
+          - name: PGPASSWORD
+            value: {{ include "db.password" $ | default .Values.db.password }}
+          - name: PGHOST
+            value: {{ include "db.host" $ | default .Values.db.host }}
+          - name: PGDATABASE
+            value: {{ include "db.database" $ | default .Values.db.database }}

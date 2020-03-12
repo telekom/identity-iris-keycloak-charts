@@ -1,0 +1,4 @@
+include:
+  - project: 'tif/infra/charts/chart-registry'
+    file: '/templates/PublishChart.gitlab-ci.yml'
+    ref: master

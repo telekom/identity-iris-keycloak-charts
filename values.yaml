@@ -1,0 +1,76 @@
+global:
+  project_prefix: "tif-"
+# for AWS/sandbox/terraform-eks-demo
+  storageclass: "gp2"
+#TODO: only for testing
+  platform: kubernetes
+
+  domain:
+    internal:
+      url: "changeme-internal.tif.telekom.de"
+      slug: "changeme_internal_tif_telekom_de"
+      labels: {}
+      expose: true
+    external:
+      url: "changeme-external.tif.telekom.de"
+      slug: "changeme_external_tif_telekom_de"
+      labels:
+        router: external
+      expose: false
+    
+  db:
+    database: 'sso'
+    username: 'sso'
+    password: 'SEE SECRETS'
+    admin_username: 'postgres'
+    admin_password: 'SEE SECRETS'
+
+  use_external_database: false
+
+postgresql:
+  max_connections: "100"
+  shared_buffers: "32MB"
+  max_prepared_transactions: "100"
+
+  image:
+    registry: ""
+    repository: "postgres"
+    tag: "9.6-alpine"
+
+  replicas: 1
+  
+  resources:
+    limits:
+      memory: 2G
+      cpu: 2000m
+    requests:
+      cpu: 50m
+      memory: 250M
+
+  persistence:
+    storageclass: "gp2"
+    capacity: "1Gi"
+
+rhsso:
+  admin_username: admin
+  admin_password: 'SEE SECRETS'
+  cluster_password: 'SEE SECRETS'
+  three_scale_realm: tif
+  access_token_lifespan: 300
+
+  image:
+    registry: ""
+    repository: "jboss/keycloak"
+    tag: "9.0.0"
+    db_client_repository: "postgres"
+    db_client_tag: "9.6-alpine"
+
+  replicas: 1
+
+  resources:
+    requests:
+      memory: "2Gi"
+      cpu: "200m"
+    limits:
+      memory: "2Gi"
+      cpu: "2000m"

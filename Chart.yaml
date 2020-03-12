@@ -1,0 +1,15 @@
+apiVersion: v1
+name: tif-keycloak
+version: 0.0.0
+appVersion: 9.0
+description: Keycloak provided by DHEI
+keywords:
+- keycloak
+- tif
+maintainers:
+- name: Mike Herwig
+  email: Mike.Herwig@external.t-systems.com
+- name: christian stein
+  email: steinc@external.telekom.de
+- name: Georg Teichert-Matuschek
+  email: Georg.Teichert-Matuschek@external.telekom.de

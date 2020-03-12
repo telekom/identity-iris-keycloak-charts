@@ -1,0 +1,14 @@
+{{- if not (.Values.global.use_external_database | default .Values.use_external_database) }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Release.Name }}-{{ .Chart.Name }}-data
+  labels: {{ include "postgresql.labels" $ | nindent 4 }}
+spec:
+  storageClassName: {{ .Values.global.storageclass | default .Values.persistence.storageclass }}
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.persistence.capacity }}
+{{- end }}

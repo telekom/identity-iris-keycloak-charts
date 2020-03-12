@@ -1,0 +1,32 @@
+{{- if eq .Values.global.platform "kubernetes" }}
+{{- range $key, $val := .Values.global.domain }}
+  {{- if $val.expose }}
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ $.Release.Name }}-{{ $key }}
+  labels: {{ include "rhsso.labels" $ | nindent 4 }}
+{{- if $val.labels }}
+{{ toYaml $val.labels | indent 4 }}
+{{- end }}
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  rules:
+  - host: {{ $.Release.Name }}-{{ include "env_short_name" $ }}.{{ tpl $val.url $ }}
+    http:
+      paths:
+        path: /
+        backend:
+          serviceName: {{ $.Release.Name }}
+          servicePort: http
+{{- if $.tls_secret }}
+  tls:
+  - hosts:
+    - {{ $.Release.Name }}-{{ include "env_short_name" $ }}.{{ tpl $val.url $ }}
+    secretName: {{ $.tls_secret }}
+{{- end }}
+  {{- end }}
+{{- end }}
+{{- end }}
