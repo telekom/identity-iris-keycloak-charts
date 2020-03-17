@@ -2,8 +2,6 @@ global:
   project_prefix: "tif-"
 # for AWS/sandbox/terraform-eks-demo
   storageclass: "gp2"
-#TODO: only for testing
-  platform: kubernetes
 
   domain:
     internal:
