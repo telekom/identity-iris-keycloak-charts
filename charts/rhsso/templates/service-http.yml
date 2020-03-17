@@ -4,9 +4,15 @@ metadata:
   name: {{ .Release.Name }}
   labels: {{ include "rhsso.labels" $ | nindent 4 }}
 spec:
+  type: ClusterIP
   ports:
   - name: http
     port: 80
+    protocol: TCP
     targetPort: 8080
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 8443
   selector:
     deployment: {{ .Release.Name }}

@@ -37,19 +37,3 @@
     {{ .Release.Name -}}-postgresql
   {{- end -}}
 {{- end -}}
-
-{{- define "db.admin_username" -}}
-  {{- if eq .Values.global.use_external_database true -}}
-    {{- .Values.global.db.external_admin_username -}}
-  {{- else -}}
-    {{- .Values.global.db.admin_username -}}
-  {{- end -}}
-{{- end -}}
-
-{{- define "db.admin_password" -}}
-  {{- if eq .Values.global.use_external_database true -}}
-    {{- .Values.global.db.external_admin_password -}}
-  {{- else -}}
-    {{- .Values.global.db.admin_password -}}
-  {{- end -}}
-{{- end -}}

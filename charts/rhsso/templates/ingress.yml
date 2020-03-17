@@ -2,7 +2,7 @@
 {{- range $key, $val := .Values.global.domain }}
   {{- if $val.expose }}
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: {{ $.Release.Name }}-{{ $key }}
@@ -10,17 +10,19 @@ metadata:
 {{- if $val.labels }}
 {{ toYaml $val.labels | indent 4 }}
 {{- end }}
-  annotations:
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+# TODO
+#  annotations:
+#    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+#    kubernetes.io/ingress.class: external-nginx
 spec:
   rules:
   - host: {{ $.Release.Name }}-{{ include "env_short_name" $ }}.{{ tpl $val.url $ }}
     http:
       paths:
-        path: /
+      - path: /
         backend:
           serviceName: {{ $.Release.Name }}
-          servicePort: http
+          servicePort: 80
 {{- if $.tls_secret }}
   tls:
   - hosts:

@@ -10,7 +10,7 @@ image:
   repository: "jboss/keycloak"
   tag: "9.0.0"
   db_client_repository: "postgres"
-  db_client_tag: "9.6-alpine"
+  db_client_tag: "9.6"
 
 db:
   database: 'sso'

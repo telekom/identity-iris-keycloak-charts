@@ -12,9 +12,9 @@ spec:
     type: RollingUpdate
   template:
     metadata:
-      annotations:
-        checksum/config: {{ include (print $.Template.BasePath "/configmap-config.yml") . | sha256sum }}
-        checksum/realm: {{ include (print $.Template.BasePath "/configmap-realm.yml") . | sha256sum }}
+#      annotations:
+#        checksum/config: {{ include (print $.Template.BasePath "/configmap-config.yml") . | sha256sum }}
+#        checksum/realm: {{ include (print $.Template.BasePath "/configmap-realm.yml") . | sha256sum }}
       labels:
         application: {{ .Release.Name }}
         deployment: {{ .Release.Name }}
@@ -25,38 +25,20 @@ spec:
         imagePullPolicy: Always
         #command: ["/opt/jboss/tools/docker-entrypoint.sh", "-b", "0.0.0.0", "-c", "/tmp/keycloak/configs/standalone-ha.xml"]
         env:
-        - name: DB_VENDOR
-          value: "postgres"
-        - name: DB_ADDR
-          value: {{ include "db.host" $ | default .Values.db.host }}
-        - name: DB_PORT
-          value: "5432"
-        - name: DB_USER
-          value: {{ include "db.username" $ | default .Values.db.username }}
-        - name: DB_PASSWORD
-          value: {{ include "db.password" $ | default .Values.db.password }}
-        - name: DB_DATABASE
-          value: {{ include "db.database" $ | default .Values.db.database }} 
-        - name: KEYCLOAK_USER
-          value: {{ .Values.admin_username }}
-        - name: KEYCLOAK_PASSWORD
-          value: {{ .Values.admin_password }}
-        - name: KEYCLOAK_IMPORT
-          value: "/tmp/keycloak/realms/tif-realm.json"
-        - name: PROXY_ADDRESS_FORWARDING
-          value: "true"
-        livenessProbe:
-          httpGet:
-            path: httpGet
-            port: 8080
+{{ include "keycloak.db.env" $ | indent 8 }}
+{{ include "keycloak.admin.env" $ | indent 8 }}
         name: rhsso
         ports:
         - { containerPort: 8080, protocol: TCP, name: http }
         - { containerPort: 8443, protocol: TCP, name: https }
-        readinessProbe:
-          httpGet:
-            path: httpGet
-            port: 8080
+#        livenessProbe:
+#          httpGet:
+#            path: httpGet
+#            port: 8080
+#        readinessProbe:
+#          httpGet:
+#            path: httpGet
+#            port: 8080
         resources:
           limits:
             memory: {{ .Values.resources.limits.memory }}
@@ -72,29 +54,22 @@ spec:
       volumes:
       - name: realm-volume
         configMap:
-          name: {{ .Release.Name }}
+          name: {{ .Release.Name }}-realm
           items:
           - key: tif-realm.json
             path: tif-realm.json
       - name: config-volume
         configMap:
-          name: {{ .Release.Name }}
+          name: {{ .Release.Name }}-config
           items:
           - key: standalone-ha.xml
             path: standalone-ha.xml
       initContainers:
-        - name: "checkdb"
-          image: '{{ include "image.init.location" $ }}'
-          command:
-          - /bin/bash
-          - -c
-          - until pg_isready; do echo waiting for database; sleep 2; done;
-          env:
-          - name: PGUSER
-            value: {{ include "db.username" $ | default .Values.db.username }}
-          - name: PGPASSWORD
-            value: {{ include "db.password" $ | default .Values.db.password }}
-          - name: PGHOST
-            value: {{ include "db.host" $ | default .Values.db.host }}
-          - name: PGDATABASE
-            value: {{ include "db.database" $ | default .Values.db.database }}
+      - name: "checkdb"
+        image: '{{ include "image.init.location" $ }}'
+        command:
+        - /bin/bash
+        - -c
+        - until pg_isready -U {{ include "db.username" $ | default .Values.db.username }}; do echo waiting for database; sleep 2; done;
+        env:
+{{ include "postgres.checkdb.env" $ | indent 8 }}

@@ -35,7 +35,7 @@ postgresql:
   image:
     registry: ""
     repository: "postgres"
-    tag: "9.6-alpine"
+    tag: "9.6"
 
   replicas: 1
   
@@ -63,7 +63,7 @@ rhsso:
     repository: "jboss/keycloak"
     tag: "9.0.0"
     db_client_repository: "postgres"
-    db_client_tag: "9.6-alpine"
+    db_client_tag: "9.6"
 
   replicas: 1
 

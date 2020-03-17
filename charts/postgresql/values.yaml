@@ -22,7 +22,7 @@ use_external_database: false
 image:
   registry: ""
   repository: "postgres"
-  tag: "9.6-alpine"
+  tag: "9.6"
 
 resources:
   limits:
