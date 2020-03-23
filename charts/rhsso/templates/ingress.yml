@@ -10,10 +10,9 @@ metadata:
 {{- if $val.labels }}
 {{ toYaml $val.labels | indent 4 }}
 {{- end }}
-# TODO
-#  annotations:
-#    nginx.ingress.kubernetes.io/ssl-redirect: "true"
-#    kubernetes.io/ingress.class: external-nginx
+  annotations:
+    #nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    kubernetes.io/ingress.class: external-nginx
 spec:
   rules:
   - host: {{ $.Release.Name }}-{{ include "env_short_name" $ }}.{{ tpl $val.url $ }}
