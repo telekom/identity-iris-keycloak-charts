@@ -11,7 +11,8 @@ metadata:
 {{ toYaml $val.labels | indent 4 }}
 {{- end }}
   annotations:
-    #nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    external-dns.alpha.kubernetes.io/hostname: {{ .Release.Name }}-admin-{{ .Release.Namespace }}.{{ .Values.global.domain.internal.url }}
+    external-dns.alpha.kubernetes.io/target: {{ .Values.global.externalDnsTarget }}
     kubernetes.io/ingress.class: external-nginx
 spec:
   rules:
