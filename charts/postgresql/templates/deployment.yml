@@ -26,7 +26,7 @@ spec:
             memory: {{ .Values.resources.limits.memory }}
             cpu: {{ .Values.resources.limits.cpu }}
         env:
-{{ include "postgresql.env" $ | indent 8 }}
+{{- include "postgresql.env" $ | indent 8 }}
         image: '{{ include "image.location" $ }}'
         imagePullPolicy: IfNotPresent
         ports:
@@ -54,7 +54,6 @@ spec:
           timeoutSeconds: 3
           successThreshold: 1
           failureThreshold: 3
-
       volumes:
         - name: {{ .Release.Name }}-{{ .Chart.Name }}-data
           persistentVolumeClaim:
