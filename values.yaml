@@ -1,8 +1,8 @@
 global:
   project_prefix: "tif-"
-# for AWS/sandbox/terraform-eks-demo
+  platform: "kubernetes"
   storageclass: "gp2"
-
+  externalDnsTarget: changeme
   domain:
     internal:
       url: "changeme-internal.tif.telekom.de"
