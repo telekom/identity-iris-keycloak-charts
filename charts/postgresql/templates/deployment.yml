@@ -4,6 +4,10 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}-{{ .Chart.Name }}
   labels: {{ include "postgresql.labels" $ | nindent 4 }}
+  {{- with .Values.deployment.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   replicas: 1
   selector:
@@ -34,7 +38,7 @@ spec:
           protocol: TCP
         volumeMounts:
           - name: {{ .Release.Name }}-{{ .Chart.Name }}-data
-            mountPath: {{ include "mount.dir" $ }}
+            mountPath: {{ include "postgresql.mount.dir" $ }}
         livenessProbe:
           tcpSocket:
             port: 5432

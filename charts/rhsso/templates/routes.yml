@@ -6,7 +6,7 @@ apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
   name: {{ $.Release.Name }}-{{ $key }}
-  labels: {{ include "rhsso.labels" $ | nindent 4 }}
+  labels: {{ include "keycloak.labels" $ | nindent 4 }}
 {{- if $val.labels }}
 {{ toYaml $val.labels | indent 4 }}
 {{- end }}

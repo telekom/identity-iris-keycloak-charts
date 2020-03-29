@@ -27,7 +27,7 @@ installed_by: {{ .Values.global.installed_by | default "tif" }}
   value: "{{ .Values.max_prepared_transactions }}"
 {{- end -}}
 
-{{- define "mount.dir" -}}
+{{- define "postgresql.mount.dir" -}}
 {{ .Values.mount_dir | default .Values.data_dir }}
 {{- end -}}
 
@@ -37,44 +37,4 @@ installed_by: {{ .Values.global.installed_by | default "tif" }}
 {{- else -}}
 {{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}
 {{- end -}}
-{{- end -}}
-
-{{- define "env_short_name" -}}
-  {{- .Release.Namespace | replace .Values.global.project_prefix "" -}}
-{{- end -}}
-
-{{- define "prefixed_release_name" -}}
-  {{- .Values.global.project_prefix | default "tif-" }}{{ .Release.Name -}}
-{{- end -}}
-
-{{- define "db.database" -}}
-  {{- if eq .Values.global.use_external_database true -}}
-    {{- include "env_short_name" $ | replace "-" "_" -}}_{{ .Release.Name | replace "-" "_" -}}
-  {{- else -}}
-    {{- .Values.global.db.database -}}
-  {{- end -}}
-{{- end -}}
-
-{{- define "db.username" -}}
-  {{- if eq .Values.global.use_external_database true -}}
-    {{- include "env_short_name" $ | replace "-" "_" -}}_{{ .Release.Name | replace "-" "_" -}}
-  {{- else -}}
-    {{- .Values.global.db.username -}}
-  {{- end -}}
-{{- end -}}
-
-{{- define "db.password" -}}
-  {{- if eq .Values.global.use_external_database true -}}
-    {{- .Values.global.db.external_password -}}
-  {{- else -}}
-    {{- .Values.global.db.password  }}
-  {{- end -}}
-{{- end -}}
-
-{{- define "db.host" -}}
-  {{- if eq .Values.global.use_external_database true -}}
-    {{- .Values.global.db.external_svc_name -}}
-  {{- else -}}
-    {{ .Release.Name -}}-postgresql
-  {{- end -}}
 {{- end -}}

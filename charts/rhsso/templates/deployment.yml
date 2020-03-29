@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Release.Name }}
-  labels: {{ include "rhsso.labels" $ | nindent 4 }}
+  labels: {{ include "keycloak.labels" $ | nindent 4 }}
 spec:
   replicas: {{ .Values.replicas }}
   selector:
@@ -21,14 +21,14 @@ spec:
       name: {{ .Release.Name }}
     spec:
       containers:
-      - image: '{{ include "image.location" $ }}'
+      - name: main
+        image: '{{ include "image.location" $ }}'
         imagePullPolicy: Always
         command: ['/bin/bash']
         args: ['-c', 'cp -f /tmp/keycloak/configs/standalone-ha.xml /opt/jboss/keycloak/standalone/configuration/custom-standalone-ha.xml && /opt/jboss/tools/docker-entrypoint.sh -b 0.0.0.0 -c custom-standalone-ha.xml']
         env:
 {{ include "keycloak.db.env" $ | indent 8 }}
 {{ include "keycloak.admin.env" $ | indent 8 }}
-        name: rhsso
         ports:
         - { containerPort: 8080, protocol: TCP, name: http }
         - { containerPort: 8443, protocol: TCP, name: https }

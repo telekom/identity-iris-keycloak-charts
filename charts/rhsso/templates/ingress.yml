@@ -6,13 +6,13 @@ apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: {{ $.Release.Name }}-{{ $key }}
-  labels: {{ include "rhsso.labels" $ | nindent 4 }}
+  labels: {{ include "keycloak.labels" $ | nindent 4 }}
 {{- if $val.labels }}
 {{ toYaml $val.labels | indent 4 }}
 {{- end }}
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: {{ .Release.Name }}-admin-{{ .Release.Namespace }}.{{ .Values.global.domain.internal.url }}
-    external-dns.alpha.kubernetes.io/target: {{ .Values.global.externalDnsTarget }}
+    external-dns.alpha.kubernetes.io/hostname: {{ $.Release.Name }}-{{ include "env_short_name" $ }}.{{ tpl $val.url $ }}
+    external-dns.alpha.kubernetes.io/target: {{ $.Values.global.externalDnsTarget }}
     kubernetes.io/ingress.class: external-nginx
 spec:
   rules:
@@ -23,11 +23,11 @@ spec:
         backend:
           serviceName: {{ $.Release.Name }}
           servicePort: 80
-{{- if $.tls_secret }}
+{{- if or ($val.tls_secret) ($.Values.global.tls_secret) }}
   tls:
-  - hosts:
+  - secretName: {{ $val.tls_secret | default $.Values.global.tls_secret }}
+    hosts:
     - {{ $.Release.Name }}-{{ include "env_short_name" $ }}.{{ tpl $val.url $ }}
-    secretName: {{ $.tls_secret }}
 {{- end }}
   {{- end }}
 {{- end }}
