@@ -27,9 +27,9 @@ max_prepared_transactions: "0"
 use_external_database: false 
 
 image:
-  registry: ""
-  repository: "postgres"
-  tag: "9.6"
+  registry: "mtr.external.otc.telekomcloud.com"
+  repository: "tif-public/postgres"
+  tag: "stable"
 
 resources:
   limits:
