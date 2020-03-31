@@ -38,9 +38,9 @@ postgresql:
   max_prepared_transactions: "100"
 
   image:
-    registry: ""
-    repository: "postgres"
-    tag: "9.6"
+    registry: "mtr.external.otc.telekomcloud.com"
+    repository: "tif-public/postgres"
+    tag: "stable"
 
   replicas: 1
   
@@ -62,11 +62,14 @@ rhsso:
   access_token_lifespan: 300
 
   image:
-    registry: ""
-    repository: "jboss/keycloak"
-    tag: "9.0.0"
-    db_client_repository: "postgres"
-    db_client_tag: "9.6"
+    registry: "mtr.external.otc.telekomcloud.com"
+    repository: "tif-public/keycloak"
+    tag: "stable"
+    # for testing on openshift use another image
+    # tag: "9.0.0_openshift"
+    db_client_registry: "mtr.external.otc.telekomcloud.com"
+    db_client_repository: "tif-public/postgres"
+    db_client_tag: "stable"
 
   replicas: 1
 

@@ -10,7 +10,7 @@ image:
   repository: "tif-public/keycloak"
   tag: "stable"
   # for testing on openshift use another image
-  tag: "9.0.0_openshift"
+  # tag: "9.0.0_openshift"
   db_client_registry: "mtr.external.otc.telekomcloud.com"
   db_client_repository: "tif-public/postgres"
   db_client_tag: "stable"
