@@ -31,7 +31,7 @@ installed_by: {{ .Values.global.installed_by | default "tif" }}
 {{ .Values.mount_dir | default .Values.data_dir }}
 {{- end -}}
 
-{{- define "image.location" -}}
+{{- define "postgresql.image.location" -}}
 {{- if eq .Values.image.registry "" -}}
 {{ .Values.image.repository }}:{{ .Values.image.tag }}
 {{- else -}}

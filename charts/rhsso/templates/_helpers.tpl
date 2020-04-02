@@ -43,15 +43,23 @@ installed_by: {{ .Values.global.installed_by | default "tif" }}
   value: {{ include "db.password" $ | default .Values.db.password }}
 {{- end -}}
 
-{{- define "image.location" -}}
-{{- if eq .Values.image.registry "" -}}
-{{ .Values.image.repository }}:{{ .Values.image.tag }}
+{{- define "keycloak.image.tag" -}}
+{{- if and (eq .Values.global.platform "openshift") (.Values.image.tag_openshift) -}}
+{{ .Values.image.tag_openshift }}
 {{- else -}}
-{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}
+{{ .Values.image.tag }}
 {{- end -}}
 {{- end -}}
 
-{{- define "image.init.location" -}}
+{{- define "keycloak.image.location" -}}
+{{- if eq .Values.image.registry "" -}}
+{{ .Values.image.repository }}:{{ tpl "keycloak.image.tag" $ }}
+{{- else -}}
+{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ include "keycloak.image.tag" $ }}
+{{- end -}}
+{{- end -}}
+
+{{- define "keycloak.image.init.location" -}}
 {{- if eq .Values.image.registry "" -}}
 {{ .Values.image.db_client_repository }}:{{ .Values.image.db_client_tag }}
 {{- else -}}
