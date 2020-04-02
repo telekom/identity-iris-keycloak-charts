@@ -12,9 +12,9 @@ spec:
     type: RollingUpdate
   template:
     metadata:
-#      annotations:
-#        checksum/config: {{ include (print $.Template.BasePath "/configmap-config.yml") . | sha256sum }}
-#        checksum/realm: {{ include (print $.Template.BasePath "/configmap-realm.yml") . | sha256sum }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap-config.yml") . | sha256sum }}
+        checksum/realm: {{ include (print $.Template.BasePath "/configmap-realm.yml") . | sha256sum }}
       labels:
         application: {{ .Release.Name }}
         deployment: {{ .Release.Name }}
@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: main
-        image: '{{ include "image.location" $ }}'
+        image: '{{ include "keycloak.image.location" $ }}'
         imagePullPolicy: Always
         command: ['/bin/bash']
         args: ['-c', 'cp -f /tmp/keycloak/configs/standalone-ha.xml /opt/jboss/keycloak/standalone/configuration/custom-standalone-ha.xml && /opt/jboss/tools/docker-entrypoint.sh -b 0.0.0.0 -c custom-standalone-ha.xml']
@@ -71,7 +71,7 @@ spec:
             path: standalone-ha.xml
       initContainers:
       - name: "checkdb"
-        image: '{{ include "image.init.location" $ }}'
+        image: '{{ include "keycloak.image.init.location" $ }}'
         command:
         - /bin/bash
         - -c

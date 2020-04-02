@@ -31,7 +31,7 @@ spec:
             cpu: {{ .Values.resources.limits.cpu }}
         env:
 {{- include "postgresql.env" $ | indent 8 }}
-        image: '{{ include "image.location" $ }}'
+        image: '{{ include "postgresql.image.location" $ }}'
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 5432
