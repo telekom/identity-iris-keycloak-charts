@@ -4,24 +4,18 @@ global:
   storageclass: "gp2"
 
   externalDnsTarget: changeme
-# Use this for certificate covering all domains (eg wildcard)
-#  tls_secret: 'my-wildcard-tls-secret'
   domain:
     internal:
       url: "changeme-internal.tif.telekom.de"
       slug: "changeme_internal_tif_telekom_de"
       labels: {}
       expose: true
-# Use this for domain specific certificate
-#      tls_secret: 'my-tls-secret'
     external:
       url: "changeme-external.tif.telekom.de"
       slug: "changeme_external_tif_telekom_de"
       labels:
         router: external
       expose: false
-# Use this for domain specific certificate
-#      tls_secret: 'my-tls-secret'
     
   db:
     database: 'sso'
@@ -57,6 +51,16 @@ postgresql:
     capacity: "1Gi"
 
 rhsso:
+
+#   Use this for certificate covering all domains (eg wildcard) or separate secrets for each domain
+#  tls:
+#    secret: 'my-wildcard-tls-secret'
+#    domain:
+#      internal:
+#        secret: 'my-tls-secret'
+#      external:
+#        secret: 'my-tls-secret'
+
   admin_username: admin
   admin_password: 'SEE SECRETS'
   access_token_lifespan: 300

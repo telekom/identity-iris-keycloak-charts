@@ -3,8 +3,6 @@ admin_password: 'SEE SECRETS'
 access_token_lifespan: 300
 use_external_database: false 
 
-tls_secret:
-
 image:
   registry: "mtr.external.otc.telekomcloud.com"
   repository: "tif-public/keycloak"

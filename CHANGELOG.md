@@ -1,7 +1,16 @@
 # Table of Contents
 
+- [1.0.0_alpha3](#100_alpha3)
 - [1.0.0_alpha2](#100_alpha2)
 - [1.0.0_alpha1 and prior](#100_alpha1)
+
+## [1.0.0_alpha3]
+
+This patch solves the issue #5 once again
+
+### Changes
+
+- TLS secret options renamed and moved to the right place ("global.tls_secret: ..." ==> "tls.secret: ...)
 
 ## [1.0.0_alpha2]
 

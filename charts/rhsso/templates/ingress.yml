@@ -23,11 +23,13 @@ spec:
         backend:
           serviceName: {{ $.Release.Name }}
           servicePort: 80
-{{- if or ($val.tls_secret) ($.Values.global.tls_secret) }}
+{{- if and $.Values.tls $.Values.tls.domain }}
+{{- if or ((index $.Values.tls.domain $key).secret) ($.Values.tls.secret) }}
   tls:
-  - secretName: {{ $val.tls_secret | default $.Values.global.tls_secret }}
+  - secretName: {{ (index $.Values.tls.domain $key).secret | default $.Values.tls.secret }}
     hosts:
     - {{ $.Release.Name }}-{{ include "env_short_name" $ }}.{{ tpl $val.url $ }}
+{{- end }}
 {{- end }}
   {{- end }}
 {{- end }}
