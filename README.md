@@ -21,13 +21,13 @@ Subcharts:
 
 Issues and questions can be reported to the [issues list](../issues)
 
-## Details
+# Details
 
-### License
+## License
 
 Neither keycloak nor postgres requires a license. All used images are copies of public images from docker-hub.
 
-### Version
+## Version
 
 |                                  | Version Info       |    
 |----------------------------------|--------------------|
@@ -38,7 +38,7 @@ Neither keycloak nor postgres requires a license. All used images are copies of 
 | - java                           |  11.0.6            |
 | postgress                        |  9.6               |
 
-### Description
+## Description
 
 **Important internal links:**
  - [this repository](https://ceiser-wbench.psst.t-online.corp/nexus3/#browse/browse:tif-public-raw:tif%2Finfr%2Fcharts%2Ftif-keycloak)
@@ -55,7 +55,7 @@ Neither keycloak nor postgres requires a license. All used images are copies of 
 
 After a succesfull installation the component can be reached at the URL: `keycloak-internal-<namespace>.<domain.internal.url>`
 
-### Configuration
+## Configuration
 
 **configuration file**
 
@@ -119,12 +119,12 @@ The following table lists the configurable parameters of this chart.
 | `postgresql.resources.limit.memory`           | Memory limit for postgresql pod                                    | `2G`                                                          |
 | `postgresql.resources.limit.cpu`              | CPU limit for postgresql pod                                       | `2000m`                                                       |
 
-### Secrets
+## Secrets
 
 Confidential informations should be stored as a sops-encrypted secret. \
 Instruction how to create a secrets and scripts provided by the TIF-team are [here](https://codeshare.workbench.telekom.de/gitlab/TIF-Collaboration/tools/tif-infrastructure-secrets-util): 
 
-### Labels
+## Labels
 
 This charts sets following labels on all deployed kubernetes resources:
 ```
@@ -133,7 +133,7 @@ component: {{ .Chart.Name }}
 chart: {{ .Chart.Name }}-{{ .Chart.Version }}
 ```
 
-## Deployment to Production
+# Deployment to Production
 
 Default settings in this template are prepared for dev and test environments.
 
