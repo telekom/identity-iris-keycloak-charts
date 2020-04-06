@@ -19,7 +19,7 @@ Subcharts:
 - rhsso (*Note: in this version the keycloak subchart is called "rhsso" for backward compatibility, in the next release it will be renamed to keycloak*)
 - postgres
 
-Issues and questions can be reported to the [issues list](issues)
+Issues and questions can be reported to the [issues list](../issues)
 
 ## Details
 
@@ -141,4 +141,4 @@ The database is used for storing ephemeral data (usualy tokens with a lifespan o
 
 Please note also, that the IDP is an important component of the security concept. For this reason, all communication must be adequate encrypted and certificates shold be properly verified.
 
-[ExternalDNS]: [https://github.com/kubernetes-sigs/external-dns]
+[External-DNS]: https://github.com/kubernetes-sigs/external-dns
