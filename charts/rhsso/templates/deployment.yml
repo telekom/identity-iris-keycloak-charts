@@ -20,6 +20,7 @@ spec:
         deployment: {{ .Release.Name }}
       name: {{ .Release.Name }}
     spec:
+      {{- include "image_pull_secrets" $ | indent 6 }}
       containers:
       - name: main
         image: '{{ include "keycloak.image.location" $ }}'

@@ -20,6 +20,7 @@ spec:
       labels:
         name: {{ .Release.Name }}-{{ .Chart.Name }}
     spec:
+      {{- include "image_pull_secrets" $ | indent 6 }}
       containers:
       - name: {{ .Release.Name }}-{{ .Chart.Name }}
         resources:

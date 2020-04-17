@@ -26,6 +26,15 @@ global:
 
   use_external_database: false
 
+  # If imagePullSecrets is not empty, a pull secret will be deployed for each entry otherwise no pull secret will be deployed
+  # If you use tif-infra-pipeline (TIF installer) this will be set automatically
+  # imagePullSecrets:
+  #   - name: mtr-tif-public
+  #     registry: https://mtr.external.otc.telekomcloud.com
+  #     username: changeme
+  #     password: changeme
+  imagePullSecrets: []
+
 postgresql:
   max_connections: "100"
   shared_buffers: "32MB"
