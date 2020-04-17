@@ -1,38 +1,32 @@
-{{- if eq .Values.global.platform "kubernetes" }}
-{{- range $key, $val := .Values.global.domain }}
-  {{- if $val.expose }}
----
+{{- if not ( eq .Values.global.platform "openshift" ) -}}
+{{- if .Values.ingress.enabled }}
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: {{ $.Release.Name }}-{{ $key }}
+  name: {{ .Release.Name }}
   labels: {{ include "keycloak.labels" $ | nindent 4 }}
-{{- if $val.labels }}
-{{ toYaml $val.labels | indent 4 }}
-{{- end }}
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: {{ $.Release.Name }}-{{ include "env_short_name" $ }}.{{ tpl $val.url $ }}
-    external-dns.alpha.kubernetes.io/target: {{ $.Values.global.externalDnsTarget }}
+{{- if .Values.ingress.annotations }}
+    {{- toYaml .Values.ingress.annotations | nindent 4 }}
+{{- else }}
+    external-dns.alpha.kubernetes.io/hostname: {{ include "keycloak.host" . }}
+    external-dns.alpha.kubernetes.io/target: {{ .Values.global.externalDnsTarget }}
     kubernetes.io/ingress.class: external-nginx
+{{- end }}
 spec:
   rules:
-  - host: {{ $.Release.Name }}-{{ include "env_short_name" $ }}.{{ tpl $val.url $ }}
+  - host: {{ include "keycloak.host" . }}
     http:
       paths:
       - path: /
         backend:
-          serviceName: {{ $.Release.Name }}
+          serviceName: {{ .Release.Name }}
           servicePort: 80
-{{- if $.Values.tls }}
-  {{- if $.Values.tls.domain }}
-    {{- if or ((index $.Values.tls.domain $key).secret) ($.Values.tls.secret) }}
+{{- if .Values.ingress.tlsSecret }}
   tls:
-  - secretName: {{ (index $.Values.tls.domain $key).secret | default $.Values.tls.secret }}
+  - secretName: {{ .Values.ingress.tlsSecret }}
     hosts:
-    - {{ $.Release.Name }}-{{ include "env_short_name" $ }}.{{ tpl $val.url $ }}
-    {{- end }}
-  {{- end }}
+    - {{ include "keycloak.host" . }}
 {{- end }}
-  {{- end }}
 {{- end }}
 {{- end }}

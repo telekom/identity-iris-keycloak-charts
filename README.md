@@ -80,44 +80,39 @@ In case of the postgress-container the data is stored in a pvc-mount in a folder
 
 The following table lists the configurable parameters of this chart.
 
-|  Parameter                                    | Description                                                        |                            Default                            |
-|-----------------------------------------------|--------------------------------------------------------------------|---------------------------------------------------------------|
-| `global.project_prefix`                       | Project prefix                                                     | `tif-`                                                        |
-| `global.platform`                             | Platform (openshift or kubernetes)                                 | `stable`                                                      |
-| `global.storageclass`                         | Storage class for PersistenVolumeClaims                            | `gp2`                                                         |
-| `global.externalDnsTarget`                    | [AMS] DNS target used in ingress annotations for [External-DNS]    | **mandatory for AWS**                                         |
-| `global.domain.internal.expose`               | Should create route/ingress for this URL?                          | `true`                                                        |
-| `global.domain.internal.url`                  | Base cluster URL reachable from Telekom network                    | **mandatory** if internal URL is enabled                      |
-| `global.domain.external.expose`               | Should create route/ingress for this URL?                          | `false`                                                       |
-| `global.domain.external.url`                  | Base cluster URL for external network                              | **mandatory** if external URL is enabled                      |
-| `global.use_external_database`                | Should the setup use an external database?                         | `false`                                                       |
-|                                               |                                                                    |                                                               |
-| `rhsso.image.registry`                        | Docker registry (with keycloak image)                              | `mtr.external.otc.telekomcloud.com`                           |
-| `rhsso.image.repository`                      | Docker repository                                                  | `tif-public/keycloak`                                         |
-| `rhsso.image.tag`                             | Selected image tag                                                 | `stable`                                                      |
-| `rhsso.image.db_client_registry`              | Docker registry (with keycloak-init image)                         | `mtr.external.otc.telekomcloud.com`                           |
-| `rhsso.image.db_client_repository`            | Docker repository                                                  | `tif-public/postgres`                                         |
-| `rhsso.image.db_client_tag`                   | Selected image tag                                                 | `stable`                                                      |
-| `rhsso.tls.secret`                            | TLS secret name (for wildcard certificate)                         |                                                               |
-| `rhsso.tls.domain.internal.secret`            | TLS secret name (for internal certificate)                         |                                                               |
-| `rhsso.tls.domain.external.secret`            | TLS secret name (for external certificate)                         |                                                               |
-| `rhsso.admin_username`                        | Name of the admin user                                             | `admin`                                                       |
-| `rhsso.admin_password`                        | Password of the admin user (usually from secret)                   |                                                               |
-| `rhsso.access_token_lifespan`                 | Lifespan of a token                                                | `300`                                                         |
-| `rhsso.replicas`                              | Number of replicas                                                 | `1`                                                           |
-| `rhsso.resources.requests.memory`             | Memory request for keycloak pod                                    | `2Gi`                                                         |
-| `rhsso.resources.requests.cpu`                | CPU request for keycloak pod                                       | `200m`                                                        |
-| `rhsso.resources.limit.memory`                | Memory limit for keycloak pod                                      | `2Gi`                                                         |
-| `rhsso.resources.limit.cpu`                   | CPU limit for keycloak pod                                         | `2000m`                                                       |
-|                                               |                                                                    |                                                               |
-| `postgresql.image.registry`                   | Docker registry (containing postgresql image)                      | `mtr.external.otc.telekomcloud.com`                           |
-| `postgresql.image.repository`                 | Docker repository                                                  | `tif-public/postgres`                                         |
-| `postgresql.image.tag`                        | Selected image tag                                                 | `stable`                                                      |
-| `postgresql.replicas`                         | Number of replicas                                                 | `1`                                                           |
-| `postgresql.resources.requests.memory`        | Memory request for postgresql pod                                  | `250M`                                                        |
-| `postgresql.resources.requests.cpu`           | CPU request for postgresql pod                                     | `50m`                                                         |
-| `postgresql.resources.limit.memory`           | Memory limit for postgresql pod                                    | `2G`                                                          |
-| `postgresql.resources.limit.cpu`              | CPU limit for postgresql pod                                       | `2000m`                                                       |
+| Parameter                             | Description                                                    | Default                            |
+|---------------------------------------|----------------------------------------------------------------|------------------------------------|
+| `global.platform`                     | Platform (openshift or kubernetes)                             | `stable`                           |
+| `global.project_prefix`               | Project prefix                                                 | `tif-`                             |
+| `global.storageclass`                 | Storage class for PersistenVolumeClaims                        | `gp2`                              |
+| `global.externalDnsTarget`            | [AMS] DNS target used in ingress annotations for [External-DNS]| `nil` **mandatory for AWS**        |
+| `global.domain`                       | Base cluster URL reachable from Telekom network                | `nil`                              |
+| `global.use_external_database`        | Should the setup use an external database?                     | `false`                            |
+| `rhsso.image.registry`                | Docker registry (with keycloak image)                          | `mtr.external.otc.telekomcloud.com`|
+| `rhsso.image.repository`              | Docker repository                                              | `tif-public/keycloak`              |
+| `rhsso.image.tag`                     | Selected image tag                                             | `stable`                           |
+| `rhsso.image.db_client_registry`      | Docker registry (with keycloak-init image)                     | `mtr.external.otc.telekomcloud.com`|
+| `rhsso.image.db_client_repository`    | Docker repository                                              | `tif-public/postgres`              |
+| `rhsso.image.db_client_tag`           | Selected image tag                                             | `stable`                           |
+| `rhsso.tls.secret`                    | TLS secret name                                                |                                    |
+| `rhsso.admin_username`                | Name of the admin user                                         | `admin`                            |
+| `rhsso.admin_password`                | Password of the admin user (usually from secret)               |                                    |
+| `rhsso.access_token_lifespan`         | Lifespan of a token                                            | `300`                              |
+| `rhsso.replicas`                      | Number of replicas                                             | `1`                                |
+| `rhsso.resources.requests.memory`     | Memory request for keycloak pod                                | `2Gi`                              |
+| `rhsso.resources.requests.cpu`        | CPU request for keycloak pod                                   | `200m`                             |
+| `rhsso.resources.limit.memory`        | Memory limit for keycloak pod                                  | `2Gi`                              |
+| `rhsso.resources.limit.cpu`           | CPU limit for keycloak pod                                     | `2000m`                            |
+| `ingress.enabled`                     | Create ingress for external access                             | `true`                             |
+| `ingress.annotations`                 | Custom annotations for ingress                                 | `nil`                              |
+| `postgresql.image.registry`           | Docker registry (containing postgresql image)                  | `mtr.external.otc.telekomcloud.com`|
+| `postgresql.image.repository`         | Docker repository                                              | `tif-public/postgres`              |
+| `postgresql.image.tag`                | Selected image tag                                             | `stable`                           |
+| `postgresql.replicas`                 | Number of replicas                                             | `1`                                |
+| `postgresql.resources.requests.memory`| Memory request for postgresql pod                              | `250M`                             |
+| `postgresql.resources.requests.cpu`   | CPU request for postgresql pod                                 | `50m`                              |
+| `postgresql.resources.limit.memory`   | Memory limit for postgresql pod                                | `2G`                               |
+| `postgresql.resources.limit.cpu`      | CPU limit for postgresql pod                                   | `2000m`                            |
 
 ## Secrets
 

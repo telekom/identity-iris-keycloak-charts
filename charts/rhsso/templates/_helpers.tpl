@@ -66,3 +66,7 @@ installed_by: {{ .Values.global.installed_by | default "tif" }}
 {{ .Values.image.registry }}/{{ .Values.image.db_client_repository }}:{{ .Values.image.db_client_tag }}
 {{- end -}}
 {{- end -}}
+
+{{- define "keycloak.host" -}}
+{{- printf "%s-%s.%s" .Release.Name .Release.Namespace .Values.global.domain }}
+{{- end -}}

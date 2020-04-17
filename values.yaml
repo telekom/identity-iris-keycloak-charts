@@ -1,21 +1,9 @@
 global:
+  platform: kubernetes
   project_prefix: "tif-"
-  platform: "kubernetes"
   storageclass: "gp2"
-
-  externalDnsTarget: changeme
-  domain:
-    internal:
-      url: "changeme-internal.tif.telekom.de"
-      slug: "changeme_internal_tif_telekom_de"
-      labels: {}
-      expose: true
-    external:
-      url: "changeme-external.tif.telekom.de"
-      slug: "changeme_external_tif_telekom_de"
-      labels:
-        router: external
-      expose: false
+  externalDnsTarget: ""
+  domain: ""
     
   db:
     database: 'sso'
@@ -61,15 +49,6 @@ postgresql:
 
 rhsso:
 
-#   Use this for certificate covering all domains (eg wildcard) or separate secrets for each domain
-#  tls:
-#    secret: 'my-wildcard-tls-secret'
-#    domain:
-#      internal:
-#        secret: 'my-tls-secret'
-#      external:
-#        secret: 'my-tls-secret'
-
   admin_username: admin
   admin_password: 'SEE SECRETS'
   access_token_lifespan: 300
@@ -93,3 +72,8 @@ rhsso:
     limits:
       memory: "2Gi"
       cpu: "2000m"
+
+  ingress:
+    enabled: true
+    # tlsSecret: ""
+    annotations: {}

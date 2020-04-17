@@ -28,4 +28,9 @@ resources:
   limits:
     memory: "2Gi"
     cpu: "2000m"
+
+ingress:
+  enabled: true
+  # tlsSecret: ""
+  annotations: {}
     
