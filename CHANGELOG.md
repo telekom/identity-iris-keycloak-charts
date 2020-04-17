@@ -1,8 +1,20 @@
 # Table of Contents
 
-- [1.0.0_alpha3](#100_alpha3)
-- [1.0.0_alpha2](#100_alpha2)
-- [1.0.0_alpha1 and prior](#100_alpha1)
+- [Table of Contents](#table-of-contents)
+  - [[0.0.0]](#000)
+    - [Changes](#changes)
+  - [[1.0.0_alpha3]](#100alpha3)
+    - [Changes](#changes-1)
+  - [[1.0.0_alpha2]](#100alpha2)
+    - [Changes](#changes-2)
+  - [[1.0.0_alpha1]](#100alpha1)
+
+## [0.0.0]
+
+### Changes
+
+- DHEI-1430: Custom annotations for rhsso ingress
+- DHEI-1430: New URL creation aligend with TIF-Deployer standard
 
 ## [1.0.0_alpha3]
 
