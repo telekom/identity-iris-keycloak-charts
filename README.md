@@ -104,6 +104,8 @@ The following table lists the configurable parameters of this chart.
 | `rhsso.resources.limit.memory`        | Memory limit for keycloak pod                                  | `2Gi`                              |
 | `rhsso.resources.limit.cpu`           | CPU limit for keycloak pod                                     | `2000m`                            |
 | `ingress.enabled`                     | Create ingress for external access                             | `true`                             |
+| `ingress.hostname`                    | Set dedicated hostname for ingress/route, overwrites global URL| `nil`                              |
+| `ingress.tlsSecret`                   | Set secret name                                                | `nil`                              |
 | `ingress.annotations`                 | Custom annotations for ingress                                 | `nil`                              |
 | `postgresql.image.registry`           | Docker registry (containing postgresql image)                  | `mtr.external.otc.telekomcloud.com`|
 | `postgresql.image.repository`         | Docker repository                                              | `tif-public/postgres`              |

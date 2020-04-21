@@ -75,5 +75,6 @@ rhsso:
 
   ingress:
     enabled: true
+    # hostname: ""
     # tlsSecret: ""
     annotations: {}

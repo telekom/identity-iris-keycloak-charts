@@ -68,5 +68,9 @@ installed_by: {{ .Values.global.installed_by | default "tif" }}
 {{- end -}}
 
 {{- define "keycloak.host" -}}
+{{- if not (empty .Values.ingress.hostname) }}
+{{- .Values.ingress.hostname -}}
+{{- else }}
 {{- printf "%s-%s.%s" .Release.Name .Release.Namespace .Values.global.domain }}
+{{- end -}}
 {{- end -}}
