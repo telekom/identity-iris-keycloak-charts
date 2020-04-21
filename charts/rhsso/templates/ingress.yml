@@ -1,4 +1,4 @@
-{{- if not ( eq .Values.global.platform "openshift" ) -}}
+{{- if eq .Values.global.platform "kubernetes" -}}
 {{- if .Values.ingress.enabled }}
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
