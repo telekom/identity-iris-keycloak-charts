@@ -6,6 +6,7 @@
 
 ### Changes
 
+- DHEI-1567: Rename subchart from "rhsso" to "keycloak"
 - DHEI-1430: Custom annotations for rhsso ingress
 - DHEI-1430: New URL creation aligned with TIF-Deployer standard
 
@@ -29,7 +30,7 @@ Issue #4 was rejected (works as expected).
 
 - default value for setting of `global.externalDnsTarget` added.
 - the usage of `global.tls_secret:` corrected and settings `global.(internal|external).tls_secret` added
-- there is an additional setting `rhsso.image.tag_openshift` for the keycloak image tag used on openshift. The default value is "9.0.0_openshift".
+- there is an additional setting `keycloak.image.tag_openshift` for the keycloak image tag used on openshift. The default value is "9.0.0_openshift".
 - in default configuration keycloak images are retrieved from [MTR repository tif-public](https://mtr.external.otc.telekomcloud.com/repository/tif-public/keycloak) with tag **stable**
 - in default configuration postgress image is retrieved from [MTR repository tif-public](https://mtr.external.otc.telekomcloud.com/repository/tif-public/postgres) with tag **stable**
 - ingress annotations corrected, as required for our AWS setup.

@@ -47,7 +47,7 @@ postgresql:
     storageclass: "gp2"
     capacity: "1Gi"
 
-rhsso:
+keycloak:
 
   admin_username: admin
   admin_password: 'SEE SECRETS'

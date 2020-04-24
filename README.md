@@ -16,7 +16,7 @@ Content:
 - by setting `use_external_database: true` an external database can be used instead of the postgres container
 
 Subcharts:
-- rhsso (*Note: in this version the keycloak subchart is called "rhsso" for backward compatibility, in the next release it will be renamed to keycloak*)
+- keycloak
 - postgres
 
 Issues and questions can be reported to the [issues list](../issues)
@@ -88,21 +88,21 @@ The following table lists the configurable parameters of this chart.
 | `global.externalDnsTarget`            | [AMS] DNS target used in ingress annotations for [External-DNS]| `nil` **mandatory for AWS**        |
 | `global.domain`                       | Base cluster URL reachable from Telekom network                | `nil`                              |
 | `global.use_external_database`        | Should the setup use an external database?                     | `false`                            |
-| `rhsso.image.registry`                | Docker registry (with keycloak image)                          | `mtr.external.otc.telekomcloud.com`|
-| `rhsso.image.repository`              | Docker repository                                              | `tif-public/keycloak`              |
-| `rhsso.image.tag`                     | Selected image tag                                             | `stable`                           |
-| `rhsso.image.db_client_registry`      | Docker registry (with keycloak-init image)                     | `mtr.external.otc.telekomcloud.com`|
-| `rhsso.image.db_client_repository`    | Docker repository                                              | `tif-public/postgres`              |
-| `rhsso.image.db_client_tag`           | Selected image tag                                             | `stable`                           |
-| `rhsso.tls.secret`                    | TLS secret name                                                |                                    |
-| `rhsso.admin_username`                | Name of the admin user                                         | `admin`                            |
-| `rhsso.admin_password`                | Password of the admin user (usually from secret)               |                                    |
-| `rhsso.access_token_lifespan`         | Lifespan of a token                                            | `300`                              |
-| `rhsso.replicas`                      | Number of replicas                                             | `1`                                |
-| `rhsso.resources.requests.memory`     | Memory request for keycloak pod                                | `2Gi`                              |
-| `rhsso.resources.requests.cpu`        | CPU request for keycloak pod                                   | `200m`                             |
-| `rhsso.resources.limit.memory`        | Memory limit for keycloak pod                                  | `2Gi`                              |
-| `rhsso.resources.limit.cpu`           | CPU limit for keycloak pod                                     | `2000m`                            |
+| `keycloak.image.registry`             | Docker registry (with keycloak image)                          | `mtr.external.otc.telekomcloud.com`|
+| `keycloak.image.repository`           | Docker repository                                              | `tif-public/keycloak`              |
+| `keycloak.image.tag`                  | Selected image tag                                             | `stable`                           |
+| `keycloak.image.db_client_registry`   | Docker registry (with keycloak-init image)                     | `mtr.external.otc.telekomcloud.com`|
+| `keycloak.image.db_client_repository` | Docker repository                                              | `tif-public/postgres`              |
+| `keycloak.image.db_client_tag`        | Selected image tag                                             | `stable`                           |
+| `keycloak.tls.secret`                 | TLS secret name                                                |                                    |
+| `keycloak.admin_username`             | Name of the admin user                                         | `admin`                            |
+| `keycloak.admin_password`             | Password of the admin user (usually from secret)               |                                    |
+| `keycloak.access_token_lifespan`      | Lifespan of a token                                            | `300`                              |
+| `keycloak.replicas`                   | Number of replicas                                             | `1`                                |
+| `keycloak.resources.requests.memory`  | Memory request for keycloak pod                                | `2Gi`                              |
+| `keycloak.resources.requests.cpu`     | CPU request for keycloak pod                                   | `200m`                             |
+| `keycloak.resources.limit.memory`     | Memory limit for keycloak pod                                  | `2Gi`                              |
+| `keycloak.resources.limit.cpu`        | CPU limit for keycloak pod                                     | `2000m`                            |
 | `ingress.enabled`                     | Create ingress for external access                             | `true`                             |
 | `ingress.hostname`                    | Set dedicated hostname for ingress/route, overwrites global URL| `nil`                              |
 | `ingress.tlsSecret`                   | Set secret name                                                | `nil`                              |
