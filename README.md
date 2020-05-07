@@ -31,8 +31,8 @@ Neither keycloak nor postgres requires a license. All used images are copies of 
 
 |                                  | Version Info       |    
 |----------------------------------|--------------------|
-| Chart Version                    |  1.0.0-beta.1      |
-| Chart Status                     |  release-candidate |
+| Chart Version                    |  1.0.0             |
+| Chart Status                     |  release           |
 | **installed software versions:** |                    |
 | keycloak                         |  9.0.0             |
 | - java                           |  11.0.6            |
