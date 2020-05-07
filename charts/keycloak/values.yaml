@@ -1,0 +1,37 @@
+admin_username: admin
+admin_password: 'SEE SECRETS'
+access_token_lifespan: 300
+use_external_database: false 
+
+image:
+  registry: "mtr.external.otc.telekomcloud.com"
+  repository: "tif-public/keycloak"
+  tag: "stable"
+  # for testing on openshift use another image
+  tag_openshift: "9.0.0_openshift"
+  db_client_registry: "mtr.external.otc.telekomcloud.com"
+  db_client_repository: "tif-public/postgres"
+  db_client_tag: "stable"
+
+db:
+  database: 'sso'
+  username: 'sso'
+  password: 'SEE SECRETS'
+  host: 'postgresql'
+  
+replicas: 1
+
+resources:
+  requests:
+    memory: "2Gi"
+    cpu: "200m"
+  limits:
+    memory: "2Gi"
+    cpu: "2000m"
+
+ingress:
+  enabled: true
+  # hostname: ""
+  # tlsSecret: ""
+  annotations: {}
+    

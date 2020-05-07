@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Release.Name }}
-  labels: {{ include "rhsso.labels" $ | nindent 4 }}
+  labels: {{ include "keycloak.labels" $ | nindent 4 }}
 spec:
   replicas: {{ .Values.replicas }}
   selector:
@@ -12,33 +12,39 @@ spec:
     type: RollingUpdate
   template:
     metadata:
-#      annotations:
-#        checksum/config: {{ include (print $.Template.BasePath "/configmap-config.yml") . | sha256sum }}
-#        checksum/realm: {{ include (print $.Template.BasePath "/configmap-realm.yml") . | sha256sum }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap-config.yml") . | sha256sum }}
+        checksum/realm: {{ include (print $.Template.BasePath "/configmap-realm.yml") . | sha256sum }}
       labels:
         application: {{ .Release.Name }}
         deployment: {{ .Release.Name }}
       name: {{ .Release.Name }}
     spec:
+      {{- include "image_pull_secrets" $ | indent 6 }}
       containers:
-      - image: '{{ include "image.location" $ }}'
+      - name: main
+        image: '{{ include "keycloak.image.location" $ }}'
         imagePullPolicy: Always
-        #command: ["/opt/jboss/tools/docker-entrypoint.sh", "-b", "0.0.0.0", "-c", "/tmp/keycloak/configs/standalone-ha.xml"]
+        command: ['/bin/bash']
+        args: ['-c', 'cp -f /tmp/keycloak/configs/standalone-ha.xml /opt/jboss/keycloak/standalone/configuration/custom-standalone-ha.xml && /opt/jboss/tools/docker-entrypoint.sh -b 0.0.0.0 -c custom-standalone-ha.xml']
         env:
 {{ include "keycloak.db.env" $ | indent 8 }}
 {{ include "keycloak.admin.env" $ | indent 8 }}
-        name: rhsso
         ports:
         - { containerPort: 8080, protocol: TCP, name: http }
         - { containerPort: 8443, protocol: TCP, name: https }
-#        livenessProbe:
-#          httpGet:
-#            path: httpGet
-#            port: 8080
-#        readinessProbe:
-#          httpGet:
-#            path: httpGet
-#            port: 8080
+        livenessProbe:
+          initialDelaySeconds: 60
+          failureThreshold: 3
+          httpGet:
+            path: '/auth/realms/master'
+            port: 8080
+            scheme: 'HTTP'
+        readinessProbe:
+          httpGet:
+            path: '/auth/realms/master'
+            port: 8080
+            scheme: 'HTTP'
         resources:
           limits:
             memory: {{ .Values.resources.limits.memory }}
@@ -66,7 +72,7 @@ spec:
             path: standalone-ha.xml
       initContainers:
       - name: "checkdb"
-        image: '{{ include "image.init.location" $ }}'
+        image: '{{ include "keycloak.image.init.location" $ }}'
         command:
         - /bin/bash
         - -c

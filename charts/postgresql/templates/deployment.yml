@@ -4,6 +4,10 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}-{{ .Chart.Name }}
   labels: {{ include "postgresql.labels" $ | nindent 4 }}
+  {{- with .Values.deployment.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   replicas: 1
   selector:
@@ -16,6 +20,7 @@ spec:
       labels:
         name: {{ .Release.Name }}-{{ .Chart.Name }}
     spec:
+      {{- include "image_pull_secrets" $ | indent 6 }}
       containers:
       - name: {{ .Release.Name }}-{{ .Chart.Name }}
         resources:
@@ -26,15 +31,15 @@ spec:
             memory: {{ .Values.resources.limits.memory }}
             cpu: {{ .Values.resources.limits.cpu }}
         env:
-{{ include "postgresql.env" $ | indent 8 }}
-        image: '{{ include "image.location" $ }}'
+{{- include "postgresql.env" $ | indent 8 }}
+        image: '{{ include "postgresql.image.location" $ }}'
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 5432
           protocol: TCP
         volumeMounts:
           - name: {{ .Release.Name }}-{{ .Chart.Name }}-data
-            mountPath: {{ include "mount.dir" $ }}
+            mountPath: {{ include "postgresql.mount.dir" $ }}
         livenessProbe:
           tcpSocket:
             port: 5432
@@ -54,7 +59,6 @@ spec:
           timeoutSeconds: 3
           successThreshold: 1
           failureThreshold: 3
-
       volumes:
         - name: {{ .Release.Name }}-{{ .Chart.Name }}-data
           persistentVolumeClaim:

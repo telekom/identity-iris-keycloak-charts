@@ -27,11 +27,11 @@ installed_by: {{ .Values.global.installed_by | default "tif" }}
   value: "{{ .Values.max_prepared_transactions }}"
 {{- end -}}
 
-{{- define "mount.dir" -}}
+{{- define "postgresql.mount.dir" -}}
 {{ .Values.mount_dir | default .Values.data_dir }}
 {{- end -}}
 
-{{- define "image.location" -}}
+{{- define "postgresql.image.location" -}}
 {{- if eq .Values.image.registry "" -}}
 {{ .Values.image.repository }}:{{ .Values.image.tag }}
 {{- else -}}

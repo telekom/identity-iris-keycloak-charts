@@ -1,28 +1,35 @@
 # database admin credentials
 admin_username: "postgres"
 admin_password: "changeme"
+
 # name of the database which should be created
 database: "change_me"
+
 # credentials of user that should be created for database
 username: "change_me"
 password: "change_me"
+
 # location of database (persistent volume will be mounted here)
 mount_dir: "/var/lib/pgsql"
 data_dir: "/var/lib/pgsql/data"
+
 # maximum number of client connections
 max_connections: "100"
+
 # memory dedicated to PostgreSQL for caching data
 shared_buffers: "32MB"
+
 # maximum number of transactions that can be in the "prepared" state simultaneously
 # setting this parameter to zero (default) disables the prepared-transaction feature
 max_prepared_transactions: "0"
+
 # if set to true no objects will be created at all
 use_external_database: false 
 
 image:
-  registry: ""
-  repository: "postgres"
-  tag: "9.6"
+  registry: "mtr.external.otc.telekomcloud.com"
+  repository: "tif-public/postgres"
+  tag: "stable"
 
 resources:
   limits:
@@ -35,3 +42,6 @@ resources:
 persistence:
   storageclass: "gp2"
   capacity: "1Gi"
+
+deployment:
+  annotations: {}
