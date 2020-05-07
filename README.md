@@ -29,11 +29,8 @@ Neither keycloak nor postgres requires a license. All used images are copies of 
 
 ## Version
 
-|                                  | Version Info       |    
+| Installed software versions      | Version Info       |    
 |----------------------------------|--------------------|
-| Chart Version                    |  1.0.0-beta.1      |
-| Chart Status                     |  release-candidate |
-| **installed software versions:** |                    |
 | keycloak                         |  9.0.0             |
 | - java                           |  11.0.6            |
 | postgress                        |  9.6               |
