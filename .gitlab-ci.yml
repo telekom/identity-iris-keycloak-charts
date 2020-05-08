@@ -1,11 +1,4 @@
-
 include:
   - project: 'tif/gitlab-pipelines'
     file: '/helm/PublishChart.gitlab-ci.yml'
     ref: master
-
-trigger tif-deployer:
-  stage: .post
-  trigger:
-    project: tif/infra/images/tif-infra-pipeline-operator
-    branch: develop 
