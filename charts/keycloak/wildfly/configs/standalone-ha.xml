@@ -634,7 +634,7 @@
                     </host>
                 </server>
                 <server name="metrics">
-                    <http-listener name="default" socket-binding="metrics-http" proxy-address-forwarding="${env.PROXY_ADDRESS_FORWARDING:false}" security-realm="ApplicationRealm" enable-http2="true"/>
+                    <http-listener name="default" socket-binding="metrics-http" proxy-address-forwarding="${env.PROXY_ADDRESS_FORWARDING:false}" enable-http2="true"/>
                     <host name="default-host" alias="localhost">
                         <location name="/metrics" handler="metrics-reverse-proxy"/>
                         <http-invoker security-realm="ApplicationRealm"/>
