@@ -629,15 +629,13 @@
                     <https-listener name="https" socket-binding="https" proxy-address-forwarding="${env.PROXY_ADDRESS_FORWARDING:false}" security-realm="ApplicationRealm" enable-http2="true"/>
                     <host name="default-host" alias="localhost">
                         <location name="/" handler="welcome-content"/>
-                        <location name="/metrics" handler="metrics-reverse-proxy"/>
                         <http-invoker security-realm="ApplicationRealm"/>
                     </host>
                 </server>
-                <server name="metrics">
-                    <http-listener name="default" socket-binding="metrics-http" proxy-address-forwarding="${env.PROXY_ADDRESS_FORWARDING:false}" enable-http2="true"/>
-                    <host name="default-host" alias="localhost">
+                <server name="metrics" default-host="metrics-host">
+                    <http-listener name="metrics-listener" socket-binding="metrics-http" proxy-address-forwarding="${env.PROXY_ADDRESS_FORWARDING:false}" enable-http2="true"/>
+                    <host name="metrics-host" alias="localhost">
                         <location name="/metrics" handler="metrics-reverse-proxy"/>
-                        <http-invoker security-realm="ApplicationRealm"/>
                     </host>
                 </server>
                 <servlet-container name="default">
@@ -646,8 +644,8 @@
                 </servlet-container>
                 <handlers>
                     <file name="welcome-content" path="${jboss.home.dir}/welcome-content"/>
-                    <reverse-proxy name="metrics-reverse-proxy" connections-per-thread="30">
-                        <host name="http://127.0.0.1:${jboss.http.port:8080}/auth/realms/master/metrics" instance-id="metricsRoute"/>
+                    <reverse-proxy name="metrics-reverse-proxy">
+                        <host name="localhost" outbound-socket-binding="metrics-http-outbound" scheme="http" path="/auth/realms/master/metrics" instance-id="metrics-route"/>
                     </reverse-proxy>
                 </handlers>
             </subsystem>
@@ -681,6 +679,9 @@
             <socket-binding name="metrics-http" port="${jboss.metrics.http.port:9542}"/>
             <outbound-socket-binding name="mail-smtp">
                 <remote-destination host="localhost" port="25"/>
+            </outbound-socket-binding>
+            <outbound-socket-binding name="metrics-http-outbound">
+                <remote-destination host="localhost" port="${jboss.http.port:8080}"/>
             </outbound-socket-binding>
         </socket-binding-group>
     </server>
