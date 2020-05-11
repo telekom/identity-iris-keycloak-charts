@@ -35,3 +35,7 @@ ingress:
   # tlsSecret: ""
   annotations: {}
     
+prometheus:
+  enabled: true 
+# port: 9542
+# path: /metrics

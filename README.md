@@ -100,10 +100,13 @@ The following table lists the configurable parameters of this chart.
 | `keycloak.resources.requests.cpu`     | CPU request for keycloak pod                                   | `200m`                             |
 | `keycloak.resources.limit.memory`     | Memory limit for keycloak pod                                  | `2Gi`                              |
 | `keycloak.resources.limit.cpu`        | CPU limit for keycloak pod                                     | `2000m`                            |
-| `ingress.enabled`                     | Create ingress for external access                             | `true`                             |
-| `ingress.hostname`                    | Set dedicated hostname for ingress/route, overwrites global URL| `nil`                              |
-| `ingress.tlsSecret`                   | Set secret name                                                | `nil`                              |
-| `ingress.annotations`                 | Custom annotations for ingress                                 | `nil`                              |
+| `keycloak.ingress.enabled`            | Create ingress for external access                             | `true`                             |
+| `keycloak.ingress.hostname`           | Set dedicated hostname for ingress/route, overwrites global URL| `nil`                              |
+| `keycloak.ingress.tlsSecret`          | Set secret name                                                | `nil`                              |
+| `keycloak.ingress.annotations`        | Custom annotations for ingress                                 | `nil`                              |
+| `keycloak.prometheus.enabled`         | Controls whether a metrics services should be deployed or not  | `true`                             |
+| `keycloak.prometheus.port`            | Sets the port at which metrics can be accessed                 | `9542`                             |
+| `keycloak.prometheus.path`            | Sets the endpoint at which at which metrics can be accessed    | `/metrics`                         |
 | `postgresql.image.registry`           | Docker registry (containing postgresql image)                  | `mtr.external.otc.telekomcloud.com`|
 | `postgresql.image.repository`         | Docker repository                                              | `tif-public/postgres`              |
 | `postgresql.image.tag`                | Selected image tag                                             | `stable`                           |

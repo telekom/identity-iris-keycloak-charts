@@ -1,0 +1,15 @@
+{{- if eq .Values.prometheus.enabled true }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-metrics
+  annotations: {{- include "keycloak.annotations.prometheus" $ | nindent 4 }}
+  labels: {{ include "keycloak.labels" $ | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+  - name: metrics-http
+    port: {{ .Values.prometheus.port | default 9542 }}
+    targetPort: {{ .Values.prometheus.port | default 9542 }}
+    protocol: TCP
+{{- end -}}

@@ -6,6 +6,12 @@ release: {{ include "prefixed_release_name" $ }}
 installed_by: {{ .Values.global.installed_by | default "tif" }}
 {{- end -}}
 
+{{- define "keycloak.annotations.prometheus" -}}
+prometheus.io/path: '{{ .Values.prometheus.path | default "/metrics" }}'
+prometheus.io/scrape: 'true'
+prometheus.io/port: '{{ .Values.prometheus.port | default 9542 }}'
+{{- end -}}
+
 {{- define "keycloak.admin.env" -}}
 - name: KEYCLOAK_USER
   value: {{ .Values.admin_username }}
