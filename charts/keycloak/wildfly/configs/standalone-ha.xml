@@ -549,6 +549,13 @@
                         </properties>
                     </provider>
                 </spi>
+                <spi name="realm-restapi-extension">
+                    <provider name="metrics" enabled="true">
+                        <properties>
+                            <property name="metrics-auth-token" value="superuser"/>
+                        </properties>
+                    </provider>
+                </spi>
             </subsystem>
             <subsystem xmlns="urn:jboss:domain:mail:3.0">
                 <mail-session name="default" jndi-name="java:jboss/mail/Default">
@@ -635,6 +642,7 @@
                 <server name="metrics" default-host="metrics-host">
                     <http-listener name="metrics-listener" socket-binding="metrics-http" proxy-address-forwarding="${env.PROXY_ADDRESS_FORWARDING:false}" enable-http2="true"/>
                     <host name="metrics-host" alias="localhost">
+                        <filter-ref name="set-metrics-auth-token-header"/>
                         <location name="/metrics" handler="metrics-reverse-proxy"/>
                     </host>
                 </server>
@@ -648,6 +656,9 @@
                         <host name="localhost" outbound-socket-binding="metrics-http-outbound" scheme="http" path="/auth/realms/master/metrics" instance-id="metrics-route"/>
                     </reverse-proxy>
                 </handlers>
+                <filters>
+                    <expression-filter name="set-metrics-auth-token-header" expression="set(attribute='%{i,X-Metrics-Auth-Token}', value='superuser')"/>
+                </filters>
             </subsystem>
             <subsystem xmlns="urn:jboss:domain:weld:4.0"/>
         </profile>
@@ -681,7 +692,7 @@
                 <remote-destination host="localhost" port="25"/>
             </outbound-socket-binding>
             <outbound-socket-binding name="metrics-http-outbound">
-                <remote-destination host="localhost" port="${jboss.http.port:8080}"/>
+                <local-destination socket-binding-ref="http"/>
             </outbound-socket-binding>
         </socket-binding-group>
     </server>
