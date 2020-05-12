@@ -36,6 +36,7 @@ ingress:
   annotations: {}
     
 prometheus:
-  enabled: true 
+  enabled: true
+  authToken: changeme
 # port: 9542
 # path: /metrics

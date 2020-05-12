@@ -557,14 +557,15 @@ data:
                       </provider>
                   </spi>
 {{- if eq .Values.prometheus.enabled true }}
-{{ $metricsAuthToken := .Values.prometheus.authToken | default "superuser" }}
+{{ if .Values.prometheus.authToken }}
                   <spi name="realm-restapi-extension">
                       <provider name="metrics" enabled="true">
                           <properties>
-                              <property name="metrics-auth-token" value="{{ $metricsAuthToken }}"/>
+                              <property name="metrics-auth-token" value="{{ .Values.prometheus.authToken }}"/>
                           </properties>
                       </provider>
                   </spi>
+{{- end -}}
 {{- end }}
               </subsystem>
               <subsystem xmlns="urn:jboss:domain:mail:3.0">
