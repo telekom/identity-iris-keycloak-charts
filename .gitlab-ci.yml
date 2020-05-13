@@ -2,3 +2,12 @@ include:
   - project: 'tif/gitlab-pipelines'
     file: '/helm/PublishChart.gitlab-ci.yml'
     ref: master
+
+trigger:tif-infra-pipeline-operator:
+  stage: .post
+  only:
+    refs:
+      - develop
+  trigger:
+    project: tif/infra/images/tif-infra-pipeline-operator
+    branch: develop
