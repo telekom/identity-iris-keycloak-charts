@@ -556,8 +556,8 @@ data:
                           </properties>
                       </provider>
                   </spi>
-{{- if eq .Values.prometheus.enabled true }}
-{{ if .Values.prometheus.authToken }}
+{{- if eq .Values.prometheus.enabled true -}}
+{{- if .Values.prometheus.authToken }}
                   <spi name="realm-restapi-extension">
                       <provider name="metrics" enabled="true">
                           <properties>
@@ -655,7 +655,9 @@ data:
                   <server name="metrics" default-host="metrics-host">
                       <http-listener name="metrics-listener" socket-binding="metrics-http" proxy-address-forwarding="${env.PROXY_ADDRESS_FORWARDING:false}" enable-http2="true"/>
                       <host name="metrics-host" alias="localhost">
+{{- if .Values.prometheus.authToken }}
                           <filter-ref name="set-metrics-auth-token-header"/>
+{{- end }}
                           <location name="{{ $metricsPath }}" handler="metrics-reverse-proxy"/>
                       </host>
                   </server>
@@ -673,8 +675,9 @@ data:
 {{- end }}
                   </handlers>
                   <filters>
-{{- if eq .Values.prometheus.enabled true }}
-                      <expression-filter name="set-metrics-auth-token-header" expression="set(attribute='%{i,X-Metrics-Auth-Token}', value='superuser')"/>
+{{- if eq .Values.prometheus.enabled true -}}
+{{- $authToken := .Values.prometheus.authToken | default "superuser" }}
+                      <expression-filter name="set-metrics-auth-token-header" expression="set(attribute='%{i,X-Metrics-Auth-Token}', value='{{ $authToken }}')"/>
 {{- end }}
                   </filters>
               </subsystem>
