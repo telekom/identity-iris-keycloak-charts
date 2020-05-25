@@ -56,9 +56,9 @@ keycloak:
   image:
     registry: "mtr.external.otc.telekomcloud.com"
     repository: "tif-public/tif-keycloak"
-    tag: "1.0.0"
+    tag: "1.0.0-RC"
     # for testing on openshift use another image
-    tag_openshift: "1.0.0"
+    tag_openshift: "1.0.0-RC"
     db_client_registry: "mtr.external.otc.telekomcloud.com"
     db_client_repository: "tif-public/postgres"
     db_client_tag: "stable"
