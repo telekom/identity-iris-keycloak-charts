@@ -2,6 +2,12 @@
 
 [[_TOC_]]
 
+## [1.1.0]
+
+### Changes
+
+- DHEI-1138: Provide default metric for Keycloak towards Prometheus
+
 ## [1.0.0]
 
 ### Changes

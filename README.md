@@ -71,6 +71,13 @@ This tif-realm.json file is stored in a separate config file and mounted to the 
 There are two options for the database: either a postgresql database run in a container or an external database.
 In case of the postgress-container the data is stored in a pvc-mount in a folder `data`.
 
+**prometheus integration**
+
+Due to internal circumstances the metrics can be accessed under keycloak REST endpoint */auth/realms/master/metrics*.
+Since this endpoint is exposed due to the nature of the Keycloak API, we made this endpoint require an authentication token which must be set via header ``X-Metrics-Auth-Token``.  
+We made the metrics more easily accissble by deploying a dedicated metrics service that can be invoked by ``:9542/metrics`` by default which points to */auth/realms/master/metrics* and will do the token-authentication automatically. This service then can be found and used by Prometheus to scrape the metrics.  
+Note, that this service is not exposed by any ingress and can only scraped if Prometheus is in the same cluster.  
+
 **configurable chart options**
 
 > **Tip**: You can use the default [values.yaml](values.yaml)
@@ -100,10 +107,14 @@ The following table lists the configurable parameters of this chart.
 | `keycloak.resources.requests.cpu`     | CPU request for keycloak pod                                   | `200m`                             |
 | `keycloak.resources.limit.memory`     | Memory limit for keycloak pod                                  | `2Gi`                              |
 | `keycloak.resources.limit.cpu`        | CPU limit for keycloak pod                                     | `2000m`                            |
-| `ingress.enabled`                     | Create ingress for external access                             | `true`                             |
-| `ingress.hostname`                    | Set dedicated hostname for ingress/route, overwrites global URL| `nil`                              |
-| `ingress.tlsSecret`                   | Set secret name                                                | `nil`                              |
-| `ingress.annotations`                 | Custom annotations for ingress                                 | `nil`                              |
+| `keycloak.ingress.enabled`            | Create ingress for external access                             | `true`                             |
+| `keycloak.ingress.hostname`           | Set dedicated hostname for ingress/route, overwrites global URL| `nil`                              |
+| `keycloak.ingress.tlsSecret`          | Set secret name                                                | `nil`                              |
+| `keycloak.ingress.annotations`        | Custom annotations for ingress                                 | `nil`                              |
+| `keycloak.prometheus.enabled`         | Controls whether a metrics service should be deployed or not   | `true`                             |
+| `keycloak.prometheus.authToken`       | Authentication token that is used in order to secure the exposed metrics endpoint | `changeme`      |
+| `keycloak.prometheus.port`            | Sets the port at which metrics can be accessed                 | `9542`                             |
+| `keycloak.prometheus.path`            | Sets the endpoint at which at which metrics can be accessed    | `/metrics`                         |
 | `postgresql.image.registry`           | Docker registry (containing postgresql image)                  | `mtr.external.otc.telekomcloud.com`|
 | `postgresql.image.repository`         | Docker repository                                              | `tif-public/postgres`              |
 | `postgresql.image.tag`                | Selected image tag                                             | `stable`                           |
