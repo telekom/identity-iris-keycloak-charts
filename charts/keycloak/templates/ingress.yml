@@ -5,14 +5,7 @@ kind: Ingress
 metadata:
   name: {{ .Release.Name }}
   labels: {{ include "keycloak.labels" $ | nindent 4 }}
-  annotations:
-{{- if .Values.ingress.annotations }}
-    {{- toYaml .Values.ingress.annotations | nindent 4 }}
-{{- else }}
-    external-dns.alpha.kubernetes.io/hostname: {{ include "keycloak.host" . }}
-    external-dns.alpha.kubernetes.io/target: {{ .Values.global.externalDnsTarget }}
-    kubernetes.io/ingress.class: external-nginx
-{{- end }}
+{{- include "keycloak.merged.ingress.annotations" $ | nindent 2 }}
 spec:
   rules:
   - host: {{ include "keycloak.host" . }}

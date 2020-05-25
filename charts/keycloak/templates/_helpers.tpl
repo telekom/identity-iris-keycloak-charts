@@ -80,3 +80,10 @@ prometheus.io/port: '{{ .Values.prometheus.port | default 9542 }}'
 {{- printf "%s-%s.%s" .Release.Name .Release.Namespace .Values.global.domain }}
 {{- end -}}
 {{- end -}}
+
+{{- define "keycloak.merged.ingress.annotations" }}
+{{- $globalAnnotations := dict "annotations" .Values.global.ingress.annotations | deepCopy -}}
+{{- $localAnnotations := dict "annotations" .Values.ingress.annotations -}}
+{{- $mergedAnnotations := mergeOverwrite $globalAnnotations $localAnnotations }}
+{{- $mergedAnnotations | toYaml -}}
+{{ end -}}

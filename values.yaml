@@ -2,8 +2,11 @@ global:
   platform: kubernetes
   project_prefix: "tif-"
   storageclass: "gp2"
-  externalDnsTarget: ""
   domain: ""
+  ingress:
+    annotations: {}
+      # external-dns.alpha.kubernetes.io/target: ""
+      # kubernetes.io/ingress.class: ""
     
   db:
     database: 'sso'
