@@ -2,29 +2,27 @@
 
 [[_TOC_]]
 
-## [1.1.0]
+## 0.0.0
 
-### Changes
+ - Global ingress annotations setting
+
+## 1.1.0
 
 - DHEI-1138: Provide default metric for Keycloak towards Prometheus
 
-## [1.0.0]
-
-### Changes
+## 1.0.0
 
 - DHEI-1567: Rename subchart from "rhsso" to "keycloak"
 - DHEI-1430: Custom annotations for rhsso ingress
 - DHEI-1430: New URL creation aligned with TIF-Deployer standard
 
-## [1.0.0_alpha3]
+## 1.0.0_alpha3
 
 This patch solves the issue #5 once again
 
-### Changes
-
 - TLS secret options renamed and moved to the right place ("global.tls_secret: ..." ==> "tls.secret: ...)
 
-## [1.0.0_alpha2]
+## 1.0.0_alpha2
 
 > Released 04.04.2020
 
@@ -44,6 +42,6 @@ Issue #4 was rejected (works as expected).
 - livenessProbe/redinessProbe and configmap checksums included
 - internal changes: some generic templates renamed and moved to another file. 
 
-## [1.0.0_alpha1]
+## 1.0.0_alpha1
 
 First testable release candidate of this chart.
