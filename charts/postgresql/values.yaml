@@ -29,7 +29,7 @@ use_external_database: false
 image:
   registry: "mtr.external.otc.telekomcloud.com"
   repository: "tif-public/postgres"
-  tag: "stable"
+  tag: "9.6.17"
 
 resources:
   limits:
