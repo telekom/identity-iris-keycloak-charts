@@ -90,6 +90,7 @@ The following table lists the configurable parameters of this chart.
 | `global.project_prefix`               | Project prefix                                                                    | `tif-`                             |
 | `global.storageclass`                 | Storage class for PersistenVolumeClaims                                           | `gp2`                              |
 | `global.domain`                       | Base cluster URL reachable from Telekom network                                   | `nil`                              |
+| `global.labels`                       | Define global labels                                                              | `tif.telekom.de/group`             |
 | `global.ingress.annotations`          | Set annotations for all ingress, can be extended by ingress specific ones         | `nil`                              |
 | `global.use_external_database`        | Should the setup use an external database?                                        | `false`                            |
 | `keycloak.image.registry`             | Docker registry (with keycloak image)                                             | `mtr.external.otc.telekomcloud.com`|
