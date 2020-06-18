@@ -3,6 +3,9 @@ global:
   project_prefix: "tif-"
   storageclass: "gp2"
   domain: ""
+  labels:
+    # fluentd label
+    tif.telekom.de/group: tif
   ingress:
     annotations: {}
       # external-dns.alpha.kubernetes.io/target: ""

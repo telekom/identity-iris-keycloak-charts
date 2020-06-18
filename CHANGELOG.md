@@ -5,6 +5,7 @@
 ## 0.0.0
 
  - Global ingress annotations setting
+ - Global labels settings with a default fluentd label
 
 ## 1.1.0
 
