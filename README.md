@@ -93,29 +93,30 @@ The following table lists the configurable parameters of this chart.
 | `global.labels`                       | Define global labels                                                              | `tif.telekom.de/group`             |
 | `global.ingress.annotations`          | Set annotations for all ingress, can be extended by ingress specific ones         | `nil`                              |
 | `global.use_external_database`        | Should the setup use an external database?                                        | `false`                            |
-| `keycloak.image.registry`             | Docker registry (with keycloak image)                                             | `mtr.external.otc.telekomcloud.com`|
-| `keycloak.image.repository`           | Docker repository                                                                 | `tif-public/keycloak`              |
-| `keycloak.image.tag`                  | Selected image tag                                                                | `stable`                           |
-| `keycloak.image.db_client_registry`   | Docker registry (with keycloak-init image)                                        | `mtr.external.otc.telekomcloud.com`|
-| `keycloak.image.db_client_repository` | Docker repository                                                                 | `tif-public/postgres`              |
-| `keycloak.image.db_client_tag`        | Selected image tag                                                                | `stable`                           |
-| `keycloak.tls.secret`                 | TLS secret name                                                                   |                                    |
-| `keycloak.admin_username`             | Name of the admin user                                                            | `admin`                            |
-| `keycloak.admin_password`             | Password of the admin user (usually from secret)                                  |                                    |
-| `keycloak.access_token_lifespan`      | Lifespan of a token                                                               | `300`                              |
-| `keycloak.replicas`                   | Number of replicas                                                                | `1`                                |
-| `keycloak.resources.requests.memory`  | Memory request for keycloak pod                                                   | `2Gi`                              |
-| `keycloak.resources.requests.cpu`     | CPU request for keycloak pod                                                      | `200m`                             |
-| `keycloak.resources.limit.memory`     | Memory limit for keycloak pod                                                     | `2Gi`                              |
-| `keycloak.resources.limit.cpu`        | CPU limit for keycloak pod                                                        | `2000m`                            |
-| `keycloak.ingress.enabled`            | Create ingress for external access                                                | `true`                             |
-| `keycloak.ingress.hostname`           | Set dedicated hostname for ingress/route, overwrites global URL                   | `nil`                              |
-| `keycloak.ingress.tlsSecret`          | Set secret name                                                                   | `nil`                              |
-| `keycloak.ingress.annotations`        | Merges specific into global ingress annotations                                   | `nil`                              |
-| `keycloak.prometheus.enabled`         | Controls whether a metrics service should be deployed or not                      | `true`                             |
-| `keycloak.prometheus.authToken`       | Authentication token that is used in order to secure the exposed metrics endpoint | `changeme`                         |
-| `keycloak.prometheus.port`            | Sets the port at which metrics can be accessed                                    | `9542`                             |
-| `keycloak.prometheus.path`            | Sets the endpoint at which at which metrics can be accessed                       | `/metrics`                         |
+| `image.registry`                      | Docker registry (with keycloak image)                                             | `mtr.external.otc.telekomcloud.com`|
+| `image.repository`                    | Docker repository                                                                 | `tif-public/keycloak`              |
+| `image.tag`                           | Selected image tag                                                                | `stable`                           |
+| `image.db_client_registry`            | Docker registry (with keycloak-init image)                                        | `mtr.external.otc.telekomcloud.com`|
+| `image.db_client_repository`          | Docker repository                                                                 | `tif-public/postgres`              |
+| `image.db_client_tag`                 | Selected image tag                                                                | `stable`                           |
+| `tls.secret`                          | TLS secret name                                                                   |                                    |
+| `admin_username`                      | Name of the admin user                                                            | `admin`                            |
+| `admin_password`                      | Password of the admin user (usually from secret)                                  |                                    |
+| `access_token_lifespan`               | Lifespan of a token                                                               | `300`                              |
+| `replicas`                            | Number of replicas                                                                | `1`                                |
+| `resources.requests.memory`           | Memory request for keycloak pod                                                   | `2Gi`                              |
+| `resources.requests.cpu`              | CPU request for keycloak pod                                                      | `200m`                             |
+| `resources.limit.memory`              | Memory limit for keycloak pod                                                     | `2Gi`                              |
+| `resources.limit.cpu`                 | CPU limit for keycloak pod                                                        | `2000m`                            |
+| `ingress.enabled`                     | Create ingress for external access                                                | `true`                             |
+| `ingress.hostname`                    | Set dedicated hostname for ingress/route, overwrites global URL                   | `nil`                              |
+| `ingress.tlsSecret`                   | Set secret name                                                                   | `nil`                              |
+| `ingress.annotations`                 | Merges specific into global ingress annotations                                   | `nil`                              |
+| `prometheus.enabled`                  | Controls whether a metrics service should be deployed or not                      | `true`                             |
+| `prometheus.authToken`                | Authentication token that is used in order to secure the exposed metrics endpoint | `changeme`                         |
+| `prometheus.port`                     | Sets the port at which metrics can be accessed                                    | `9542`                             |
+| `prometheus.path`                     | Sets the endpoint at which at which metrics can be accessed                       | `/metrics`                         |
+| **postgresql**                        |                                                                                   |                                    |
 | `postgresql.image.registry`           | Docker registry (containing postgresql image)                                     | `mtr.external.otc.telekomcloud.com`|
 | `postgresql.image.repository`         | Docker repository                                                                 | `tif-public/postgres`              |
 | `postgresql.image.tag`                | Selected image tag                                                                | `stable`                           |
