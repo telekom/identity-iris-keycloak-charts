@@ -1,7 +1,7 @@
 {{- define "keycloak.labels" -}}
 app: {{ include "prefixed_release_name" $ }}
+helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
 component: {{ .Chart.Name }}
-chart: {{ .Chart.Name }}-{{ .Chart.Version }}
 release: {{ include "prefixed_release_name" $ }}
 installed_by: {{ .Values.global.installed_by | default "tif" }}
 {{ .Values.global.labels | toYaml }}
