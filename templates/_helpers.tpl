@@ -39,7 +39,7 @@ prometheus.io/port: '{{ .Values.prometheus.port | default 9542 }}'
   value: {{ include "db.password" $ | default .Values.db.password }}
 {{- end -}}
 
-{{- define "postgres.checkdb.env" -}}
+{{- define "postgres.checkdb.env" }}
 - name: PGHOST
   value: {{ include "db.host" $ | default .Values.db.host }}
 - name: PGDATABASE
@@ -87,4 +87,19 @@ prometheus.io/port: '{{ .Values.prometheus.port | default 9542 }}'
 {{- $localAnnotations := dict "annotations" .Values.ingress.annotations -}}
 {{- $mergedAnnotations := mergeOverwrite $globalAnnotations $localAnnotations }}
 {{- $mergedAnnotations | toYaml -}}
+{{ end -}}
+
+{{- define "keycloak.db.certificates.volume" }}
+{{- if .Values.global.externalDatabase.ssl }}
+- name: certificates
+  secret:
+    secretName: {{ .Release.Name }}-certificates
+{{- end -}}
+{{ end -}}
+
+{{- define "keycloak.db.certificates.volumeMount" }}
+{{- if .Values.global.externalDatabase.ssl }}
+- name: certificates
+  mountPath: /certificates
+{{- end -}}
 {{ end -}}

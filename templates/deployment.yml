@@ -67,6 +67,18 @@ spec:
           mountPath: /tmp/keycloak/realms
         - name: config-volume
           mountPath: /opt/jboss/keycloak/standalone/configuration
+        {{- include "keycloak.db.certificates.volumeMount" $ | indent 8 }}
+      initContainers:
+      - name: "checkdb"
+        image: '{{ include "keycloak.image.init.location" $ }}'
+        command:
+        - /bin/bash
+        - -c
+        - until pg_isready -U {{ include "db.username" $ | default .Values.db.username }}; do echo waiting for database; sleep 2; done;
+        env:
+          {{- include "postgres.checkdb.env" $ | indent 8 }}
+        volumeMounts:
+          {{- include "keycloak.db.certificates.volumeMount" $ | indent 8 }}
       volumes:
       - name: realm-volume
         configMap:
@@ -80,12 +92,4 @@ spec:
           items:
           - key: standalone-ha.xml
             path: mounted-standalone-ha.xml
-      initContainers:
-      - name: "checkdb"
-        image: '{{ include "keycloak.image.init.location" $ }}'
-        command:
-        - /bin/bash
-        - -c
-        - until pg_isready -U {{ include "db.username" $ | default .Values.db.username }}; do echo waiting for database; sleep 2; done;
-        env:
-{{ include "postgres.checkdb.env" $ | indent 8 }}
+      {{- include "keycloak.db.certificates.volume" $ | indent 6 }}

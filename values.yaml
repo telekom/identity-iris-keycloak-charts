@@ -18,7 +18,23 @@ global:
     admin_username: 'postgres'
     admin_password: 'SEE SECRETS'
 
-  use_external_database: false
+  externalDatabase:
+    enabled: false
+    # ssl: false
+    # sslMode: 'verify-full'
+    # sslCert: |
+    #   -----BEGIN CERTIFICATE-----
+    #   <CA certificate in PEM format here>
+    #   -----END CERTIFICATE-----
+    # sslKey: |
+    #   -----BEGIN CERTIFICATE-----
+    #   <CA certificate in PEM format here>
+    #   -----END CERTIFICATE-----
+    # sslRootCert: |
+    #   -----BEGIN CERTIFICATE-----
+    #   <Root certificate in PEM format here>
+    #   -----END CERTIFICATE-----
+
 
   # If imagePullSecrets is not empty, a pull secret will be deployed for each entry otherwise no pull secret will be deployed
   # If you use tif-infra-pipeline (TIF installer) this will be set automatically
