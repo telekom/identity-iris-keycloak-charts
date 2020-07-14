@@ -24,6 +24,15 @@ prometheus.io/port: '{{ .Values.prometheus.port | default 9542 }}'
   value: "true"
 {{- end -}}
 
+{{- define "keycloak.jdbcParams" -}}
+{{- $ssl := "true" }}
+{{- $sslMode := .Values.global.externalDatabase.sslMode | default "verify-full" }}
+{{- $sslCert := "/certificates/sslcert.crt" }}
+{{- $sslKey := "/certificates/sslkey.pk8" }}
+{{- $sslRootCert := "/certificates/sslrootcert.crt" }}
+{{- printf "ssl=%s sslmode=%s sslcert=%s sslkey=%s sslrootcert=%s" $ssl $sslMode $sslCert $sslKey $sslRootCert -}}
+{{ end -}}
+
 {{- define "keycloak.db.env" -}}
 - name: DB_VENDOR
   value: "postgres"
@@ -37,6 +46,10 @@ prometheus.io/port: '{{ .Values.prometheus.port | default 9542 }}'
   value: {{ include "db.username" $ | default .Values.db.username }}
 - name: DB_PASSWORD
   value: {{ include "db.password" $ | default .Values.db.password }}
+{{- if .Values.global.externalDatabase.ssl }}
+- name: JDBC_PARAMS
+  values: {{ include "keycloak.jdbcParams" $ | quote }}
+{{- end -}}
 {{- end -}}
 
 {{- define "postgres.checkdb.env" }}
