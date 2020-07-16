@@ -92,7 +92,11 @@ The following table lists the configurable parameters of this chart.
 | `global.domain`                       | Base cluster URL reachable from Telekom network                                   | `nil`                              |
 | `global.labels`                       | Define global labels                                                              | `tif.telekom.de/group`             |
 | `global.ingress.annotations`          | Set annotations for all ingress, can be extended by ingress specific ones         | `nil`                              |
-| `global.use_external_database`        | Should the setup use an external database?                                        | `false`                            |
+| `global.externalDatabase.enabled`     | Should the setup use an external database?                                        | `false`                            |
+| `global.externalDatabase.ssl`         | Encrypt the database connection                                                   | `false`                            |
+| `global.externalDatabase.sslCert`     | Client certificate                                                                | `nil`                              |
+| `global.externalDatabase.sslKey`      | Client key                                                                        | `nil`                              |
+| `global.externalDatabase.sslRootCert` | Root certificate                                                                  | `nil`                              |
 | `image.registry`                      | Docker registry (with keycloak image)                                             | `mtr.external.otc.telekomcloud.com`|
 | `image.repository`                    | Docker repository                                                                 | `tif-public/keycloak`              |
 | `image.tag`                           | Selected image tag                                                                | `stable`                           |

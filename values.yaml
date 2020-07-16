@@ -27,9 +27,9 @@ global:
     #   <CA certificate in PEM format here>
     #   -----END CERTIFICATE-----
     # sslKey: |
-    #   -----BEGIN CERTIFICATE-----
-    #   <CA certificate in PEM format here>
-    #   -----END CERTIFICATE-----
+    #   -----BEGIN PRIVATE KEY-----
+    #   <pk8 in PEM format here>
+    #   -----END PRIVATE KEY-----
     # sslRootCert: |
     #   -----BEGIN CERTIFICATE-----
     #   <Root certificate in PEM format here>
