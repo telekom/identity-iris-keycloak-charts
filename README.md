@@ -93,6 +93,7 @@ The following table lists the configurable parameters of this chart.
 | `global.labels`                       | Define global labels                                                              | `tif.telekom.de/group`             |
 | `global.ingress.annotations`          | Set annotations for all ingress, can be extended by ingress specific ones         | `nil`                              |
 | `global.externalDatabase.enabled`     | Should the setup use an external database?                                        | `false`                            |
+| `global.externalDatabase.host`        | Hostname of the external database                                                 | `nil`                              |
 | `global.externalDatabase.ssl`         | Encrypt the database connection                                                   | `false`                            |
 | `global.externalDatabase.sslCert`     | Client certificate                                                                | `nil`                              |
 | `global.externalDatabase.sslKey`      | Client key                                                                        | `nil`                              |
