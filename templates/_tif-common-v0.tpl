@@ -23,11 +23,7 @@
 {{- end -}}
 
 {{- define "db.password" -}}
-  {{- if eq .Values.global.externalDatabase.enabled true -}}
-    {{- .Values.global.db.external_password -}}
-  {{- else -}}
-    {{- .Values.global.db.password  }}
-  {{- end -}}
+{{- .Values.global.db.password  }}
 {{- end -}}
 
 {{- define "db.host" -}}
