@@ -48,7 +48,7 @@ prometheus.io/port: '{{ .Values.prometheus.port | default 9542 }}'
   value: {{ include "db.password" $ | default .Values.db.password }}
 {{- if .Values.global.externalDatabase.ssl }}
 - name: JDBC_PARAMS
-  values: {{ include "keycloak.jdbcParams" $ | quote }}
+  value: {{ include "keycloak.jdbcParams" $ | quote }}
 {{- end -}}
 {{- end -}}
 
