@@ -30,7 +30,7 @@ prometheus.io/port: '{{ .Values.prometheus.port | default 9542 }}'
 {{- $sslCert := "/certificates/sslcert.crt" }}
 {{- $sslKey := "/certificates/sslkey.pk8" }}
 {{- $sslRootCert := "/certificates/sslrootcert.crt" }}
-{{- printf "ssl=%s sslmode=%s sslcert=%s sslkey=%s sslrootcert=%s" $ssl $sslMode $sslCert $sslKey $sslRootCert -}}
+{{- printf "ssl=%s&sslmode=%s&sslcert=%s&sslkey=%s&sslrootcert=%s" $ssl $sslMode $sslCert $sslKey $sslRootCert -}}
 {{ end -}}
 
 {{- define "keycloak.db.env" -}}
