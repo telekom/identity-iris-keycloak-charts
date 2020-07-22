@@ -27,10 +27,21 @@ prometheus.io/port: '{{ .Values.prometheus.port | default 9542 }}'
 {{- define "keycloak.jdbcParams" -}}
 {{- $ssl := "true" }}
 {{- $sslMode := .Values.global.externalDatabase.sslMode | default "verify-full" }}
-{{- $sslCert := "/certificates/sslcert.crt" }}
-{{- $sslKey := "/certificates/sslkey.pk8" }}
-{{- $sslRootCert := "/certificates/sslrootcert.crt" }}
-{{- printf "ssl=%s&sslmode=%s&sslcert=%s&sslkey=%s&sslrootcert=%s" $ssl $sslMode $sslCert $sslKey $sslRootCert -}}
+{{- $sslCert := "&sslcert=" }}
+{{- $sslKey := "&sslkey=" }}
+{{- $sslRootCert := "&sslrootcert=" }}
+
+{{- if .Values.global.externalDatabase.sslCert }}
+{{- $sslCert = "&sslcert=/certificates/sslcert.crt" }}
+{{- end -}}
+{{- if .Values.global.externalDatabase.sslKey }}
+{{- $sslKey = "&sslkey=/certificates/sslkey.pk8" }}
+{{- end -}}
+{{- if .Values.global.externalDatabase.sslRootCert }}
+{{- $sslRootCert = "&sslrootcert=/certificates/sslrootcert.crt" }}
+{{- end -}}
+
+{{- printf "ssl=%s&sslmode=%s%s%s%s" $ssl $sslMode $sslCert $sslKey $sslRootCert -}}
 {{ end -}}
 
 {{- define "keycloak.db.env" -}}
