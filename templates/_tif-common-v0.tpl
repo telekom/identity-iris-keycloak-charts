@@ -1,25 +1,13 @@
-{{- define "env_short_name" -}}
-  {{- .Release.Namespace | replace .Values.global.project_prefix "" -}}
-{{- end -}}
-
 {{- define "prefixed_release_name" -}}
   {{- .Values.global.project_prefix | default "tif-" }}{{ .Release.Name -}}
 {{- end -}}
 
 {{- define "db.database" -}}
-  {{- if eq .Values.global.externalDatabase.enabled true -}}
-    {{- include "env_short_name" $ | replace "-" "_" -}}_{{ .Release.Name | replace "-" "_" -}}
-  {{- else -}}
-    {{- .Values.global.db.database -}}
-  {{- end -}}
+{{- .Values.global.db.database -}}
 {{- end -}}
 
 {{- define "db.username" -}}
-  {{- if eq .Values.global.externalDatabase.enabled true -}}
-    {{- include "env_short_name" $ | replace "-" "_" -}}_{{ .Release.Name | replace "-" "_" -}}
-  {{- else -}}
-    {{- .Values.global.db.username -}}
-  {{- end -}}
+{{- .Values.global.db.username -}}
 {{- end -}}
 
 {{- define "db.password" -}}
