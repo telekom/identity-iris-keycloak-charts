@@ -1109,7 +1109,7 @@ spec:
         image: 'mtr.external.otc.telekomcloud.com/tif-public/tif-keycloak:1.0.0'
         imagePullPolicy: Always
         command: ['/bin/bash']
-        args: ['-c', '/opt/jboss/tools/docker-entrypoint.sh -b 0.0.0.0 -c mounted-standalone-ha.xml']
+        args: ['-c', 'cp -f /tmp/keycloak/configs/standalone-ha.xml /opt/jboss/keycloak/standalone/configuration/custom-standalone-ha.xml && /opt/jboss/tools/docker-entrypoint.sh -b 0.0.0.0 -c custom-standalone-ha.xml']
         env:
         - name: DB_VENDOR
           value: "postgres"
@@ -1164,7 +1164,23 @@ spec:
         - name: realm-volume
           mountPath: /tmp/keycloak/realms
         - name: config-volume
-          mountPath: /opt/jboss/keycloak/standalone/configuration
+          mountPath: /tmp/keycloak/configs        
+      initContainers:
+      - name: "checkdb"
+        image: 'mtr.external.otc.telekomcloud.com/tif-public/postgres:9.6.17'
+        command:
+        - /bin/bash
+        - -c
+        - until pg_isready -U sso; do echo waiting for database; sleep 2; done;
+        env:        
+        - name: PGHOST
+          value: keycloak-postgresql
+        - name: PGDATABASE
+          value: sso
+        - name: PGUSER
+          value: sso
+        - name: PGPASSWORD
+          value: SEE SECRETS
       volumes:
       - name: realm-volume
         configMap:
@@ -1177,23 +1193,7 @@ spec:
           name: keycloak-config
           items:
           - key: standalone-ha.xml
-            path: mounted-standalone-ha.xml
-      initContainers:
-      - name: "checkdb"
-        image: 'mtr.external.otc.telekomcloud.com/tif-public/postgres:9.6.17'
-        command:
-        - /bin/bash
-        - -c
-        - until pg_isready -U sso; do echo waiting for database; sleep 2; done;
-        env:
-        - name: PGHOST
-          value: keycloak-postgresql
-        - name: PGDATABASE
-          value: sso
-        - name: PGUSER
-          value: sso
-        - name: PGPASSWORD
-          value: SEE SECRETS
+            path: standalone-ha.xml
 ---
 # Source: tif-keycloak/templates/ingress.yml
 apiVersion: networking.k8s.io/v1beta1
