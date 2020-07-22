@@ -1,4 +1,4 @@
-{{- if not (.Values.global.use_external_database | default .Values.use_external_database) }}
+{{- if not (.Values.global.externalDatabase.enabled | default .Values.externalDatabase.enabled ) }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:

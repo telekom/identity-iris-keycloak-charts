@@ -8,6 +8,7 @@
  - Global ingress annotations setting
  - Global labels settings with a default fluentd label
  - Label deployments with chart version
+ - DHEI-2398: External database encryption 
 
 ## 1.1.0
 

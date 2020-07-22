@@ -27,7 +27,7 @@ spec:
         image: '{{ include "keycloak.image.location" $ }}'
         imagePullPolicy: Always
         command: ['/bin/bash']
-        args: ['-c', '/opt/jboss/tools/docker-entrypoint.sh -b 0.0.0.0 -c mounted-standalone-ha.xml']
+        args: ['-c', 'cp -f /tmp/keycloak/configs/standalone-ha.xml /opt/jboss/keycloak/standalone/configuration/custom-standalone-ha.xml && /opt/jboss/tools/docker-entrypoint.sh -b 0.0.0.0 -c custom-standalone-ha.xml']
         env:
 {{ include "keycloak.db.env" $ | indent 8 }}
 {{ include "keycloak.admin.env" $ | indent 8 }}
@@ -66,7 +66,17 @@ spec:
         - name: realm-volume
           mountPath: /tmp/keycloak/realms
         - name: config-volume
-          mountPath: /opt/jboss/keycloak/standalone/configuration
+          mountPath: /tmp/keycloak/configs
+        {{- include "keycloak.db.certificates.volumeMount" $ | indent 8 }}
+      initContainers:
+      - name: "checkdb"
+        image: '{{ include "keycloak.image.init.location" $ }}'
+        command:
+        - /bin/bash
+        - -c
+        - until pg_isready -U {{ include "db.username" $ | default .Values.db.username }}; do echo waiting for database; sleep 2; done;
+        env:
+          {{- include "postgres.checkdb.env" $ | indent 8 }}
       volumes:
       - name: realm-volume
         configMap:
@@ -79,13 +89,5 @@ spec:
           name: {{ .Release.Name }}-config
           items:
           - key: standalone-ha.xml
-            path: mounted-standalone-ha.xml
-      initContainers:
-      - name: "checkdb"
-        image: '{{ include "keycloak.image.init.location" $ }}'
-        command:
-        - /bin/bash
-        - -c
-        - until pg_isready -U {{ include "db.username" $ | default .Values.db.username }}; do echo waiting for database; sleep 2; done;
-        env:
-{{ include "postgres.checkdb.env" $ | indent 8 }}
+            path: standalone-ha.xml
+      {{- include "keycloak.db.certificates.volume" $ | indent 6 }}
