@@ -24,6 +24,26 @@ prometheus.io/port: '{{ .Values.prometheus.port | default 9542 }}'
   value: "true"
 {{- end -}}
 
+{{- define "keycloak.jdbcParams" -}}
+{{- $ssl := "true" }}
+{{- $sslMode := .Values.global.externalDatabase.sslMode | default "verify-full" }}
+{{- $sslCert := "&sslcert=" }}
+{{- $sslKey := "&sslkey=" }}
+{{- $sslRootCert := "&sslrootcert=" }}
+
+{{- if .Values.global.externalDatabase.sslCert }}
+{{- $sslCert = "&sslcert=/certificates/sslcert.crt" }}
+{{- end -}}
+{{- if .Values.global.externalDatabase.sslKey }}
+{{- $sslKey = "&sslkey=/certificates/sslkey.pk8" }}
+{{- end -}}
+{{- if .Values.global.externalDatabase.sslRootCert }}
+{{- $sslRootCert = "&sslrootcert=/certificates/sslrootcert.crt" }}
+{{- end -}}
+
+{{- printf "ssl=%s&sslmode=%s%s%s%s" $ssl $sslMode $sslCert $sslKey $sslRootCert -}}
+{{ end -}}
+
 {{- define "keycloak.db.env" -}}
 - name: DB_VENDOR
   value: "postgres"
@@ -37,9 +57,13 @@ prometheus.io/port: '{{ .Values.prometheus.port | default 9542 }}'
   value: {{ include "db.username" $ | default .Values.db.username }}
 - name: DB_PASSWORD
   value: {{ include "db.password" $ | default .Values.db.password }}
+{{- if .Values.global.externalDatabase.ssl }}
+- name: JDBC_PARAMS
+  value: {{ include "keycloak.jdbcParams" $ | quote }}
+{{- end -}}
 {{- end -}}
 
-{{- define "postgres.checkdb.env" -}}
+{{- define "postgres.checkdb.env" }}
 - name: PGHOST
   value: {{ include "db.host" $ | default .Values.db.host }}
 - name: PGDATABASE
@@ -87,4 +111,19 @@ prometheus.io/port: '{{ .Values.prometheus.port | default 9542 }}'
 {{- $localAnnotations := dict "annotations" .Values.ingress.annotations -}}
 {{- $mergedAnnotations := mergeOverwrite $globalAnnotations $localAnnotations }}
 {{- $mergedAnnotations | toYaml -}}
+{{ end -}}
+
+{{- define "keycloak.db.certificates.volume" }}
+{{- if .Values.global.externalDatabase.ssl }}
+- name: certificates
+  secret:
+    secretName: {{ .Release.Name }}-certificates
+{{- end -}}
+{{ end -}}
+
+{{- define "keycloak.db.certificates.volumeMount" }}
+{{- if .Values.global.externalDatabase.ssl }}
+- name: certificates
+  mountPath: /certificates
+{{- end -}}
 {{ end -}}

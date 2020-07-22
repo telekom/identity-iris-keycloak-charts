@@ -7,7 +7,7 @@
 {{- end -}}
 
 {{- define "db.database" -}}
-  {{- if eq .Values.global.use_external_database true -}}
+  {{- if eq .Values.global.externalDatabase.enabled true -}}
     {{- include "env_short_name" $ | replace "-" "_" -}}_{{ .Release.Name | replace "-" "_" -}}
   {{- else -}}
     {{- .Values.global.db.database -}}
@@ -15,7 +15,7 @@
 {{- end -}}
 
 {{- define "db.username" -}}
-  {{- if eq .Values.global.use_external_database true -}}
+  {{- if eq .Values.global.externalDatabase.enabled true -}}
     {{- include "env_short_name" $ | replace "-" "_" -}}_{{ .Release.Name | replace "-" "_" -}}
   {{- else -}}
     {{- .Values.global.db.username -}}
@@ -23,16 +23,12 @@
 {{- end -}}
 
 {{- define "db.password" -}}
-  {{- if eq .Values.global.use_external_database true -}}
-    {{- .Values.global.db.external_password -}}
-  {{- else -}}
-    {{- .Values.global.db.password  }}
-  {{- end -}}
+{{- .Values.global.db.password  }}
 {{- end -}}
 
 {{- define "db.host" -}}
-  {{- if eq .Values.global.use_external_database true -}}
-    {{- .Values.global.db.external_svc_name -}}
+  {{- if eq .Values.global.externalDatabase.enabled true -}}
+    {{- .Values.global.externalDatabase.host -}}
   {{- else -}}
     {{ .Release.Name -}}-postgresql
   {{- end -}}
