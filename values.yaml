@@ -93,7 +93,15 @@ prometheus:
 # port: 9542
 # path: /metrics
 
-custom_config:
-  frontendUrl: 
-  # spi_hostname: |-
-  #    <!-- some xml config -->
+customConfig:
+  # with the following setting one can set the frontendUrl configuration for hostname SPI
+  # frontendUrl: '${keycloak.frontendUrl:}'
+  #
+
+  spi: {}
+  # as alternative, one can replace the whole SPI "hostname" configuration block, however this overrides the frontendUrl variable
+  # spi:
+  #   hostname: |-
+  #    <spi name="hostname">
+  #      <!-- some xml config -->
+  #    </spi>

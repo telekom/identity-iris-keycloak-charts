@@ -1209,7 +1209,7 @@ metadata:
   annotations: {}
 spec:
   rules:
-  - host: keycloak-georg-test4.lab.tif.telekom.de
+  - host: keycloak-default.lab.tif.telekom.de
     http:
       paths:
       - path: /

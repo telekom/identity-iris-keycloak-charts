@@ -1,5 +1,6 @@
-custom_config:
-  spi_hostname: |-
+customConfig:
+  spi:
+    hostname: |-
                   <!-- this is a customized xml block -->
                   <spi name="hostname">
                       <default-provider>${keycloak.hostname.provider:default}</default-provider>

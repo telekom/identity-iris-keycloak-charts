@@ -4,6 +4,7 @@
 
 ## 0.0.0
 
+ - Configurable frontendUrl / hostname SPI config
  - Global ingress annotations setting
  - Global labels settings with a default fluentd label
  - Label deployments with chart version

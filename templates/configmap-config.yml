@@ -539,14 +539,14 @@ data:
                       <default-provider>${keycloak.x509cert.lookup.provider:default}</default-provider>
                       <provider name="default" enabled="true"/>
                   </spi>
-{{- if .Values.custom_config.spi_hostname }}
-{{ .Values.custom_config.spi_hostname | indent 18 }}
+{{- if and .Values.customConfig.spi .Values.customConfig.spi.hostname }}
+{{ .Values.customConfig.spi.hostname | indent 18 }}
 {{- else }}
                   <spi name="hostname">
                       <default-provider>${keycloak.hostname.provider:default}</default-provider>
                       <provider name="default" enabled="true">
                           <properties>
-                              <property name="frontendUrl" value={{- .Values.custom_config.frontendUrl | default "${keycloak.frontendUrl:}" | quote -}}/>
+                              <property name="frontendUrl" value={{- .Values.customConfig.frontendUrl | default "${keycloak.frontendUrl:}" | quote -}}/>
                               <property name="forceBackendUrlToFrontendUrl" value="false"/>
                           </properties>
                       </provider>
