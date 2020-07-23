@@ -8,6 +8,7 @@
  - Global labels settings with a default fluentd label
  - Label deployments with chart version
  - DHEI-2398: External database encryption 
+ - DHEI-2377: Configurable frontendUrl (or alt. "hostname" SPI configuration)
 
 ## 1.1.0
 

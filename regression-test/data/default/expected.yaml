@@ -1,8 +1,16 @@
+---
+# Source: tif-keycloak/templates/configmap-config.yml
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Release.Name }}-config
-  labels: {{ include "keycloak.labels" $ | nindent 4 }}
+  name: keycloak-config
+  labels: 
+    app: tif-keycloak
+    helm.sh/chart: tif-keycloak-0.0.0
+    component: tif-keycloak
+    release: tif-keycloak
+    installed_by: tif
+    tif.telekom.de/group: tif
 data:
  standalone-ha.xml: |-
   <?xml version='1.0' encoding='UTF-8'?>
@@ -539,14 +547,11 @@ data:
                       <default-provider>${keycloak.x509cert.lookup.provider:default}</default-provider>
                       <provider name="default" enabled="true"/>
                   </spi>
-{{- if and .Values.customConfig.spi .Values.customConfig.spi.hostname }}
-{{ .Values.customConfig.spi.hostname | indent 18 }}
-{{- else }}
                   <spi name="hostname">
                       <default-provider>${keycloak.hostname.provider:default}</default-provider>
                       <provider name="default" enabled="true">
                           <properties>
-                              <property name="frontendUrl" value={{- .Values.customConfig.frontendUrl | default "${keycloak.frontendUrl:}" | quote -}}/>
+                              <property name="frontendUrl" value="${keycloak.frontendUrl:}"/>
                               <property name="forceBackendUrlToFrontendUrl" value="false"/>
                           </properties>
                       </provider>
@@ -559,18 +564,13 @@ data:
                           </properties>
                       </provider>
                   </spi>
-{{- end }}
-{{- if eq .Values.prometheus.enabled true -}}
-{{- if .Values.prometheus.authToken }}
                   <spi name="realm-restapi-extension">
                       <provider name="metrics" enabled="true">
                           <properties>
-                              <property name="metrics-auth-token" value="{{ .Values.prometheus.authToken }}"/>
+                              <property name="metrics-auth-token" value="changeme"/>
                           </properties>
                       </provider>
                   </spi>
-{{- end -}}
-{{- end }}
               </subsystem>
               <subsystem xmlns="urn:jboss:domain:mail:3.0">
                   <mail-session name="default" jndi-name="java:jboss/mail/Default">
@@ -654,35 +654,25 @@ data:
                           <http-invoker security-realm="ApplicationRealm"/>
                       </host>
                   </server>
-{{- if eq .Values.prometheus.enabled true -}}
-{{- $metricsPath := .Values.prometheus.path | default "/metrics" }}
                   <server name="metrics" default-host="metrics-host">
                       <http-listener name="metrics-listener" socket-binding="metrics-http" proxy-address-forwarding="${env.PROXY_ADDRESS_FORWARDING:false}" enable-http2="true"/>
                       <host name="metrics-host" alias="localhost">
-{{- if .Values.prometheus.authToken }}
                           <filter-ref name="set-metrics-auth-token-header"/>
-{{- end }}
-                          <location name="{{ $metricsPath }}" handler="metrics-reverse-proxy"/>
+                          <location name="/metrics" handler="metrics-reverse-proxy"/>
                       </host>
                   </server>
-{{- end }}
                   <servlet-container name="default">
                       <jsp-config/>
                       <websockets/>
                   </servlet-container>
                   <handlers>
                       <file name="welcome-content" path="${jboss.home.dir}/welcome-content"/>
-{{- if eq .Values.prometheus.enabled true }}
                       <reverse-proxy name="metrics-reverse-proxy">
                           <host name="localhost" outbound-socket-binding="metrics-http-outbound" scheme="http" path="/auth/realms/master/metrics" instance-id="metrics-route"/>
                       </reverse-proxy>
-{{- end }}
                   </handlers>
                   <filters>
-{{- if eq .Values.prometheus.enabled true -}}
-{{- $authToken := .Values.prometheus.authToken | default "superuser" }}
-                      <expression-filter name="set-metrics-auth-token-header" expression="set(attribute='%{i,X-Metrics-Auth-Token}', value='{{ $authToken }}')"/>
-{{- end }}
+                      <expression-filter name="set-metrics-auth-token-header" expression="set(attribute='%{i,X-Metrics-Auth-Token}', value='changeme')"/>
                   </filters>
               </subsystem>
               <subsystem xmlns="urn:jboss:domain:weld:4.0"/>
@@ -712,15 +702,517 @@ data:
               <socket-binding name="modcluster" multicast-address="${jboss.modcluster.multicast.address:224.0.1.105}" multicast-port="23364"/>
               <socket-binding name="txn-recovery-environment" port="4712"/>
               <socket-binding name="txn-status-manager" port="4713"/>
-{{- if eq .Values.prometheus.enabled true -}}
-{{- $metricsPort := .Values.prometheus.port | default "9542" }}
-              <socket-binding name="metrics-http" port="{{ $metricsPort }}"/>
+              <socket-binding name="metrics-http" port="9542"/>
               <outbound-socket-binding name="metrics-http-outbound">
                   <local-destination socket-binding-ref="http"/>
               </outbound-socket-binding>
-{{- end }}
               <outbound-socket-binding name="mail-smtp">
                   <remote-destination host="localhost" port="25"/>
               </outbound-socket-binding>
           </socket-binding-group>
       </server>
+---
+# Source: tif-keycloak/templates/configmap-realm.yml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keycloak-realm
+  labels: 
+    app: tif-keycloak
+    helm.sh/chart: tif-keycloak-0.0.0
+    component: tif-keycloak
+    release: tif-keycloak
+    installed_by: tif
+    tif.telekom.de/group: tif
+data:
+  tif-realm.json: |
+    {
+      "realm": "tif",
+      "displayName": "tif",
+      "displayNameHtml": "tif",
+      "accessTokenLifespan": 300,
+      "enabled": true,
+      "sslRequired": "none",
+      "loginTheme": "keycloak",
+      "eventsEnabled": true,
+      "eventsListeners": [
+        "metrics-listener",
+        "jboss-logging"
+      ],
+      "adminEventsEnabled": true,
+      "clients": [{
+        "clientId": "3scale-admin-provider",
+        "name": "3scale-admin-provider",
+        "description": "3scale-admin-provider",
+        "redirectUris": [],
+        "webOrigins": [],
+        "publicClient": false,
+        "surrogateAuthRequired": false,
+        "enabled": true,
+        "clientAuthenticatorType": "client-secret",
+        "notBefore": 0,
+        "bearerOnly": false,
+        "consentRequired": false,
+        "standardFlowEnabled": true,
+        "implicitFlowEnabled": false,
+        "directAccessGrantsEnabled": false,
+        "serviceAccountsEnabled": true,
+        "frontchannelLogout": false,
+        "protocol": "openid-connect",
+        "fullScopeAllowed": true,
+        "nodeReRegistrationTimeout": -1,
+        "protocolMappers": [{
+            "name": "given name",
+            "protocol": "openid-connect",
+            "protocolMapper": "oidc-usermodel-property-mapper",
+            "consentRequired": true,
+            "consentText": "${givenName}",
+            "config": {
+              "userinfo.token.claim": "true",
+              "user.attribute": "firstName",
+              "id.token.claim": "true",
+              "access.token.claim": "true",
+              "claim.name": "given_name",
+              "jsonType.label": "String"
+            }
+          },
+          {
+            "name": "Client ID",
+            "protocol": "openid-connect",
+            "protocolMapper": "oidc-usersessionmodel-note-mapper",
+            "consentRequired": false,
+            "consentText": "",
+            "config": {
+              "user.session.note": "clientId",
+              "id.token.claim": "true",
+              "access.token.claim": "true",
+              "claim.name": "clientId",
+              "jsonType.label": "String"
+            }
+          },
+          {
+            "name": "family name",
+            "protocol": "openid-connect",
+            "protocolMapper": "oidc-usermodel-property-mapper",
+            "consentRequired": true,
+            "consentText": "${familyName}",
+            "config": {
+              "userinfo.token.claim": "true",
+              "user.attribute": "lastName",
+              "id.token.claim": "true",
+              "access.token.claim": "true",
+              "claim.name": "family_name",
+              "jsonType.label": "String"
+            }
+          },
+          {
+            "name": "full name",
+            "protocol": "openid-connect",
+            "protocolMapper": "oidc-full-name-mapper",
+            "consentRequired": true,
+            "consentText": "${fullName}",
+            "config": {
+              "id.token.claim": "true",
+              "access.token.claim": "true"
+            }
+          },
+          {
+            "name": "email",
+            "protocol": "openid-connect",
+            "protocolMapper": "oidc-usermodel-property-mapper",
+            "consentRequired": true,
+            "consentText": "${email}",
+            "config": {
+              "userinfo.token.claim": "true",
+              "user.attribute": "email",
+              "id.token.claim": "true",
+              "access.token.claim": "true",
+              "claim.name": "email",
+              "jsonType.label": "String"
+            }
+          },
+          {
+            "name": "Client Host",
+            "protocol": "openid-connect",
+            "protocolMapper": "oidc-usersessionmodel-note-mapper",
+            "consentRequired": false,
+            "consentText": "",
+            "config": {
+              "user.session.note": "clientHost",
+              "id.token.claim": "true",
+              "access.token.claim": "true",
+              "claim.name": "clientHost",
+              "jsonType.label": "String"
+            }
+          },
+          {
+            "name": "Client IP Address",
+            "protocol": "openid-connect",
+            "protocolMapper": "oidc-usersessionmodel-note-mapper",
+            "consentRequired": false,
+            "consentText": "",
+            "config": {
+              "user.session.note": "clientAddress",
+              "id.token.claim": "true",
+              "access.token.claim": "true",
+              "claim.name": "clientAddress",
+              "jsonType.label": "String"
+            }
+          },
+          {
+            "name": "role list",
+            "protocol": "saml",
+            "protocolMapper": "saml-role-list-mapper",
+            "consentRequired": false,
+            "config": {
+              "single": "false",
+              "attribute.nameformat": "Basic",
+              "attribute.name": "Role"
+            }
+          },
+          {
+            "name": "username",
+            "protocol": "openid-connect",
+            "protocolMapper": "oidc-usermodel-property-mapper",
+            "consentRequired": true,
+            "consentText": "${username}",
+            "config": {
+              "userinfo.token.claim": "true",
+              "user.attribute": "username",
+              "id.token.claim": "true",
+              "access.token.claim": "true",
+              "claim.name": "preferred_username",
+              "jsonType.label": "String"
+            }
+          }
+        ],
+        "useTemplateConfig": false,
+        "useTemplateScope": false,
+        "useTemplateMappers": false,
+        "access": {
+          "view": true,
+          "configure": true,
+          "manage": true
+        }
+      }]
+    }
+---
+# Source: tif-keycloak/charts/postgresql/templates/pvc.yml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: keycloak-postgresql-data
+  labels: 
+    app: tif-keycloak
+    helm.sh/chart: postgresql-1.0.0
+    component: postgresql
+    release: tif-keycloak
+    installed_by: tif
+    tif.telekom.de/group: tif
+spec:
+  storageClassName: gp2
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+# Source: tif-keycloak/charts/postgresql/templates/service.yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: keycloak-postgresql
+  labels: 
+    app: tif-keycloak
+    helm.sh/chart: postgresql-1.0.0
+    component: postgresql
+    release: tif-keycloak
+    installed_by: tif
+    tif.telekom.de/group: tif
+spec:
+  type: ClusterIP
+  selector:                  
+    name: keycloak-postgresql
+  ports:
+  - name: db
+    port: 5432
+    protocol: TCP
+    targetPort: 5432
+---
+# Source: tif-keycloak/templates/service-http.yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: keycloak
+  labels: 
+    app: tif-keycloak
+    helm.sh/chart: tif-keycloak-0.0.0
+    component: tif-keycloak
+    release: tif-keycloak
+    installed_by: tif
+    tif.telekom.de/group: tif
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 8443
+  selector:
+    deployment: keycloak
+---
+# Source: tif-keycloak/templates/service-metrics.yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: keycloak-metrics
+  annotations:
+    prometheus.io/path: '/metrics'
+    prometheus.io/scrape: 'true'
+    prometheus.io/port: '9542'
+  labels: 
+    app: tif-keycloak
+    helm.sh/chart: tif-keycloak-0.0.0
+    component: tif-keycloak
+    release: tif-keycloak
+    installed_by: tif
+    tif.telekom.de/group: tif
+spec:
+  selector:
+    deployment: keycloak
+  ports:
+  - name: metrics-http
+    port: 9542
+    targetPort: 9542
+    protocol: TCP
+---
+# Source: tif-keycloak/charts/postgresql/templates/deployment.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak-postgresql
+  labels: 
+    app: tif-keycloak
+    helm.sh/chart: postgresql-1.0.0
+    component: postgresql
+    release: tif-keycloak
+    installed_by: tif
+    tif.telekom.de/group: tif
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: keycloak-postgresql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        name: keycloak-postgresql
+    spec:      
+      containers:
+      - name: keycloak-postgresql
+        resources:
+          requests:
+            memory: 250M
+            cpu: 50m
+          limits:
+            memory: 2G
+            cpu: 2000m
+        env:        
+        - name: PGDATA
+          value: /var/lib/pgsql/data
+        - name: POSTGRES_USER
+          value: sso
+        - name: POSTGRES_PASSWORD
+          value: SEE SECRETS
+        - name: POSTGRES_DATABASE
+          value: sso
+        - name: POSTGRES_ADMIN_PASSWORD
+          value: SEE SECRETS
+        - name: POSTGRES_MAX_CONNECTIONS
+          value: "100"
+        - name: POSTGRES_SHARED_BUFFERS
+          value: 32MB
+        - name: POSTGRES_MAX_PREPARED_TRANSACTIONS
+          value: "100"
+        image: 'mtr.external.otc.telekomcloud.com/tif-public/postgres:9.6.17'
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5432
+          protocol: TCP
+        volumeMounts:
+          - name: keycloak-postgresql-data
+            mountPath: /var/lib/pgsql
+        livenessProbe:
+          tcpSocket:
+            port: 5432
+          initialDelaySeconds: 120
+          periodSeconds: 10
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 3
+        readinessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -c
+            - pg_isready -U sso
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 3
+          successThreshold: 1
+          failureThreshold: 3
+      volumes:
+        - name: keycloak-postgresql-data
+          persistentVolumeClaim:
+            claimName: keycloak-postgresql-data
+      restartPolicy: Always
+---
+# Source: tif-keycloak/templates/deployment.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak
+  labels: 
+    app: tif-keycloak
+    helm.sh/chart: tif-keycloak-0.0.0
+    component: tif-keycloak
+    release: tif-keycloak
+    installed_by: tif
+    tif.telekom.de/group: tif
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      deployment: keycloak
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        checksum/config: 09d23d956cebee02a844764e4791d4af8f04036f1364b0cffd6bdeed0b80c1c7
+        checksum/realm: 7b04543dc0238c3f8d1eb6b3ea5175ecb6a9103906eda692d954e1deba6b6b7f
+      labels:
+        application: keycloak
+        deployment: keycloak
+      name: keycloak
+    spec:      
+      serviceAccountName: default
+      containers:
+      - name: main
+        image: 'mtr.external.otc.telekomcloud.com/tif-public/tif-keycloak:1.0.0'
+        imagePullPolicy: Always
+        command: ['/bin/bash']
+        args: ['-c', 'cp -f /tmp/keycloak/configs/standalone-ha.xml /opt/jboss/keycloak/standalone/configuration/custom-standalone-ha.xml && /opt/jboss/tools/docker-entrypoint.sh -b 0.0.0.0 -c custom-standalone-ha.xml']
+        env:
+        - name: DB_VENDOR
+          value: "postgres"
+        - name: DB_PORT
+          value: "5432"
+        - name: DB_ADDR
+          value: keycloak-postgresql
+        - name: DB_DATABASE
+          value: sso 
+        - name: DB_USER
+          value: sso
+        - name: DB_PASSWORD
+          value: SEE SECRETS
+        - name: KEYCLOAK_USER
+          value: admin
+        - name: KEYCLOAK_PASSWORD
+          value: SEE SECRETS
+        - name: KEYCLOAK_IMPORT
+          value: "/tmp/keycloak/realms/tif-realm.json"
+        - name: PROXY_ADDRESS_FORWARDING
+          value: "true"
+        ports:
+        - { containerPort: 8080, protocol: TCP, name: http }
+        - { containerPort: 8443, protocol: TCP, name: https }
+        - { containerPort: 9542, protocol: TCP, name: metrics-http }
+        livenessProbe:
+          initialDelaySeconds: 60
+          failureThreshold: 3
+          httpGet:
+            path: '/auth/realms/master'
+            port: 8080
+            scheme: 'HTTP'
+        readinessProbe:
+          httpGet:
+            path: '/auth/realms/master'
+            port: 8080
+            scheme: 'HTTP'
+        resources:
+          limits:
+            memory: 2Gi
+            cpu: 2000m
+          requests:
+            memory: 2Gi
+            cpu: 200m
+        securityContext:
+          capabilities:
+            drop:
+              - ALL
+          runAsNonRoot: true
+          runAsUser: 10001
+        volumeMounts:
+        - name: realm-volume
+          mountPath: /tmp/keycloak/realms
+        - name: config-volume
+          mountPath: /tmp/keycloak/configs        
+      initContainers:
+      - name: "checkdb"
+        image: 'mtr.external.otc.telekomcloud.com/tif-public/postgres:9.6.17'
+        command:
+        - /bin/bash
+        - -c
+        - until pg_isready -U sso; do echo waiting for database; sleep 2; done;
+        env:        
+        - name: PGHOST
+          value: keycloak-postgresql
+        - name: PGDATABASE
+          value: sso
+        - name: PGUSER
+          value: sso
+        - name: PGPASSWORD
+          value: SEE SECRETS
+      volumes:
+      - name: realm-volume
+        configMap:
+          name: keycloak-realm
+          items:
+          - key: tif-realm.json
+            path: tif-realm.json
+      - name: config-volume
+        configMap:
+          name: keycloak-config
+          items:
+          - key: standalone-ha.xml
+            path: standalone-ha.xml
+---
+# Source: tif-keycloak/templates/ingress.yml
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: keycloak
+  labels: 
+    app: tif-keycloak
+    helm.sh/chart: tif-keycloak-0.0.0
+    component: tif-keycloak
+    release: tif-keycloak
+    installed_by: tif
+    tif.telekom.de/group: tif
+  annotations: {}
+spec:
+  rules:
+  - host: keycloak-default.lab.tif.telekom.de
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: keycloak
+          servicePort: 80

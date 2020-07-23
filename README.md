@@ -117,6 +117,8 @@ The following table lists the configurable parameters of this chart.
 | `ingress.hostname`                    | Set dedicated hostname for ingress/route, overwrites global URL                   | `nil`                              |
 | `ingress.tlsSecret`                   | Set secret name                                                                   | `nil`                              |
 | `ingress.annotations`                 | Merges specific into global ingress annotations                                   | `nil`                              |
+| `customConfig.frontendUrl`            | Allows to configure another frontend URL                                          | `${keycloak.frontendUrl:}`         |
+| `customConfig.spi.hostname`           | Allows to overwrite the complete <spi name="hostname"> config incl. frontendUrl   | s. configmap-config.yml for details |
 | `prometheus.enabled`                  | Controls whether a metrics service should be deployed or not                      | `true`                             |
 | `prometheus.authToken`                | Authentication token that is used in order to secure the exposed metrics endpoint | `changeme`                         |
 | `prometheus.port`                     | Sets the port at which metrics can be accessed                                    | `9542`                             |

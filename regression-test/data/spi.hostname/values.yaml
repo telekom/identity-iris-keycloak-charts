@@ -1,0 +1,21 @@
+customConfig:
+  spi:
+    hostname: |-
+                  <!-- this is a customized xml block -->
+                  <spi name="hostname">
+                      <default-provider>${keycloak.hostname.provider:default}</default-provider>
+                      <provider name="default" enabled="true">
+                          <properties>
+                              <property name="frontendUrl" value="myhost.telekom.de"/>
+                              <property name="forceBackendUrlToFrontendUrl" value="true"/>
+                          </properties>
+                      </provider>
+                      <provider name="fixed" enabled="true">
+                          <properties>
+                              <property name="hostname" value="${keycloak.hostname.fixed.hostname:localhost}"/>
+                              <property name="httpPort" value="${keycloak.hostname.fixed.httpPort:-1}"/>
+                              <property name="httpsPort" value="${keycloak.hostname.fixed.httpsPort:-1}"/>
+                              <property name="alwaysHttps" value="${keycloak.hostname.fixed.alwaysHttps:false}"/>
+                          </properties>
+                      </provider>
+                  </spi>
