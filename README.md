@@ -96,7 +96,7 @@ The following table lists the configurable parameters of this chart.
 | `global.externalDatabase.host`        | Hostname of the external database                                                 | `nil`                              |
 | `global.externalDatabase.ssl`         | Encrypt the database connection                                                   | `false`                            |
 | `global.externalDatabase.sslCert`     | Client certificate, set for mTLS                                                  | `nil`                              |
-| `global.externalDatabase.sslKey`      | Client key                                                                        | `nil`                              |
+| `global.externalDatabase.sslKey`      | Client key, set for mTLS                                                          | `nil`                              |
 | `global.externalDatabase.sslRootCert` | Root certificate                                                                  | `nil`                              |
 | `image.registry`                      | Docker registry (with keycloak image)                                             | `mtr.external.otc.telekomcloud.com`|
 | `image.repository`                    | Docker repository                                                                 | `tif-public/keycloak`              |
