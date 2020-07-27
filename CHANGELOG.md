@@ -2,7 +2,7 @@
 
 [[_TOC_]]
 
-## 0.0.0
+## 1.2.0
 
  - Global ingress annotations setting
  - Global labels settings with a default fluentd label
