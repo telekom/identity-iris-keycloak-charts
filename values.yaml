@@ -2,8 +2,14 @@ global:
   platform: kubernetes
   project_prefix: "tif-"
   storageclass: "gp2"
-  externalDnsTarget: ""
   domain: ""
+  labels:
+    # fluentd label
+    tif.telekom.de/group: tif
+  ingress:
+    annotations: {}
+      # external-dns.alpha.kubernetes.io/target: ""
+      # kubernetes.io/ingress.class: ""
     
   db:
     database: 'sso'
@@ -12,7 +18,24 @@ global:
     admin_username: 'postgres'
     admin_password: 'SEE SECRETS'
 
-  use_external_database: false
+  externalDatabase:
+    enabled: false
+    # host: ''
+    # ssl: false
+    # sslMode: 'verify-full'
+    # sslCert: |
+    #   -----BEGIN CERTIFICATE-----
+    #   <CA certificate in PEM format here>
+    #   -----END CERTIFICATE-----
+    # sslKey: |
+    #   -----BEGIN PRIVATE KEY-----
+    #   <pk8 in PEM format here>
+    #   -----END PRIVATE KEY-----
+    # sslRootCert: |
+    #   -----BEGIN CERTIFICATE-----
+    #   <Root certificate in PEM format here>
+    #   -----END CERTIFICATE-----
+
 
   # If imagePullSecrets is not empty, a pull secret will be deployed for each entry otherwise no pull secret will be deployed
   # If you use tif-infra-pipeline (TIF installer) this will be set automatically
@@ -31,7 +54,7 @@ postgresql:
   image:
     registry: "mtr.external.otc.telekomcloud.com"
     repository: "tif-public/postgres"
-    tag: "stable"
+    tag: "9.6.17"
 
   replicas: 1
   
@@ -47,40 +70,55 @@ postgresql:
     storageclass: "gp2"
     capacity: "1Gi"
 
-keycloak:
+admin_username: admin
+admin_password: 'SEE SECRETS'
+access_token_lifespan: 300
 
-  admin_username: admin
-  admin_password: 'SEE SECRETS'
-  access_token_lifespan: 300
+image:
+  registry: "mtr.external.otc.telekomcloud.com"
+  repository: "tif-public/tif-keycloak"
+  tag: "1.0.0"
+  db_client_registry: "mtr.external.otc.telekomcloud.com"
+  db_client_repository: "tif-public/postgres"
+  db_client_tag: "9.6.17"
 
-  image:
-    registry: "mtr.external.otc.telekomcloud.com"
-    repository: "tif-public/tif-keycloak"
-    tag: "1.0.0"
-    # for testing on openshift use another image
-    tag_openshift: "1.0.0"
-    db_client_registry: "mtr.external.otc.telekomcloud.com"
-    db_client_repository: "tif-public/postgres"
-    db_client_tag: "stable"
+db:
+  database: 'sso'
+  username: 'sso'
+  password: 'SEE SECRETS'
+  host: 'postgresql'
+  
+replicas: 1
 
-  replicas: 1
+resources:
+  requests:
+    memory: "2Gi"
+    cpu: "200m"
+  limits:
+    memory: "2Gi"
+    cpu: "2000m"
 
-  resources:
-    requests:
-      memory: "2Gi"
-      cpu: "200m"
-    limits:
-      memory: "2Gi"
-      cpu: "2000m"
+ingress:
+  enabled: true
+  # hostname: ""
+  # tlsSecret: ""
+  annotations: {}
 
-  ingress:
-    enabled: true
-    # hostname: ""
-    # tlsSecret: ""
-    annotations: {}
+prometheus:
+  enabled: true
+  authToken: changeme
+# port: 9542
+# path: /metrics
 
-  prometheus:
-    enabled: true
-    authToken: changeme
-  # port: 9542
-  # path: /metrics
+customConfig:
+  # with the following setting one can set the frontendUrl configuration for hostname SPI
+  # frontendUrl: '${keycloak.frontendUrl:}'
+  #
+
+  spi: {}
+  # as alternative, one can replace the whole SPI "hostname" configuration block, however this overrides the frontendUrl variable
+  # spi:
+  #   hostname: |-
+  #    <spi name="hostname">
+  #      <!-- some xml config -->
+  #    </spi>

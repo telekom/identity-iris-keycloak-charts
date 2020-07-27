@@ -24,12 +24,13 @@ shared_buffers: "32MB"
 max_prepared_transactions: "0"
 
 # if set to true no objects will be created at all
-use_external_database: false 
+externalDatabase:
+  enabled: false 
 
 image:
   registry: "mtr.external.otc.telekomcloud.com"
   repository: "tif-public/postgres"
-  tag: "stable"
+  tag: "9.6.17"
 
 resources:
   limits:
