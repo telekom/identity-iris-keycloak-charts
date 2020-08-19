@@ -9,37 +9,34 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicas }}
   selector:
-    matchLabels:
-      name: {{ .Release.Name }}-{{ .Chart.Name }}
+    matchLabels: {{ include "postgresql.selector" $ | nindent 6 }}
   strategy:
     type: Recreate
   template:
     metadata:
-      labels:
-        name: {{ .Release.Name }}-{{ .Chart.Name }}
+      labels: {{ include "postgresql.labels" $ | nindent 8 }}
     spec:
       {{- include "image_pull_secrets" $ | indent 6 }}
       containers:
       - name: {{ .Release.Name }}-{{ .Chart.Name }}
-        resources:
-          requests:
-            memory: {{ .Values.resources.requests.memory }}
-            cpu: {{ .Values.resources.requests.cpu }}
-          limits:
-            memory: {{ .Values.resources.limits.memory }}
-            cpu: {{ .Values.resources.limits.cpu }}
+        resources: {{ .Values.resources | toYaml | nindent 10 }}
         env:
-{{- include "postgresql.env" $ | indent 8 }}
-        image: '{{ include "postgresql.image.location" $ }}'
+        {{- include "postgresql.env" $ | indent 8 }}
+        image: '{{ include "postgresql.image" $ }}'
         imagePullPolicy: IfNotPresent
+        securityContext: {{ .Values.securityContext | toYaml | nindent 10 }}
         ports:
         - containerPort: 5432
           protocol: TCP
         volumeMounts:
-          - name: {{ .Release.Name }}-{{ .Chart.Name }}-data
-            mountPath: {{ include "postgresql.mount.dir" $ }}
+        - mountPath: /tmp
+          name: {{ .Release.Name }}-{{ .Chart.Name }}-tmp
+        - mountPath: /var/run/postgresql
+          name: {{ .Release.Name }}-{{ .Chart.Name }}-run
+        - mountPath: {{ .Values.persistence.mountDir | default "/var/lib/postgresql/data" }}
+          name: {{ .Release.Name }}-{{ .Chart.Name }}-data
         livenessProbe:
           tcpSocket:
             port: 5432
@@ -60,10 +57,13 @@ spec:
           successThreshold: 1
           failureThreshold: 3
       volumes:
-        - name: {{ .Release.Name }}-{{ .Chart.Name }}-data
-          persistentVolumeClaim:
-            claimName: {{ .Release.Name }}-{{ .Chart.Name }}-data
+      - name: {{ .Release.Name }}-{{ .Chart.Name }}-run
+        emptyDir: {}
+      - name: {{ .Release.Name }}-{{ .Chart.Name }}-tmp
+        emptyDir: {}
+      - name: {{ .Release.Name }}-{{ .Chart.Name }}-data
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-{{ .Chart.Name }}-data
       restartPolicy: Always
-
 {{- end }}
 

@@ -8,7 +8,5 @@ spec:
   storageClassName: {{ .Values.global.storageclass | default .Values.persistence.storageclass }}
   accessModes:
     - ReadWriteOnce
-  resources:
-    requests:
-      storage: {{ .Values.persistence.capacity }}
+  resources: {{ .Values.persistence.resources | toYaml | nindent 4 }}
 {{- end }}

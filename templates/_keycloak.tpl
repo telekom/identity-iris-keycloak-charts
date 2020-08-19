@@ -1,27 +1,56 @@
 {{- define "keycloak.labels" -}}
-app: {{ include "prefixed_release_name" $ }}
+app: {{ .Release.Name }}
+app.kubernetes.io/name: keycloak
+app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
+app.kubernetes.io/component: idp
+app.kubernetes.io/part-of: tif-runtime
+app.kubernetes.io/managed-by: {{ .Values.global.installed_by | default "tif" }}
 helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
-component: {{ .Chart.Name }}
-release: {{ include "prefixed_release_name" $ }}
-installed_by: {{ .Values.global.installed_by | default "tif" }}
 {{ .Values.global.labels | toYaml }}
 {{- end -}}
 
-{{- define "keycloak.annotations.prometheus" -}}
-prometheus.io/path: '{{ .Values.prometheus.path | default "/metrics" }}'
-prometheus.io/scrape: 'true'
-prometheus.io/port: '{{ .Values.prometheus.port | default 9542 }}'
+{{- define "keycloak.selector" -}}
+app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
 {{- end -}}
 
-{{- define "keycloak.admin.env" -}}
-- name: KEYCLOAK_USER
-  value: {{ .Values.admin_username }}
-- name: KEYCLOAK_PASSWORD
-  value: {{ .Values.admin_password }}
-- name: KEYCLOAK_IMPORT
-  value: "/tmp/keycloak/realms/tif-realm.json"
-- name: PROXY_ADDRESS_FORWARDING
-  value: "true"
+{{- define "keycloak.image" -}}
+{{- $imageName := "tif-keycloak" -}}
+{{- $imageTag := "1.0.0" -}}
+{{- $imageRepository := "mtr.external.otc.telekomcloud.com" -}}
+{{- $imageOrganization := "tif-public" -}}
+{{- if .Values.image -}}
+  {{- if not (kindIs "string" .Values.image) -}}
+    {{ $imageRepository = .Values.image.repository | default $imageRepository -}}
+    {{ $imageOrganization = .Values.image.organization | default $imageOrganization -}}
+    {{ $imageName = .Values.image.name | default $imageName -}}
+    {{ $imageTag = .Values.image.tag | default $imageTag -}}
+    {{- printf "%s/%s/%s:%s" $imageRepository $imageOrganization $imageName $imageTag -}}
+  {{- else -}}
+    {{- .Values.image -}}
+  {{- end -}}
+{{- else -}}
+ {{- printf "%s/%s/%s:%s" $imageRepository $imageOrganization $imageName $imageTag -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "keycloak.init.image" -}}
+{{- $imageName := "postgres" -}}
+{{- $imageTag := "12.3-debian" -}}
+{{- $imageRepository := "mtr.external.otc.telekomcloud.com" -}}
+{{- $imageOrganization := "tif-public" -}}
+{{- if .Values.image -}}
+  {{- if not (kindIs "string" .Values.image) -}}
+    {{ $imageRepository = .Values.image.repository | default $imageRepository -}}
+    {{ $imageOrganization = .Values.image.organization | default $imageOrganization -}}
+    {{ $imageName = .Values.image.name | default $imageName -}}
+    {{ $imageTag = .Values.image.tag | default $imageTag -}}
+    {{- printf "%s/%s/%s:%s" $imageRepository $imageOrganization $imageName $imageTag -}}
+  {{- else -}}
+    {{- .Values.image -}}
+  {{- end -}}
+{{- else -}}
+ {{- printf "%s/%s/%s:%s" $imageRepository $imageOrganization $imageName $imageTag -}}
+{{- end -}}
 {{- end -}}
 
 {{- define "keycloak.jdbcParams" -}}
@@ -44,7 +73,15 @@ prometheus.io/port: '{{ .Values.prometheus.port | default 9542 }}'
 {{- printf "ssl=%s&sslmode=%s%s%s%s" $ssl $sslMode $sslCert $sslKey $sslRootCert -}}
 {{ end -}}
 
-{{- define "keycloak.db.env" -}}
+{{- define "keycloak.env" }}
+- name: KEYCLOAK_USER
+  value: {{ .Values.admin_username }}
+- name: KEYCLOAK_PASSWORD
+  value: {{ .Values.admin_password }}
+- name: KEYCLOAK_IMPORT
+  value: "/opt/jboss/keycloak/standalone/configuration/realms/tif-realm.json"
+- name: PROXY_ADDRESS_FORWARDING
+  value: "true"
 - name: DB_VENDOR
   value: "postgres"
 - name: DB_PORT
@@ -63,7 +100,7 @@ prometheus.io/port: '{{ .Values.prometheus.port | default 9542 }}'
 {{- end -}}
 {{- end -}}
 
-{{- define "postgres.checkdb.env" }}
+{{- define "keycloak.checkdatabase.env" }}
 - name: PGHOST
   value: {{ include "db.host" $ | default .Values.db.host }}
 - name: PGDATABASE
@@ -72,30 +109,6 @@ prometheus.io/port: '{{ .Values.prometheus.port | default 9542 }}'
   value: {{ include "db.username" $ | default .Values.db.username }}
 - name: PGPASSWORD
   value: {{ include "db.password" $ | default .Values.db.password }}
-{{- end -}}
-
-{{- define "keycloak.image.tag" -}}
-{{- if and (eq .Values.global.platform "openshift") (.Values.image.tag_openshift) -}}
-{{ .Values.image.tag_openshift }}
-{{- else -}}
-{{ .Values.image.tag }}
-{{- end -}}
-{{- end -}}
-
-{{- define "keycloak.image.location" -}}
-{{- if eq .Values.image.registry "" -}}
-{{ .Values.image.repository }}:{{ tpl "keycloak.image.tag" $ }}
-{{- else -}}
-{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ include "keycloak.image.tag" $ }}
-{{- end -}}
-{{- end -}}
-
-{{- define "keycloak.image.init.location" -}}
-{{- if eq .Values.image.registry "" -}}
-{{ .Values.image.db_client_repository }}:{{ .Values.image.db_client_tag }}
-{{- else -}}
-{{ .Values.image.registry }}/{{ .Values.image.db_client_repository }}:{{ .Values.image.db_client_tag }}
-{{- end -}}
 {{- end -}}
 
 {{- define "keycloak.host" -}}

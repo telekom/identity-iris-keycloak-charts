@@ -1,5 +1,14 @@
-{{- define "prefixed_release_name" -}}
-  {{- .Values.global.project_prefix | default "tif-" }}{{ .Release.Name -}}
+{{- define "image_pull_secrets" -}}
+{{- if .Values.global.imagePullSecrets }}
+imagePullSecrets:
+{{- range .Values.global.imagePullSecrets }}
+{{- if not (kindIs "string" .) }}
+  - name: {{ $.Release.Name }}-pullsecret-{{ .name }}
+{{- else }}
+  - name: {{ . }}
+{{- end -}}
+{{- end -}}
+{{- end -}}
 {{- end -}}
 
 {{- define "db.database" -}}
@@ -20,13 +29,4 @@
   {{- else -}}
     {{ .Release.Name -}}-postgresql
   {{- end -}}
-{{- end -}}
-
-{{- define "image_pull_secrets" -}}
-{{- if .Values.global.imagePullSecrets }}
-imagePullSecrets:
-{{- range .Values.global.imagePullSecrets }}
-  - name: {{ $.Release.Name -}}-pullsecret-{{ .name }}
-{{- end -}}
-{{- end -}}
 {{- end -}}
