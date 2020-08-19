@@ -2,35 +2,37 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Release.Name }}
+  annotations:
+    checksum/config: {{ include (print $.Template.BasePath "/configmap-config.yml") . | sha256sum }}
+    checksum/realm: {{ include (print $.Template.BasePath "/configmap-realm.yml") . | sha256sum }}
   labels: {{ include "keycloak.labels" $ | nindent 4 }}
 spec:
   replicas: {{ .Values.replicas }}
   selector:
-    matchLabels:
-      deployment: {{ .Release.Name }}
-  strategy:
-    type: RollingUpdate
+    matchLabels: {{ include "keycloak.selector" $ | nindent 6 }}
   template:
     metadata:
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap-config.yml") . | sha256sum }}
         checksum/realm: {{ include (print $.Template.BasePath "/configmap-realm.yml") . | sha256sum }}
-      labels:
-        application: {{ .Release.Name }}
-        deployment: {{ .Release.Name }}
-      name: {{ .Release.Name }}
+{{- if eq .Values.prometheus.enabled true }}
+        prometheus.io/path: '{{ .Values.prometheus.path | default "/metrics" }}'
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '{{ .Values.prometheus.port | default 9542 }}'
+{{- end }}
+      labels: {{ include "keycloak.labels" $ | nindent 8 }}
     spec:
       {{- include "image_pull_secrets" $ | indent 6 }}
       serviceAccountName: default
       containers:
-      - name: main
-        image: '{{ include "keycloak.image.location" $ }}'
+      - name: keycloak
+        image: '{{ include "keycloak.image" $ }}'
         imagePullPolicy: Always
+        securityContext: {{ .Values.securityContext | toYaml | nindent 10 }}
         command: ['/bin/bash']
-        args: ['-c', 'cp -f /tmp/keycloak/configs/standalone-ha.xml /opt/jboss/keycloak/standalone/configuration/custom-standalone-ha.xml && /opt/jboss/tools/docker-entrypoint.sh -b 0.0.0.0 -c custom-standalone-ha.xml']
+        args: ['-c', 'rm -f /opt/jboss/keycloak/standalone/configuration/keycloak-add-user.json || true; /opt/jboss/tools/docker-entrypoint.sh -b 0.0.0.0 -c customer-standalone-ha.xml']
         env:
-{{ include "keycloak.db.env" $ | indent 8 }}
-{{ include "keycloak.admin.env" $ | indent 8 }}
+        {{- include "keycloak.env" $ | indent 8 }}
         ports:
         - { containerPort: 8080, protocol: TCP, name: http }
         - { containerPort: 8443, protocol: TCP, name: https }
@@ -56,38 +58,43 @@ spec:
           requests:
             memory: {{ .Values.resources.requests.memory }}
             cpu: {{ .Values.resources.requests.cpu }}
-        securityContext:
-          capabilities:
-            drop:
-              - ALL
-          runAsNonRoot: true
-          runAsUser: 10001
         volumeMounts:
-        - name: realm-volume
-          mountPath: /tmp/keycloak/realms
-        - name: config-volume
-          mountPath: /tmp/keycloak/configs
+        - name: tmp
+          mountPath: /tmp
+        - name: standalone
+          mountPath: /opt/jboss/keycloak/standalone
         {{- include "keycloak.db.certificates.volumeMount" $ | indent 8 }}
       initContainers:
-      - name: "checkdb"
-        image: '{{ include "keycloak.image.init.location" $ }}'
-        command:
-        - /bin/bash
-        - -c
-        - until pg_isready -U {{ include "db.username" $ | default .Values.db.username }}; do echo waiting for database; sleep 2; done;
+      - name: "init-standalone"
+        image: '{{ include "keycloak.image" $ }}'
+        imagePullPolicy: Always
+        securityContext: {{ .Values.securityContext | toYaml | nindent 10 }}
+        volumeMounts:
+        - name: standalone
+          mountPath: /standalone
+        - name: config
+          mountPath: /tmp/config
+        - name: realms
+          mountPath: /tmp/realms
+        command: ['/bin/bash']
+        args: ['-c', 'cp -av /opt/jboss/keycloak/standalone/. /standalone/ || true; cp -av /tmp/config/. /standalone/configuration/ || true; cp -av /tmp/realms/ /standalone/configuration/ || true']
+      - name: "check-database"
+        image: '{{ include "keycloak.init.image" $ }}'
+        imagePullPolicy: Always
+        securityContext: {{ .Values.postgresql.securityContext | toYaml | nindent 10 }}
+        command: ['/bin/bash']
+        args: ['-c', 'until pg_isready -U {{ include "db.username" $ | default .Values.db.username }}; do echo waiting for database; sleep 2; done;']
         env:
-          {{- include "postgres.checkdb.env" $ | indent 8 }}
+        {{- include "keycloak.checkdatabase.env" $ | indent 8 }}
       volumes:
-      - name: realm-volume
-        configMap:
-          name: {{ .Release.Name }}-realm
-          items:
-          - key: tif-realm.json
-            path: tif-realm.json
-      - name: config-volume
+      - name: tmp
+        emptyDir: {}
+      - name: standalone
+        emptyDir: {}
+      - name: config
         configMap:
           name: {{ .Release.Name }}-config
-          items:
-          - key: standalone-ha.xml
-            path: standalone-ha.xml
+      - name: realms
+        configMap:
+          name: {{ .Release.Name }}-realm
       {{- include "keycloak.db.certificates.volume" $ | indent 6 }}

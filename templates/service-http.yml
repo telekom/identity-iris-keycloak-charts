@@ -5,6 +5,7 @@ metadata:
   labels: {{ include "keycloak.labels" $ | nindent 4 }}
 spec:
   type: ClusterIP
+  selector: {{ include "keycloak.selector" $ | nindent 4 }}
   ports:
   - name: http
     port: 80
@@ -14,5 +15,3 @@ spec:
     port: 443
     protocol: TCP
     targetPort: 8443
-  selector:
-    deployment: {{ .Release.Name }}
