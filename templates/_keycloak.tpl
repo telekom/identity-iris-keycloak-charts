@@ -73,6 +73,14 @@ app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
 {{- printf "ssl=%s&sslmode=%s%s%s%s" $ssl $sslMode $sslCert $sslKey $sslRootCert -}}
 {{ end -}}
 
+{{- define "keycloak.javaOptions" -}}
+{{- if .Values.javaOptions -}}
+{{ .Values.javaOptions }}
+{{- else -}}
+-Xms64m -Xmx512m -XX:MetaspaceSize=96M -XX:MaxMetaspaceSize=256m -Djava.net.preferIPv4Stack=true -Djboss.modules.system.pkgs=org.jboss.byteman -Djava.awt.headless=true
+{{- end -}}
+{{- end -}}
+
 {{- define "keycloak.env" }}
 - name: KEYCLOAK_USER
   value: {{ .Values.admin_username }}
@@ -89,14 +97,18 @@ app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
 - name: DB_ADDR
   value: {{ include "db.host" $ | default .Values.db.host }}
 - name: DB_DATABASE
-  value: {{ include "db.database" $ | default .Values.db.database }} 
+  value: {{ .Values.global.db.database | default .Values.db.database }} 
 - name: DB_USER
-  value: {{ include "db.username" $ | default .Values.db.username }}
+  value: {{ .Values.global.db.username | default .Values.db.username }}
 - name: DB_PASSWORD
-  value: {{ include "db.password" $ | default .Values.db.password }}
+  value: {{ .Values.global.db.password | default .Values.db.password }}
 {{- if .Values.global.externalDatabase.ssl }}
 - name: JDBC_PARAMS
   value: {{ include "keycloak.jdbcParams" $ | quote }}
+{{- end -}}
+{{- if .Values.javaOptions }}
+- name: JAVA_OPTS
+  value: {{ include "keycloak.javaOptions" $ | quote }}
 {{- end -}}
 {{- end -}}
 
@@ -104,11 +116,11 @@ app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
 - name: PGHOST
   value: {{ include "db.host" $ | default .Values.db.host }}
 - name: PGDATABASE
-  value: {{ include "db.database" $ | default .Values.db.database }}
+  value: {{ .Values.global.db.database | default .Values.db.database }}
 - name: PGUSER
-  value: {{ include "db.username" $ | default .Values.db.username }}
+  value: {{ .Values.global.db.username | default .Values.db.username }}
 - name: PGPASSWORD
-  value: {{ include "db.password" $ | default .Values.db.password }}
+  value: {{ .Values.global.db.password | default .Values.db.password }}
 {{- end -}}
 
 {{- define "keycloak.host" -}}

@@ -11,18 +11,6 @@ imagePullSecrets:
 {{- end -}}
 {{- end -}}
 
-{{- define "db.database" -}}
-{{- .Values.global.db.database -}}
-{{- end -}}
-
-{{- define "db.username" -}}
-{{- .Values.global.db.username -}}
-{{- end -}}
-
-{{- define "db.password" -}}
-{{- .Values.global.db.password  }}
-{{- end -}}
-
 {{- define "db.host" -}}
   {{- if eq .Values.global.externalDatabase.enabled true -}}
     {{- .Values.global.externalDatabase.host -}}
