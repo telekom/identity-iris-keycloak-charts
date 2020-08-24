@@ -101,8 +101,8 @@ The following table lists the configurable parameters of this chart.
 | `image.name`                          | Docker image name in MTR                                                          | `tif-keycloak`                     |
 | `image.tag`                           | Selected image tag                                                                | `1.0.0`                            |
 | `tls.secret`                          | TLS secret name                                                                   |                                    |
-| `admin_username`                      | Name of the admin user                                                            | `admin`                            |
-| `admin_password`                      | Password of the admin user (usually from secret)                                  |                                    |
+| `admin_username`                      | Name of the Keycloak admin user                                                   | `admin`                            |
+| `admin_password`                      | Password of the Keycloak admin user                                               |                                    |
 | `access_token_lifespan`               | Lifespan of a token                                                               | `300`                              |
 | `replicas`                            | Number of replicas                                                                | `1`                                |
 | `resources.requests.memory`           | Memory request for keycloak pod                                                   | `2Gi`                              |
