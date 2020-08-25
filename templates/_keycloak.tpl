@@ -85,7 +85,10 @@ app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
 - name: KEYCLOAK_USER
   value: {{ .Values.admin_username }}
 - name: KEYCLOAK_PASSWORD
-  value: {{ .Values.admin_password }}
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Release.Name }}
+      key: keycloakPassword
 - name: KEYCLOAK_IMPORT
   value: "/opt/jboss/keycloak/standalone/configuration/realms/tif-realm.json"
 - name: PROXY_ADDRESS_FORWARDING
@@ -95,13 +98,16 @@ app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
 - name: DB_PORT
   value: "5432"
 - name: DB_ADDR
-  value: {{ include "db.host" $ | default .Values.db.host }}
+  value: {{ include "db.host" $ }}
 - name: DB_DATABASE
-  value: {{ .Values.global.db.database | default .Values.db.database }} 
+  value: {{ .Values.global.db.database }} 
 - name: DB_USER
-  value: {{ .Values.global.db.username | default .Values.db.username }}
+  value: {{ .Values.global.db.username }}
 - name: DB_PASSWORD
-  value: {{ .Values.global.db.password | default .Values.db.password }}
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Release.Name }}
+      key: dbPassword
 {{- if .Values.global.externalDatabase.ssl }}
 - name: JDBC_PARAMS
   value: {{ include "keycloak.jdbcParams" $ | quote }}
@@ -114,13 +120,16 @@ app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
 
 {{- define "keycloak.checkdatabase.env" }}
 - name: PGHOST
-  value: {{ include "db.host" $ | default .Values.db.host }}
+  value: {{ include "db.host" $ }}
 - name: PGDATABASE
-  value: {{ .Values.global.db.database | default .Values.db.database }}
+  value: {{ .Values.global.db.database }}
 - name: PGUSER
-  value: {{ .Values.global.db.username | default .Values.db.username }}
+  value: {{ .Values.global.db.username }}
 - name: PGPASSWORD
-  value: {{ .Values.global.db.password | default .Values.db.password }}
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Release.Name }}
+      key: dbPassword
 {{- end -}}
 
 {{- define "keycloak.host" -}}

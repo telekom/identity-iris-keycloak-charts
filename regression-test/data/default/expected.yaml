@@ -15,8 +15,27 @@ metadata:
     tif.telekom.de/group: tif
 type: Opaque
 data:
-  password: U0VFIFNFQ1JFVFM=
-  adminPassword: U0VFIFNFQ1JFVFM=
+  adminPassword: "Y2hhbmdlbWU="
+  password: "Y2hhbmdlbWU="
+---
+# Source: tif-keycloak/templates/secret.yml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: keycloak
+  labels: 
+    app: keycloak
+    app.kubernetes.io/name: keycloak
+    app.kubernetes.io/instance: keycloak-keycloak
+    app.kubernetes.io/component: idp
+    app.kubernetes.io/part-of: tif-runtime
+    app.kubernetes.io/managed-by: tif
+    helm.sh/chart: tif-keycloak-0.0.0
+    tif.telekom.de/group: tif
+type: Opaque
+data:
+  keycloakPassword: "Y2hhbmdlbWU="
+  dbPassword: "Y2hhbmdlbWU="
 ---
 # Source: tif-keycloak/templates/configmap-config.yml
 apiVersion : v1
@@ -1062,8 +1081,7 @@ spec:
         image: 'mtr.external.otc.telekomcloud.com/tif-public/postgres:12.3-debian'
         imagePullPolicy: IfNotPresent
         securityContext: 
-          privileged: false
-          runAsNonRoot: true
+          {}
         ports:
         - containerPort: 5432
           protocol: TCP
@@ -1149,15 +1167,17 @@ spec:
         image: 'mtr.external.otc.telekomcloud.com/tif-public/tif-keycloak:1.0.0'
         imagePullPolicy: Always
         securityContext: 
-          privileged: false
-          runAsNonRoot: true
+          {}
         command: ['/bin/bash']
-        args: ['-c', '/opt/jboss/tools/docker-entrypoint.sh -b 0.0.0.0 -c customer-standalone-ha.xml']
+        args: ['-c', 'rm -f /opt/jboss/keycloak/standalone/configuration/keycloak-add-user.json || true; /opt/jboss/tools/docker-entrypoint.sh -b 0.0.0.0 -c customer-standalone-ha.xml']
         env:        
         - name: KEYCLOAK_USER
           value: admin
         - name: KEYCLOAK_PASSWORD
-          value: SEE SECRETS
+          valueFrom:
+            secretKeyRef:
+              name: keycloak
+              key: keycloakPassword
         - name: KEYCLOAK_IMPORT
           value: "/opt/jboss/keycloak/standalone/configuration/realms/tif-realm.json"
         - name: PROXY_ADDRESS_FORWARDING
@@ -1173,7 +1193,12 @@ spec:
         - name: DB_USER
           value: sso
         - name: DB_PASSWORD
-          value: SEE SECRETS
+          valueFrom:
+            secretKeyRef:
+              name: keycloak
+              key: dbPassword
+        - name: JAVA_OPTS
+          value: "-XX:+UseContainerSupport -XX:MinRAMPercentage=50.0 -XX:MaxRAMPercentage=75.0 -XX:MetaspaceSize=96M -XX:MaxMetaspaceSize=256m -Djava.net.preferIPv4Stack=true -Djboss.modules.system.pkgs=org.jboss.byteman -Djava.awt.headless=true"
         ports:
         - { containerPort: 8080, protocol: TCP, name: http }
         - { containerPort: 8443, protocol: TCP, name: https }
@@ -1203,12 +1228,11 @@ spec:
         - name: standalone
           mountPath: /opt/jboss/keycloak/standalone        
       initContainers:
-      - name: "copy-files"
+      - name: "init-standalone"
         image: 'mtr.external.otc.telekomcloud.com/tif-public/tif-keycloak:1.0.0'
         imagePullPolicy: Always
         securityContext: 
-          privileged: false
-          runAsNonRoot: true
+          {}
         volumeMounts:
         - name: standalone
           mountPath: /standalone
@@ -1222,8 +1246,7 @@ spec:
         image: 'mtr.external.otc.telekomcloud.com/tif-public/postgres:12.3-debian'
         imagePullPolicy: Always
         securityContext: 
-          privileged: false
-          runAsNonRoot: true
+          {}
         command: ['/bin/bash']
         args: ['-c', 'until pg_isready -U sso; do echo waiting for database; sleep 2; done;']
         env:        
@@ -1234,7 +1257,10 @@ spec:
         - name: PGUSER
           value: sso
         - name: PGPASSWORD
-          value: SEE SECRETS
+          valueFrom:
+            secretKeyRef:
+              name: keycloak
+              key: dbPassword
       volumes:
       - name: tmp
         emptyDir: {}
