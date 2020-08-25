@@ -25,22 +25,22 @@ Issues and questions can be reported to the [issues list](../issues)
 
 ## License
 
-Neither keycloak nor postgres requires a license. All used images are copies of public images from docker-hub.  
-The Keycloak image has been extended to integrate with logging solutions like Prometheus.  
+Neither Iris nor Postgres requires a license. All used images are copies of public images from docker-hub.  
+Iris is a Keycloak based image that has been extended to integrate with logging solutions like Prometheus.  
 
 ## Version
 
 | Installed software versions      | Version Info       |    
 |----------------------------------|--------------------|
-| keycloak                         |  9.0.0             |
+| Keycloak                         |  9.0.0             |
 | - java                           |  11.0.6            |
-| postgress                        |  12.3              |
+| PostgreSQL                       |  12.3              |
 
 ## Description
 
 **Important internal links:**
- - [this repository](https://ceiser-wbench.psst.t-online.corp/nexus3/#browse/browse:tif-public-raw:tif%2Finfr%2Fcharts%2Ftif-keycloak)
- - [chart in nexus](https://ceiser-wbench.psst.t-online.corp/nexus3/#browse/browse:tif-public-raw:tif%2Finfr%2Fcharts%2Ftif-keycloak)
+ - [this repository](https://ceiser-wbench.psst.t-online.corp/nexus3/#browse/browse:tif-public-raw:tif%2Finfr%2Fcharts%2Firis)
+ - [chart in nexus](https://ceiser-wbench.psst.t-online.corp/nexus3/#browse/browse:tif-public-raw:tif%2Finfr%2Fcharts%2F2Firis)
  - [mtr-repo "tif-public"](https://mtr.external.otc.telekomcloud.com/organization/tif-public)
 
 **Important external links:**
@@ -62,7 +62,7 @@ This chart contains a copy of the standalone-ha.xml stored in a config map. At s
 
 **realm**
 
-According to the documentation, the master realm should be used only for administrative purposes. This chart initialize keycloak with an additional realm called "tif".  
+According to the documentation, the master realm should be used only for administrative purposes. This chart initialize Keycloak with an additional realm called "tif".  
 This tif-realm.json file is stored in a separate config file and mounted to the pod container.
 
 > **Note**: Current version of the chart does not contain any flags to replace the default config maps. Modifing the config maps must be done manually.  
@@ -74,7 +74,7 @@ In case of the postgress-container the data is stored in a pvc-mount in a folder
 
 **prometheus integration**
 
-Due to internal circumstances the metrics can be accessed under keycloak REST endpoint */auth/realms/master/metrics*.
+Due to internal circumstances the metrics can be accessed under Keycloak REST endpoint */auth/realms/master/metrics*.
 Since this endpoint is exposed due to the nature of the Keycloak API, we made this endpoint require an authentication token which must be set via header ``X-Metrics-Auth-Token``.  
 We made the metrics accessible under the container's ``:9542/metrics`` endpoint which will redirects the traffic to */auth/realms/master/metrics* and will do the token-authentication automatically. The pods will be annotated with Prometheus meta data information so that Prometheus knows where to scrape the metrics.  
 
@@ -99,17 +99,17 @@ The following table lists the configurable parameters of this chart.
 | `global.externalDatabase.sslRootCert` | Root certificate                                                                  | `nil`                              |
 | `image.repository`                    | MTR repository                                                                    | `mtr.external.otc.telekomcloud.com`|
 | `image.organization`                  | MTR organization                                                                  | `tif-public`                       |
-| `image.name`                          | Docker image name in MTR                                                          | `tif-keycloak`                     |
+| `image.name`                          | Docker image name in MTR                                                          | `iris`                             |
 | `image.tag`                           | Selected image tag                                                                | `1.0.0`                            |
 | `tls.secret`                          | TLS secret name                                                                   |                                    |
 | `admin_username`                      | Name of the Keycloak admin user                                                   | `admin`                            |
 | `admin_password`                      | Password of the Keycloak admin user                                               |                                    |
 | `access_token_lifespan`               | Lifespan of a token                                                               | `300`                              |
 | `replicas`                            | Number of replicas                                                                | `1`                                |
-| `resources.requests.memory`           | Memory request for keycloak pod                                                   | `2Gi`                              |
-| `resources.requests.cpu`              | CPU request for keycloak pod                                                      | `200m`                             |
-| `resources.limit.memory`              | Memory limit for keycloak pod                                                     | `2Gi`                              |
-| `resources.limit.cpu`                 | CPU limit for keycloak pod                                                        | `2000m`                            |
+| `resources.requests.memory`           | Memory request for Keycloak pod                                                   | `2Gi`                              |
+| `resources.requests.cpu`              | CPU request for Keycloak pod                                                      | `200m`                             |
+| `resources.limit.memory`              | Memory limit for Keycloak pod                                                     | `2Gi`                              |
+| `resources.limit.cpu`                 | CPU limit for Keycloak pod                                                        | `2000m`                            |
 | `ingress.enabled`                     | Create ingress for external access                                                | `true`                             |
 | `ingress.hostname`                    | Set dedicated hostname for ingress/route, overwrites global URL                   | `nil`                              |
 | `ingress.tlsSecret`                   | Set secret name                                                                   | `nil`                              |

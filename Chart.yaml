@@ -2,7 +2,7 @@ apiVersion: v1
 name: iris
 version: 0.0.0
 appVersion: 9.0
-description: Keycloak provided by DHEI
+description: Iris provided by DHEI
 keywords:
 - dhei
 - tif
