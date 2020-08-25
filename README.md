@@ -5,8 +5,7 @@
 # Target Audience
 
 This chart installs [Keycloak](https://www.keycloak.org/documentation.html). \
-It is suitable for installations on plain kubernetes (eg. AWS EKS) where RedHat-support is not available. \
-For OpenShift environments (eg. AppAgile) the chart "rhsso-broker" should be preferred.
+It is suitable for installations on OTC, AWS EKS, AppAgile and CaaS.
 
 # TL;DR;
 
@@ -16,7 +15,6 @@ Content:
 - by setting `use_external_database: true` an external database can be used instead of the postgres container
 
 Subcharts:
-- keycloak
 - postgres
 
 Issues and questions can be reported to the [issues list](../issues)
@@ -25,7 +23,8 @@ Issues and questions can be reported to the [issues list](../issues)
 
 ## License
 
-Neither keycloak nor postgres requires a license. All used images are copies of public images from docker-hub.
+Neither keycloak nor postgres requires a license. All used images are copies of public images from docker-hub.  
+The Keycloak image has been extended to integrate with logging solutions like Prometheus.  
 
 ## Version
 
@@ -33,7 +32,7 @@ Neither keycloak nor postgres requires a license. All used images are copies of 
 |----------------------------------|--------------------|
 | keycloak                         |  9.0.0             |
 | - java                           |  11.0.6            |
-| postgress                        |  9.6               |
+| postgress                        |  12.3              |
 
 ## Description
 
@@ -151,6 +150,6 @@ Please note also, that the IDP is an important component of the security concept
 | Environment | Compatible |
 |-------------|------------|
 | OTC         | Yes        |
-| AppAgile    | Unverified |
+| AppAgile    | Yes        |
 | AWS EKS     | Yes        |
 | CaaS        | Yes        |
