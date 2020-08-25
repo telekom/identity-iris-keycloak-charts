@@ -1229,7 +1229,7 @@ spec:
           mountPath: /opt/jboss/keycloak/standalone        
       initContainers:
       - name: "init-standalone"
-        image: 'mtr.external.otc.telekomcloud.com/tif-public/tif-keycloak:1.0.0'
+        image: 'mtr.external.otc.telekomcloud.com/tif-public/iris:1.0.0'
         imagePullPolicy: Always
         securityContext: 
           {}
@@ -1285,7 +1285,7 @@ metadata:
     app.kubernetes.io/component: idp
     app.kubernetes.io/part-of: tif-runtime
     app.kubernetes.io/managed-by: tif
-    helm.sh/chart: tif-keycloak-0.0.0
+    helm.sh/chart: iris-0.0.0
     tif.telekom.de/group: tif
   annotations: {}
 spec:
