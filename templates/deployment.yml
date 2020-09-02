@@ -37,7 +37,7 @@ spec:
         - { containerPort: 8080, protocol: TCP, name: http }
         - { containerPort: 8443, protocol: TCP, name: https }
 {{- if eq .Values.prometheus.enabled true }}
-        - { containerPort: 9542, protocol: TCP, name: metrics-http }
+        - { containerPort: {{ .Values.prometheus.port | default 9542 }}, protocol: TCP, name: metrics-http }
 {{- end }}
         livenessProbe:
           initialDelaySeconds: 60
