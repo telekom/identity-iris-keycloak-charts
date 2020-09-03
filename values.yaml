@@ -67,8 +67,8 @@ resources:
     cpu: 1
     memory: 1Gi
   requests:
-    cpu: 50m
-    memory: 500Mi
+    cpu: 100m
+    memory: 600Mi
 
 ingress:
   enabled: true
