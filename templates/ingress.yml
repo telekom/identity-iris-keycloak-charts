@@ -15,11 +15,11 @@ spec:
         backend:
           serviceName: {{ .Release.Name }}
           servicePort: 80
-{{- if .Values.ingress.tlsSecret }}
   tls:
-  - secretName: {{ .Values.ingress.tlsSecret }}
-    hosts:
+  - hosts:
     - {{ include "keycloak.host" . }}
-{{- end }}
+    {{- if .Values.ingress.tlsSecret }}
+    secretName: {{ .Values.ingress.tlsSecret }}
+    {{- end }}
 {{- end }}
 {{- end }}

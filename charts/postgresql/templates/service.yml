@@ -7,8 +7,7 @@ metadata:
   labels: {{ include "postgresql.labels" $ | nindent 4 }}
 spec:
   type: ClusterIP
-  selector:                  
-    name: {{ .Release.Name }}-{{ .Chart.Name }}
+  selector: {{ include "postgresql.selector" $ | nindent 4 }}
   ports:
   - name: db
     port: 5432

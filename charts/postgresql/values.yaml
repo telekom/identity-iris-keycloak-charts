@@ -1,3 +1,17 @@
+global:
+  passwordRules:
+    enabled: false
+    length: 12
+    mustMatch:
+    - '[a-z]'
+    - '[A-Z]'
+    - '[0-9]'
+    - '[^a-zA-Z0-9]' 
+    
+  db: {}
+
+securityContext: {}
+
 # database admin credentials
 admin_username: "postgres"
 admin_password: "changeme"
@@ -8,10 +22,6 @@ database: "change_me"
 # credentials of user that should be created for database
 username: "change_me"
 password: "change_me"
-
-# location of database (persistent volume will be mounted here)
-mount_dir: "/var/lib/pgsql"
-data_dir: "/var/lib/pgsql/data"
 
 # maximum number of client connections
 max_connections: "100"
@@ -27,22 +37,24 @@ max_prepared_transactions: "0"
 externalDatabase:
   enabled: false 
 
-image:
-  registry: "mtr.external.otc.telekomcloud.com"
-  repository: "tif-public/postgres"
-  tag: "9.6.17"
+image: mtr.external.otc.telekomcloud.com/tif-public/postgres:12.3-debian
+
+replicas: 1
 
 resources:
   limits:
-    memory: 2G
-    cpu: 2000m
+    cpu: 100m
+    memory: 500Mi
   requests:
-    cpu: 50m
-    memory: 250M
+    cpu: 20m
+    memory: 200Mi
 
 persistence:
-  storageclass: "gp2"
-  capacity: "1Gi"
+  storageclass: gp2
+  resources:
+    requests:
+      storage: 1Gi
+  #mountDir: '/var/lib/postgresql/data'
 
 deployment:
   annotations: {}

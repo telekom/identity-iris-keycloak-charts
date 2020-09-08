@@ -1,3 +1,5 @@
+# Iris Helm Chart
+
 **Table of contents**
 
 [[_TOC_]]
@@ -5,8 +7,7 @@
 # Target Audience
 
 This chart installs [Keycloak](https://www.keycloak.org/documentation.html). \
-It is suitable for installations on plain kubernetes (eg. AWS EKS) where RedHat-support is not available. \
-For OpenShift environments (eg. AppAgile) the chart "rhsso-broker" should be preferred.
+It is suitable for installations on OTC, AWS EKS, AppAgile and CaaS.
 
 # TL;DR;
 
@@ -16,7 +17,6 @@ Content:
 - by setting `use_external_database: true` an external database can be used instead of the postgres container
 
 Subcharts:
-- keycloak
 - postgres
 
 Issues and questions can be reported to the [issues list](../issues)
@@ -25,21 +25,22 @@ Issues and questions can be reported to the [issues list](../issues)
 
 ## License
 
-Neither keycloak nor postgres requires a license. All used images are copies of public images from docker-hub.
+Neither Iris nor Postgres requires a license. All used images are copies of public images from docker-hub.  
+Iris is a Keycloak based image that has been extended to integrate with logging solutions like Prometheus.  
 
 ## Version
 
 | Installed software versions      | Version Info       |    
 |----------------------------------|--------------------|
-| keycloak                         |  9.0.0             |
+| Keycloak                         |  9.0.0             |
 | - java                           |  11.0.6            |
-| postgress                        |  9.6               |
+| PostgreSQL                       |  12.3              |
 
 ## Description
 
 **Important internal links:**
- - [this repository](https://ceiser-wbench.psst.t-online.corp/nexus3/#browse/browse:tif-public-raw:tif%2Finfr%2Fcharts%2Ftif-keycloak)
- - [chart in nexus](https://ceiser-wbench.psst.t-online.corp/nexus3/#browse/browse:tif-public-raw:tif%2Finfr%2Fcharts%2Ftif-keycloak)
+ - [this repository](https://ceiser-wbench.psst.t-online.corp/nexus3/#browse/browse:tif-public-raw:tif%2Finfr%2Fcharts%2Firis)
+ - [chart in nexus](https://ceiser-wbench.psst.t-online.corp/nexus3/#browse/browse:tif-public-raw:tif%2Finfr%2Fcharts%2F2Firis)
  - [mtr-repo "tif-public"](https://mtr.external.otc.telekomcloud.com/organization/tif-public)
 
 **Important external links:**
@@ -61,7 +62,7 @@ This chart contains a copy of the standalone-ha.xml stored in a config map. At s
 
 **realm**
 
-According to the documentation, the master realm should be used only for administrative purposes. This chart initialize keycloak with an additional realm called "tif".  
+According to the documentation, the master realm should be used only for administrative purposes. This chart initialize Keycloak with an additional realm called "tif".  
 This tif-realm.json file is stored in a separate config file and mounted to the pod container.
 
 > **Note**: Current version of the chart does not contain any flags to replace the default config maps. Modifing the config maps must be done manually.  
@@ -73,10 +74,9 @@ In case of the postgress-container the data is stored in a pvc-mount in a folder
 
 **prometheus integration**
 
-Due to internal circumstances the metrics can be accessed under keycloak REST endpoint */auth/realms/master/metrics*.
+Due to internal circumstances the metrics can be accessed under Keycloak REST endpoint */auth/realms/master/metrics*.
 Since this endpoint is exposed due to the nature of the Keycloak API, we made this endpoint require an authentication token which must be set via header ``X-Metrics-Auth-Token``.  
-We made the metrics more easily accissble by deploying a dedicated metrics service that can be invoked by ``:9542/metrics`` by default which points to */auth/realms/master/metrics* and will do the token-authentication automatically. This service then can be found and used by Prometheus to scrape the metrics.  
-Note, that this service is not exposed by any ingress and can only scraped if Prometheus is in the same cluster.  
+We made the metrics accessible under the container's ``:9542/metrics`` endpoint which will redirects the traffic to */auth/realms/master/metrics* and will do the token-authentication automatically. The pods will be annotated with Prometheus meta data information so that Prometheus knows where to scrape the metrics.  
 
 **configurable chart options**
 
@@ -87,7 +87,6 @@ The following table lists the configurable parameters of this chart.
 | Parameter                             | Description                                                                       | Default                            |
 |---------------------------------------|-----------------------------------------------------------------------------------|------------------------------------|
 | `global.platform`                     | Platform (openshift or kubernetes)                                                | `stable`                           |
-| `global.project_prefix`               | Project prefix                                                                    | `tif-`                             |
 | `global.storageclass`                 | Storage class for PersistenVolumeClaims                                           | `gp2`                              |
 | `global.domain`                       | Base cluster URL reachable from Telekom network                                   | `nil`                              |
 | `global.labels`                       | Define global labels                                                              | `tif.telekom.de/group`             |
@@ -98,56 +97,47 @@ The following table lists the configurable parameters of this chart.
 | `global.externalDatabase.sslCert`     | Client certificate, set for mTLS                                                  | `nil`                              |
 | `global.externalDatabase.sslKey`      | Client key, set for mTLS                                                          | `nil`                              |
 | `global.externalDatabase.sslRootCert` | Root certificate                                                                  | `nil`                              |
-| `image.registry`                      | Docker registry (with keycloak image)                                             | `mtr.external.otc.telekomcloud.com`|
-| `image.repository`                    | Docker repository                                                                 | `tif-public/keycloak`              |
-| `image.tag`                           | Selected image tag                                                                | `stable`                           |
-| `image.db_client_registry`            | Docker registry (with keycloak-init image)                                        | `mtr.external.otc.telekomcloud.com`|
-| `image.db_client_repository`          | Docker repository                                                                 | `tif-public/postgres`              |
-| `image.db_client_tag`                 | Selected image tag                                                                | `stable`                           |
+| `image.repository`                    | MTR repository                                                                    | `mtr.external.otc.telekomcloud.com`|
+| `image.organization`                  | MTR organization                                                                  | `tif-public`                       |
+| `image.name`                          | Docker image name in MTR                                                          | `iris`                             |
+| `image.tag`                           | Selected image tag                                                                | `1.0.0`                            |
 | `tls.secret`                          | TLS secret name                                                                   |                                    |
-| `admin_username`                      | Name of the admin user                                                            | `admin`                            |
-| `admin_password`                      | Password of the admin user (usually from secret)                                  |                                    |
+| `admin_username`                      | Name of the Keycloak admin user                                                   | `admin`                            |
+| `admin_password`                      | Password of the Keycloak admin user                                               |                                    |
 | `access_token_lifespan`               | Lifespan of a token                                                               | `300`                              |
 | `replicas`                            | Number of replicas                                                                | `1`                                |
-| `resources.requests.memory`           | Memory request for keycloak pod                                                   | `2Gi`                              |
-| `resources.requests.cpu`              | CPU request for keycloak pod                                                      | `200m`                             |
-| `resources.limit.memory`              | Memory limit for keycloak pod                                                     | `2Gi`                              |
-| `resources.limit.cpu`                 | CPU limit for keycloak pod                                                        | `2000m`                            |
+| `resources.requests.memory`           | Memory request for Keycloak pod                                                   | `2Gi`                              |
+| `resources.requests.cpu`              | CPU request for Keycloak pod                                                      | `200m`                             |
+| `resources.limit.memory`              | Memory limit for Keycloak pod                                                     | `2Gi`                              |
+| `resources.limit.cpu`                 | CPU limit for Keycloak pod                                                        | `2000m`                            |
 | `ingress.enabled`                     | Create ingress for external access                                                | `true`                             |
 | `ingress.hostname`                    | Set dedicated hostname for ingress/route, overwrites global URL                   | `nil`                              |
 | `ingress.tlsSecret`                   | Set secret name                                                                   | `nil`                              |
 | `ingress.annotations`                 | Merges specific into global ingress annotations                                   | `nil`                              |
 | `customConfig.frontendUrl`            | Allows to configure another frontend URL                                          | `${keycloak.frontendUrl:}`         |
 | `customConfig.spi.hostname`           | Allows to overwrite the complete <spi name="hostname"> config incl. frontendUrl   | s. configmap-config.yml for details |
-| `prometheus.enabled`                  | Controls whether a metrics service should be deployed or not                      | `true`                             |
+| `prometheus.enabled`                 | Controls whether to annotate pods with prometheus scraping information or not  | `true`           |
 | `prometheus.authToken`                | Authentication token that is used in order to secure the exposed metrics endpoint | `changeme`                         |
 | `prometheus.port`                     | Sets the port at which metrics can be accessed                                    | `9542`                             |
 | `prometheus.path`                     | Sets the endpoint at which at which metrics can be accessed                       | `/metrics`                         |
 | **postgresql**                        |                                                                                   |                                    |
-| `postgresql.image.registry`           | Docker registry (containing postgresql image)                                     | `mtr.external.otc.telekomcloud.com`|
-| `postgresql.image.repository`         | Docker repository                                                                 | `tif-public/postgres`              |
-| `postgresql.image.tag`                | Selected image tag                                                                | `stable`                           |
+| `postgresql.image.repository`         | MTR repository                                                                    | `mtr.external.otc.telekomcloud.com`|
+| `postgresql.image.organization`       | MTR organization                                                                  | `tif-public`                       |
+| `postgresql.image.name`               | Docker image name in MTR                                                          | `postgres`                         |
+| `postgresql.image.tag`                | Selected image tag                                                                | `12.3-debian`                      |
 | `postgresql.replicas`                 | Number of replicas                                                                | `1`                                |
-| `postgresql.resources.requests.memory`| Memory request for postgresql pod                                                 | `250M`                             |
-| `postgresql.resources.requests.cpu`   | CPU request for postgresql pod                                                    | `50m`                              |
-| `postgresql.resources.limit.memory`   | Memory limit for postgresql pod                                                   | `2G`                               |
-| `postgresql.resources.limit.cpu`      | CPU limit for postgresql pod                                                      | `2000m`                            |
+| `postgresql.resources.requests.memory`| Memory request for postgresql pod                                                 | `200Mi`                            |
+| `postgresql.resources.requests.cpu`   | CPU request for postgresql pod                                                    | `20m`                              |
+| `postgresql.resources.limit.memory`   | Memory limit for postgresql pod                                                   | `500Mi`                            |
+| `postgresql.resources.limit.cpu`      | CPU limit for postgresql pod                                                      | `100m`                             |
+| `postgresql.persistence.resources.requests.storage`| Volume storage space for postgresql                                  | `1Gi`                              |
 
 ## Secrets
 
 Confidential informations should be stored as a sops-encrypted secret. \
 Instruction how to create a secrets and scripts provided by the TIF-team are [here](https://codeshare.workbench.telekom.de/gitlab/TIF-Collaboration/tools/tif-infrastructure-secrets-util): 
 
-## Labels
-
-This charts sets following labels on all deployed kubernetes resources:
-```
-app: tif-{{ .Release.Name }}
-component: {{ .Chart.Name }}
-chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-```
-
-# Deployment to Production
+# Deployment to production
 
 Default settings in this template are prepared for dev and test environments.
 
@@ -156,3 +146,12 @@ The database is used for storing ephemeral data (usualy tokens with a lifespan o
 Please note also, that the IDP is an important component of the security concept. For this reason, all communication must be adequate encrypted and certificates shold be properly verified.
 
 [External-DNS]: https://github.com/kubernetes-sigs/external-dns
+
+## Compatibility
+
+| Environment | Compatible |
+|-------------|------------|
+| OTC         | Yes        |
+| AppAgile    | Yes        |
+| AWS EKS     | Yes        |
+| CaaS        | Yes        |

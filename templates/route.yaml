@@ -1,0 +1,24 @@
+{{- if eq .Values.global.platform "openshift" -}}
+{{- if .Values.ingress.enabled }}
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{ .Release.Name }}
+  labels: {{ include "keycloak.labels" $ | nindent 4 }}
+{{- include "keycloak.merged.ingress.annotations" $ | nindent 2 }}
+spec:
+  host: {{ include "keycloak.host" . }}
+  port:
+    targetPort: http
+  to:
+    kind: Service
+    name: {{ .Release.Name }}
+    weight: 100
+  tls:
+    insecureEdgeTerminationPolicy: Redirect
+    termination: edge
+status:
+  ingress:
+    - host: ""
+{{- end -}}
+{{- end -}}
