@@ -2,6 +2,13 @@
 
 [[_TOC_]]
 
+## 1.3.0
+ - Fixed security issues by using Kubernetes secrets for (database) passphrases
+ - Made CPU, RAM and persistence resources configurable
+ - Made the securityContext configurable
+ - Adjusted resource request and limit defaults
+ - Support for environments that prohibit writing to the root file system (like CaaS)
+
 ## 1.2.0
 
  - Global ingress annotations setting
