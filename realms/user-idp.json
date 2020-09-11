@@ -1,6 +1,6 @@
 {
-  "id": "exampleapplication",
-  "realm": "exampleapplication",
+  "id": "user-idp",
+  "realm": "user-idp",
   "enabled": true,
   "accessTokenLifespan": {{ .Values.access_token_lifespan | default 300 }},
   "eventsEnabled": true,
@@ -16,20 +16,20 @@
             "name": "admin",
             "composite": false,
             "clientRole": false,
-            "containerId": "exampleapplication",
+            "containerId": "user-idp",
             "attributes": {}
         },
         {
             "name": "user",
             "composite": false,
             "clientRole": false,
-            "containerId": "exampleapplication",
+            "containerId": "user-idp",
             "attributes": {}
         }
     ],
     "client": {
         "chevron": [],
-        "exampleclient": []
+        "example-application": []
     }
   },
   "users": [
@@ -136,18 +136,18 @@
         ]
     },
     {
-        "clientId": "exampleclient",
-        "rootUrl": "http://exampleurl",
-        "adminUrl": "http://exampleurl",
+        "clientId": "example-application",
+        "rootUrl": "http://changeme",
+        "adminUrl": "http://changeme",
         "surrogateAuthRequired": false,
         "enabled": true,
         "alwaysDisplayInConsole": false,
         "clientAuthenticatorType": "client-secret",
         "redirectUris": [
-            "http://exampleurl/*"
+            "http://changeme/*"
         ],
         "webOrigins": [
-            "http://exampleurl"
+            "http://changeme"
         ],
         "notBefore": 0,
         "bearerOnly": false,
