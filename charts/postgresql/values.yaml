@@ -39,8 +39,6 @@ externalDatabase:
 
 image: mtr.external.otc.telekomcloud.com/tif-public/postgres:12.3-debian
 
-replicas: 1
-
 resources:
   limits:
     cpu: 100m

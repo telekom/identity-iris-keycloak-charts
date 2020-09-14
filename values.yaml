@@ -129,8 +129,6 @@ postgresql:
   # PostgreSQL admin user (postgres) password
   admin_password: changeme
 
-  replicas: 1
-
   resources:
     limits:
       cpu: 100m
