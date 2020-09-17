@@ -4,6 +4,7 @@
 
 ## 1.4.0
  - DHEI-2617: Added realm managment
+ - Hotfix: Use "Recreate" strategy for database deployment
 
 ## 1.3.0
  - Fixed security issues by using Kubernetes secrets for (database) passphrases
