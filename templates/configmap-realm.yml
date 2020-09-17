@@ -5,5 +5,9 @@ metadata:
   name: {{ .Release.Name }}-realm
   labels: {{ include "keycloak.labels" $ | nindent 4 }}
 data:
-{{ ( tpl (.Files.Glob "realms/*.json").AsConfig  . ) | indent 2 }}
-
+  {{- $files := .Files }}
+  {{- range .Values.realms }}
+  {{ $realmPath := printf "realms/%s.json" . }}
+  {{- printf "%s.json" . }}: |-
+    {{- tpl ($files.Get $realmPath ) $ | nindent 4 }}
+  {{- end }}

@@ -81,6 +81,14 @@ app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
 {{- end -}}
 {{- end -}}
 
+{{- define "keycloak.realms" }}
+{{- $allRealms := "" -}}
+{{- range .Values.realms -}}
+{{- $additionalRealm := printf "/opt/jboss/keycloak/standalone/configuration/realms/%s.json" . -}}
+{{- printf "%s,%s" $allRealms $additionalRealm -}}
+{{- end -}}
+{{ end }}
+
 {{- define "keycloak.env" }}
 - name: KEYCLOAK_USER
   value: {{ .Values.admin_username }}
@@ -90,7 +98,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
       name: {{ .Release.Name }}
       key: keycloakPassword
 - name: KEYCLOAK_IMPORT
-  value: "/opt/jboss/keycloak/standalone/configuration/realms/tif-realm.json"
+  value: {{ trimPrefix "," (include "keycloak.realms" $)  | quote }}
 - name: PROXY_ADDRESS_FORWARDING
   value: "true"
 - name: DB_VENDOR

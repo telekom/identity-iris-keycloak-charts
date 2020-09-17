@@ -1,0 +1,17 @@
+{
+  "realm": "tif",
+  "displayName": "tif",
+  "displayNameHtml": "tif",
+  "accessTokenLifespan": {{ .Values.access_token_lifespan | default 300 }},
+  "enabled": true,
+  "sslRequired": "none",
+  "loginTheme": "keycloak",
+  "eventsEnabled": true,
+  "eventsListeners": [
+      {{- if eq .Values.prometheus.enabled true }}
+  "metrics-listener",
+      {{- end }}
+  "jboss-logging"
+  ],
+  "adminEventsEnabled": true
+}

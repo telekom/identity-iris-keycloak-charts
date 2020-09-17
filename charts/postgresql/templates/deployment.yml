@@ -9,11 +9,11 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  replicas: {{ .Values.replicas }}
-  selector:
-    matchLabels: {{ include "postgresql.selector" $ | nindent 6 }}
+  replicas: 1
   strategy:
     type: Recreate
+  selector:
+    matchLabels: {{ include "postgresql.selector" $ | nindent 6 }}
   template:
     metadata:
       labels: {{ include "postgresql.labels" $ | nindent 8 }}

@@ -58,6 +58,10 @@ securityContext: {}
 admin_username: admin
 admin_password: changeme
 
+realms:
+  - chevron
+  - tif
+
 access_token_lifespan: 300
   
 replicas: 1
@@ -124,8 +128,6 @@ postgresql:
 
   # PostgreSQL admin user (postgres) password
   admin_password: changeme
-
-  replicas: 1
 
   resources:
     limits:
