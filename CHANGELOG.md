@@ -2,6 +2,9 @@
 
 [[_TOC_]]
 
+## 0.0.0
+ - No default realm deployment
+
 ## 1.4.0
  - DHEI-2617: Added realm managment
  - Hotfix: Use "Recreate" strategy for database deployment
