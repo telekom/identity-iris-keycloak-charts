@@ -97,8 +97,10 @@ app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
     secretKeyRef:
       name: {{ .Release.Name }}
       key: keycloakPassword
+{{- if .Values.realms }}
 - name: KEYCLOAK_IMPORT
   value: {{ trimPrefix "," (include "keycloak.realms" $)  | quote }}
+{{- end }}
 - name: PROXY_ADDRESS_FORWARDING
   value: "true"
 - name: DB_VENDOR

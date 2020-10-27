@@ -1,3 +1,4 @@
+{{- if .Values.realms -}}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -10,4 +11,5 @@ data:
   {{ $realmPath := printf "realms/%s.json" . }}
   {{- printf "%s.json" . }}: |-
     {{- tpl ($files.Get $realmPath ) $ | nindent 4 }}
+  {{- end -}}
   {{- end }}
