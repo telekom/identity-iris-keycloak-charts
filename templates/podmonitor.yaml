@@ -4,7 +4,7 @@ kind: PodMonitor
 metadata:
   name: {{ .Release.Name }}
   labels: {{ include "keycloak.labels" $ | nindent 4 }}
-    release: tif-prometheus-operator
+    release: {{ .Values.prometheus.podMonitor.selector | default "guardians-raccoon" }}
   namespace: {{ .Release.Namespace }}
 spec:
   podMetricsEndpoints:

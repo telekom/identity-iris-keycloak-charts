@@ -4,6 +4,7 @@
 
 ## 0.0.0
  - No default realm deployment
+ - Made podmonitor selector configurable
 
 ## 1.4.0
  - DHEI-2617: Added realm managment

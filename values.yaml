@@ -89,6 +89,7 @@ prometheus:
   # prometheus has to be enabled to use this
   podMonitor:   
     enabled: false
+    #selector: "guardians-raccoon"
     #scheme: http
     #interval: "15s"
     #scrapeTimeout: "3s"
