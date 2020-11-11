@@ -54,6 +54,10 @@ global:
 
 securityContext: {}
 
+#initialDelaySeconds: 60
+#periodSeconds: 10
+#failureThreshold: 6
+
 # Keycloak admin role credentials
 admin_username: admin
 admin_password: changeme

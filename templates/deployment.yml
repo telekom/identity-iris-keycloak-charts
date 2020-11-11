@@ -40,8 +40,9 @@ spec:
         - { containerPort: {{ .Values.prometheus.port | default 9542 }}, protocol: TCP, name: metrics-http }
 {{- end }}
         livenessProbe:
-          initialDelaySeconds: 60
-          failureThreshold: 3
+          initialDelaySeconds: {{ .Values.initialDelaySeconds | default 60 }}
+          periodSeconds: {{ .Values.periodSeconds | default 10 }}
+          failureThreshold: {{ .Values.failureThreshold | default 6 }}
           httpGet:
             path: '/auth/realms/master'
             port: 8080
