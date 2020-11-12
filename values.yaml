@@ -54,13 +54,17 @@ global:
 
 securityContext: {}
 
+#initialDelaySeconds: 60
+#periodSeconds: 10
+#failureThreshold: 30
+
 # Keycloak admin role credentials
 admin_username: admin
 admin_password: changeme
 
-realms:
-  - chevron
-  - tif
+realms: []
+#  - chevron
+#  - tif
 
 access_token_lifespan: 300
   
@@ -89,6 +93,7 @@ prometheus:
   # prometheus has to be enabled to use this
   podMonitor:   
     enabled: false
+    #selector: "guardians-raccoon"
     #scheme: http
     #interval: "15s"
     #scrapeTimeout: "3s"

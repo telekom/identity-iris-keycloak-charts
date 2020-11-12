@@ -104,7 +104,7 @@ The following table lists the configurable parameters of this chart.
 | `tls.secret`                          | TLS secret name                                                                   |                                    |
 | `admin_username`                      | Name of the Keycloak admin user                                                   | `admin`                            |
 | `admin_password`                      | Password of the Keycloak admin user                                               |                                    |
-| `realms`                              | Add the realms you want to be imported on deployment from /realms                 | `chevron, tif`                     |
+| `realms`                              | Add the realms you want to be imported on deployment from /realms                 | `nil`                     |
 | `access_token_lifespan`               | Lifespan of a token                                                               | `300`                              |
 | `replicas`                            | Number of replicas                                                                | `1`                                |
 | `resources.requests.memory`           | Memory request for Keycloak pod                                                   | `2Gi`                              |
