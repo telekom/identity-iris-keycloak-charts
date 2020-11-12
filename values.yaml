@@ -56,7 +56,7 @@ securityContext: {}
 
 #initialDelaySeconds: 60
 #periodSeconds: 10
-#failureThreshold: 6
+#failureThreshold: 30
 
 # Keycloak admin role credentials
 admin_username: admin

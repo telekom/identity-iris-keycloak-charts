@@ -42,7 +42,7 @@ spec:
         livenessProbe:
           initialDelaySeconds: {{ .Values.initialDelaySeconds | default 60 }}
           periodSeconds: {{ .Values.periodSeconds | default 10 }}
-          failureThreshold: {{ .Values.failureThreshold | default 6 }}
+          failureThreshold: {{ .Values.failureThreshold | default 30 }}
           httpGet:
             path: '/auth/realms/master'
             port: 8080

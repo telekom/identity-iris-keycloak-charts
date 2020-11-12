@@ -3,8 +3,11 @@
 [[_TOC_]]
 
 ## 0.0.0
+
+## 1.4.1
  - No default realm deployment
  - Made podmonitor selector configurable
+ - Made initialDelaySeconds, periodSeconds and failureThreshold configurable and set them to reasonable defaults
 
 ## 1.4.0
  - DHEI-2617: Added realm managment
