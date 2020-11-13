@@ -15,16 +15,16 @@ spec:
   endpoints:
     - port: metrics-http
       path: {{ .Values.prometheus.path | default "/metrics" }}
-      {{- if .Values.prometheus.podMonitor.scheme }}
-      scheme: {{ .Values.prometheus.podMonitor.scheme }}
+      {{- if .Values.prometheus.serviceMonitor.scheme }}
+      scheme: {{ .Values.prometheus.serviceMonitor.scheme }}
       {{- end }}
-      {{- if .Values.prometheus.podMonitor.interval }}
-      interval: {{ .Values.prometheus.podMonitor.interval | quote}}
+      {{- if .Values.prometheus.serviceMonitor.interval }}
+      interval: {{ .Values.prometheus.serviceMonitor.interval | quote}}
       {{- end }}
-      {{- if .Values.prometheus.podMonitor.scrapeTimeout }}
-      scrapeTimeout: {{ .Values.prometheus.podMonitor.scrapeTimeout | quote }}
+      {{- if .Values.prometheus.serviceMonitor.scrapeTimeout }}
+      scrapeTimeout: {{ .Values.prometheus.serviceMonitor.scrapeTimeout | quote }}
       {{- end }}
-      {{- if .Values.prometheus.podMonitor.honorLabels }}
-      honorLabels: {{ .Values.prometheus.podMonitor.honorLabels }}
+      {{- if .Values.prometheus.serviceMonitor.honorLabels }}
+      honorLabels: {{ .Values.prometheus.serviceMonitor.honorLabels }}
       {{- end }}
 {{- end -}}
