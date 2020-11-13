@@ -121,6 +121,16 @@ The following table lists the configurable parameters of this chart.
 | `prometheus.authToken`                | Authentication token that is used in order to secure the exposed metrics endpoint | `changeme`                         |
 | `prometheus.port`                     | Sets the port at which metrics can be accessed                                    | `9542`                             |
 | `prometheus.path`                     | Sets the endpoint at which at which metrics can be accessed                       | `/metrics`                         |
+| `prometheus.podMonitor.enabled`        | Enables a podmonitor which can be used by the prometheus operator to collect metrics    | `false`          |
+| `prometheus.podMonitor.scheme`         | HTTP scheme to use for scraping                                                         | `http`           |
+| `prometheus.podMonitor.interval`       | Interval at which metrics should be scraped                                             | `15s`            |
+| `prometheus.podMonitor.scrapeTimeout`  | Timeout after which the scrape of prometheus is ended                                   | `3s`             |
+| `prometheus.podMonitor.honorLabels`    | HonorLabels chooses the metric’s labels on collisions with target labels                | `true`           |
+| `prometheus.serviceMonitor.enabled`        | Enables a servicemonitor which can be used by the prometheus operator to collect metrics    | `true`          |
+| `prometheus.serviceMonitor.scheme`         | HTTP scheme to use for scraping                                                         | `http`           |
+| `prometheus.serviceMonitor.interval`       | Interval at which metrics should be scraped                                             | `15s`            |
+| `prometheus.serviceMonitor.scrapeTimeout`  | Timeout after which the scrape of prometheus is ended                                   | `3s`             |
+| `prometheus.serviceMonitor.honorLabels`    | HonorLabels chooses the metric’s labels on collisions with target labels                | `true`           |
 | **postgresql**                        |                                                                                   |                                    |
 | `postgresql.image.repository`         | MTR repository                                                                    | `mtr.external.otc.telekomcloud.com`|
 | `postgresql.image.organization`       | MTR organization                                                                  | `tif-public`                       |

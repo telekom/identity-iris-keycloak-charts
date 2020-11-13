@@ -1,4 +1,4 @@
-{{- if eq .Values.prometheus.podMonitor.enabled true -}}
+{{- if and (.Values.prometheus.enabled) (.Values.prometheus.podMonitor.enabled) -}}
 apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:
