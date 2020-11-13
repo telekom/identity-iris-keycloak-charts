@@ -91,6 +91,13 @@ prometheus:
   #path: /metrics
   # podMonitor is used to provide a PodMonitor CRD to integrate with prometheus operator
   # prometheus has to be enabled to use this
+  serviceMonitor:   
+    enabled: true
+    #selector: "guardians-raccoon"
+    #scheme: http
+    #interval: "15s"
+    #scrapeTimeout: "3s"
+    #honorLabels: ""
   podMonitor:   
     enabled: false
     #selector: "guardians-raccoon"
@@ -98,7 +105,6 @@ prometheus:
     #interval: "15s"
     #scrapeTimeout: "3s"
     #honorLabels: ""
-
 
 customConfig:
   # With the following setting one can set the frontendUrl configuration for hostname SPI

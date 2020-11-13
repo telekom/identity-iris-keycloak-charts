@@ -15,3 +15,9 @@ spec:
     port: 443
     protocol: TCP
     targetPort: 8443
+{{- if eq .Values.prometheus.serviceMonitor.enabled true }}
+  - name: metrics-http
+    port: 9542
+    protocol: TCP
+    targetPort: {{ .Values.prometheus.port | default 9542 }}
+{{- end -}}
