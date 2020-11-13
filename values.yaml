@@ -63,8 +63,15 @@ admin_username: admin
 admin_password: changeme
 
 realms: []
+#  - user-idp
 #  - chevron
 #  - tif
+
+realmDefaults:
+  rootUrl: 'http://changeme/'
+  redirectUris:
+    - 'http://changeme/*'
+  webOrigins: []
 
 access_token_lifespan: 300
   

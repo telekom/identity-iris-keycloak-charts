@@ -48,18 +48,14 @@
   "clients": [
     {
       "clientId": "chevron",
-      "rootUrl": "http://changeme",
-      "adminUrl": "http://changeme",
+      "rootUrl": {{ .Values.realmDefaults.rootUrl | default "http://changeme" | quote }}
+      "adminUrl": "",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "redirectUris": [
-        "http://changeme/*"
-      ],
-      "webOrigins": [
-        "http://changeme"
-      ],
+      "redirectUris": {{ .Values.realmDefaults.redirectUris | toPrettyJson | indent 8 | trim -}},
+      "webOrigins": {{ .Values.realmDefaults.webOrigins | toPrettyJson | indent 8 | trim -}},
       "notBefore": 0,
       "bearerOnly": false,
       "consentRequired": false,
@@ -104,18 +100,14 @@
     },
     {
       "clientId": "chevron-ui",
-      "rootUrl": "http://changeme",
-      "adminUrl": "http://changeme",
+      "rootUrl": {{ .Values.realmDefaults.rootUrl | default "http://changeme" | quote }}
+      "adminUrl": "",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "redirectUris": [
-        "http://changeme/*"
-      ],
-      "webOrigins": [
-        "http://changeme"
-      ],
+      "redirectUris": {{ .Values.realmDefaults.redirectUris | toPrettyJson | indent 8 | trim -}},
+      "webOrigins": {{ .Values.realmDefaults.webOrigins | toPrettyJson | indent 8 | trim -}},
       "notBefore": 0,
       "bearerOnly": false,
       "consentRequired": false,
