@@ -81,7 +81,7 @@
   "clients": [
     {
         "clientId": "chevron",
-        "rootUrl": {{ .Values.realmDefaults.rootUrl | default "http://changeme" | quote }}
+        "rootUrl": {{ .Values.realmDefaults.rootUrl | default "http://changeme" | quote }},
         "adminUrl": "",
         "surrogateAuthRequired": false,
         "enabled": true,
@@ -133,7 +133,7 @@
     },
     {
         "clientId": "example-application",
-        "rootUrl": {{ .Values.realmDefaults.rootUrl | default "http://changeme" | quote }}
+        "rootUrl": {{ .Values.realmDefaults.rootUrl | default "http://changeme" | quote }},
         "adminUrl": "",
         "surrogateAuthRequired": false,
         "enabled": true,
