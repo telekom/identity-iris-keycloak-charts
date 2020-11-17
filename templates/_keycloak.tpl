@@ -82,11 +82,22 @@ app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
 {{- end -}}
 
 {{- define "keycloak.realms" }}
-{{- $allRealms := "" -}}
-{{- range .Values.realms -}}
-{{- $additionalRealm := printf "/opt/jboss/keycloak/standalone/configuration/realms/%s.json" . -}}
-{{- printf "%s,%s" $allRealms $additionalRealm -}}
+{{- $realmsPath := "/opt/jboss/keycloak/standalone/configuration/realms" -}}
+{{- $realms := "" -}}
+{{- range $path, $_ := .Files.Glob "realms/*.json" -}}
+{{- $jsonFilename := base $path -}}
+{{- $r := printf "%s/%s" $realmsPath $jsonFilename -}}
+{{- $realms = printf "%s,%s" $realms $r -}}
+{{- end }}
+{{-  if eq $realms "" -}}
+{{- if and .Values.realms -}}
+{{- if not (eq (len .Values.realms) 0) -}}
+{{- $r := printf "%s/%s" $realmsPath "_generated.json" -}}
+{{- $realms = printf "%s,%s" $realms $r -}}
 {{- end -}}
+{{- end -}}
+{{- end -}}
+{{- $realms -}}
 {{ end }}
 
 {{- define "keycloak.env" }}
@@ -97,7 +108,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
     secretKeyRef:
       name: {{ .Release.Name }}
       key: keycloakPassword
-{{- if .Values.realms }}
+{{- if not (eq (include "keycloak.realms" $) "") }}
 - name: KEYCLOAK_IMPORT
   value: {{ trimPrefix "," (include "keycloak.realms" $)  | quote }}
 {{- end }}
