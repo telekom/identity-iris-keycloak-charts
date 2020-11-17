@@ -62,9 +62,28 @@ securityContext: {}
 admin_username: admin
 admin_password: changeme
 
-realms: []
-#  - chevron
-#  - tif
+# Use this configuration
+# to create realms with clients
+# This will create a _generated.json in /realms/
+# Note: 
+# If you copy your own json files into /realms (via Sapling for example)
+# no _generated.json will be created!
+# 
+#realms:
+#- name: user-idp
+#  clients:
+#  - name: chevron
+#    rootUrl: 'http://change.me'
+#    redirectUris:
+#    - 'http://change.me/*'
+#    webOrigins:
+#    - 'http://change.me'
+#  - name: chevron-ui
+#    rootUrl: 'http://change.me'
+#    redirectUris:
+#    - 'http://change.me/*'
+#    webOrigins:
+#    - 'http://change.me'
 
 access_token_lifespan: 300
   
