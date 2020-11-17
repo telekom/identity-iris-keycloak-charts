@@ -1,5 +1,3 @@
-{{- if and .Values.realms -}}
-{{- if not (eq (len .Values.realms) 0) -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -7,10 +5,12 @@ metadata:
   labels: {{ include "keycloak.labels" $ | nindent 4 }}
 data:
   {{- range $path, $_ := .Files.Glob "realms/*.json" }}
-  {{ base $path }}: |-
-  {{- tpl ($.Files.Get $path) $ | indent 4 }}
+  {{ base $path }}: |
+  {{- tpl ($.Files.Get $path) $ | nindent 4 }}
   {{- end }}
-  '_generated.json': |-
+  {{- if and .Values.realms -}}
+  {{- if not (eq (len .Values.realms) 0) }}
+  '_generated.json': |
     [
         {{- range $realmIdx, $realm := .Values.realms }}
         {
@@ -164,5 +164,5 @@ data:
         }{{- if not (eq $realmIdx (sub (len $.Values.realms) 1)) -}},{{- end }}
         {{- end }}
     ]
-{{- end -}}
-{{- end -}}
+  {{- end -}}
+  {{- end -}}
