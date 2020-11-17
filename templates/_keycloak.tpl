@@ -85,17 +85,15 @@ app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
 {{- $realmsPath := "/opt/jboss/keycloak/standalone/configuration/realms" -}}
 {{- $realms := "" -}}
 {{- range $path, $_ := .Files.Glob "realms/*.json" -}}
-{{- $jsonFilename := base $path -}}
-{{- $r := printf "%s/%s" $realmsPath $jsonFilename -}}
-{{- $realms = printf "%s,%s" $realms $r -}}
+  {{- $jsonFilename := base $path -}}
+  {{- $r := printf "%s/%s" $realmsPath $jsonFilename -}}
+  {{- $realms = printf "%s,%s" $realms $r -}}
 {{- end }}
 {{-  if eq $realms "" -}}
-{{- if and .Values.realms -}}
-{{- if not (eq (len .Values.realms) 0) -}}
-{{- $r := printf "%s/%s" $realmsPath "_generated.json" -}}
-{{- $realms = printf "%s,%s" $realms $r -}}
-{{- end -}}
-{{- end -}}
+  {{- range .Values.realms -}}
+  {{- $r := printf "%s/_generated_%s.json" $realmsPath .name -}}
+  {{- $realms = printf "%s,%s" $realms $r -}}
+  {{- end -}}
 {{- end -}}
 {{- $realms -}}
 {{ end }}
