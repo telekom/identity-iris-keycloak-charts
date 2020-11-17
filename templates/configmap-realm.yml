@@ -44,7 +44,7 @@ data:
                 ],
                 "client": {
                     {{- range $idx, $client := $realm.clients }}
-                    "{{ $client }}": []{{- if not (eq $idx (sub (len $realm.clients) 1)) -}},{{- end }}
+                    "{{ $client.name }}": []{{- if not (eq $idx (sub (len $realm.clients) 1)) -}},{{- end }}
                     {{- end }}
                 }
             },

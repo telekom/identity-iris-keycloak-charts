@@ -71,6 +71,7 @@ admin_password: changeme
 # 
 #realms:
 #- name: user-idp
+#  access_token_lifespan: 300
 #  clients:
 #  - name: chevron
 #    rootUrl: 'http://change.me'
@@ -84,8 +85,6 @@ admin_password: changeme
 #    - 'http://change.me/*'
 #    webOrigins:
 #    - 'http://change.me'
-
-access_token_lifespan: 300
   
 replicas: 1
 
