@@ -2,7 +2,8 @@
 
 [[_TOC_]]
 
-## 0.0.0
+## 1.5.0
+ - Add generic way to define realms with clients via Helm values
 
 ## 1.4.1
  - No default realm deployment
@@ -21,7 +22,6 @@
  - Support for environments that prohibit writing to the root file system (like CaaS)
 
 ## 1.2.0
-
  - Global ingress annotations setting
  - Global labels settings with a default fluentd label
  - Label deployments with chart version
@@ -29,11 +29,9 @@
  - DHEI-2377: Configurable frontendUrl (or alt. "hostname" SPI configuration)
 
 ## 1.1.0
-
 - DHEI-1138: Provide default metric for Keycloak towards Prometheus
 
 ## 1.0.0
-
 - DHEI-1567: Rename subchart from "rhsso" to "keycloak"
 - DHEI-1430: Custom annotations for rhsso ingress
 - DHEI-1430: New URL creation aligned with TIF-Deployer standard
