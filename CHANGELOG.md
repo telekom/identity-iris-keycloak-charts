@@ -4,6 +4,7 @@
 
 ## 1.5.0
  - Add generic way to define realms with clients via Helm values
+ - Added ServiceMonitor which is now enabled by default. PodMonitor is now disabled by default
 
 ## 1.4.1
  - No default realm deployment
