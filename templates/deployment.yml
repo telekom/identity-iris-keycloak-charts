@@ -3,8 +3,8 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}
   annotations:
-    checksum/config: {{ include (print $.Template.BasePath "/configmap-config.yml") . | sha256sum }}
-    checksum/realm: {{ include (print $.Template.BasePath "/configmap-realm.yml") . | sha256sum }}
+  {{- include "keycloak.annotations" $ | nindent 4 }}
+  {{- include "keycloak.checksums" $ | nindent 4 }}   
   labels: {{ include "keycloak.labels" $ | nindent 4 }}
 spec:
   replicas: {{ .Values.replicas }}
@@ -13,8 +13,8 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: {{ include (print $.Template.BasePath "/configmap-config.yml") . | sha256sum }}
-        checksum/realm: {{ include (print $.Template.BasePath "/configmap-realm.yml") . | sha256sum }}
+      {{- include "keycloak.annotations" $ | nindent 8 }}
+      {{- include "keycloak.checksums" $ | nindent 8 }}  
 {{- if eq .Values.prometheus.enabled true }}
         prometheus.io/path: '{{ .Values.prometheus.path | default "/metrics" }}'
         prometheus.io/scrape: 'true'

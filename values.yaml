@@ -1,4 +1,7 @@
 global:
+  metadata:
+    pipeline: {}
+
   platform: kubernetes
   storageclass: gp2
   domain: ""
@@ -26,8 +29,8 @@ global:
     - '[a-z]'
     - '[A-Z]'
     - '[0-9]'
-    - '[^a-zA-Z0-9]'      
-  
+    - '[^a-zA-Z0-9]'        
+
   # Database and credentials that will be created for Keycloak
   db:
     database: sso
@@ -51,6 +54,13 @@ global:
     #  -----BEGIN CERTIFICATE-----
     #  <Root certificate in PEM format here>
     #  -----END CERTIFICATE-----
+
+# You can list files (in /templates) here that should cause a re-deployment of your application
+# when their contents change
+# This makes sense if you change configMaps or secrets and you
+# want your deplment to use the latest configuration
+templateChangeTriggers: []
+#- my-custom-configmap.yaml
 
 securityContext: {}
 
