@@ -97,7 +97,6 @@ data:
             {{- range $clientIdx, $client := $realm.clients }}
             {
                 "clientId": "{{- $client.name }}",
-                "rootUrl": "{{- $client.rootUrl | default "http://change.me"}}",
                 "surrogateAuthRequired": false,
                 "enabled": true,
                 "alwaysDisplayInConsole": false,

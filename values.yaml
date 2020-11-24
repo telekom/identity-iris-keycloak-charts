@@ -73,7 +73,7 @@ admin_username: admin
 admin_password: changeme
 
 # Use this configuration
-# to create realms with clients
+# to create realms with public clients
 # This will create a _generated.json in /realms/
 # Note: 
 # If you copy your own json files into /realms (via Sapling for example)
@@ -84,7 +84,6 @@ admin_password: changeme
 #  access_token_lifespan: 300
 #  clients:
 #  - name: chevron
-#    rootUrl: 'http://change.me'
 #    redirectUris:
 #    - 'http://change.me/*'
 #    webOrigins:
