@@ -75,10 +75,8 @@ spec:
           mountPath: /standalone
         - name: config
           mountPath: /tmp/config
-{{- if .Values.realms }}
         - name: realms
           mountPath: /tmp/realms
-{{- end }}
         command: ['/bin/bash']
         args: ['-c', 'cp -av /opt/jboss/keycloak/standalone/. /standalone/ || true; cp -av /tmp/config/. /standalone/configuration/ || true; cp -av /tmp/realms/ /standalone/configuration/ || true']
       - name: "check-database"
@@ -97,9 +95,7 @@ spec:
       - name: config
         configMap:
           name: {{ .Release.Name }}-config
-{{- if .Values.realms }}
       - name: realms
         configMap:
           name: {{ .Release.Name }}-realm
-{{- end }}
       {{- include "keycloak.db.certificates.volume" $ | indent 6 }}
