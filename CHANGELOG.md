@@ -2,6 +2,9 @@
 
 [[_TOC_]]
 
+## 1.5.1
+ - Added ConfigMap for pipeline meta data
+
 ## 1.5.0
  - Add generic way to define realms with clients via Helm values
  - Added ServiceMonitor which is now enabled by default. PodMonitor is now disabled by default
