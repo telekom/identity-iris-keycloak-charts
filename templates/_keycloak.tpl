@@ -53,6 +53,21 @@ app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
 {{- end -}}
 {{- end -}}
 
+{{- define "keycloak.annotations" -}}
+ops.eni.telekom.de/pipeline-meta-ref: {{ .Release.Name }}-pipeline-metadata
+{{- if eq (toString .Values.global.metadata.pipeline.forceRedeploy) "true" }}
+ops.eni.telekom.de/pipeline-force-redeploy: '{{ now | date "2006-01-02T15:04:05Z07:00" }}'
+{{- end -}}
+{{- end -}}
+
+{{- define "keycloak.checksums" -}}
+checksum/config: {{ include (print $.Template.BasePath "/configmap-config.yml") . | sha256sum }}
+checksum/realm: {{ include (print $.Template.BasePath "/configmap-realm.yml") . | sha256sum }}
+{{- range .Values.templateChangeTriggers }}
+checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
+{{- end -}}
+{{- end -}}
+
 {{- define "keycloak.jdbcParams" -}}
 {{- $ssl := "true" }}
 {{- $sslMode := .Values.global.externalDatabase.sslMode | default "verify-full" }}

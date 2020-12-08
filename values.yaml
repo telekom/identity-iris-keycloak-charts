@@ -1,4 +1,7 @@
 global:
+  metadata:
+    pipeline: {}
+
   platform: kubernetes
   storageclass: gp2
   domain: ""
@@ -26,8 +29,8 @@ global:
     - '[a-z]'
     - '[A-Z]'
     - '[0-9]'
-    - '[^a-zA-Z0-9]'      
-  
+    - '[^a-zA-Z0-9]'        
+
   # Database and credentials that will be created for Keycloak
   db:
     database: sso
@@ -52,6 +55,13 @@ global:
     #  <Root certificate in PEM format here>
     #  -----END CERTIFICATE-----
 
+# You can list files (in /templates) here that should cause a re-deployment of your application
+# when their contents change
+# This makes sense if you change configMaps or secrets and you
+# want your deplment to use the latest configuration
+templateChangeTriggers: []
+#- my-custom-configmap.yaml
+
 securityContext: {}
 
 #initialDelaySeconds: 60
@@ -63,7 +73,7 @@ admin_username: admin
 admin_password: changeme
 
 # Use this configuration
-# to create realms with clients
+# to create realms with public clients
 # This will create a _generated.json in /realms/
 # Note: 
 # If you copy your own json files into /realms (via Sapling for example)
@@ -74,7 +84,6 @@ admin_password: changeme
 #  access_token_lifespan: 300
 #  clients:
 #  - name: chevron
-#    rootUrl: 'http://change.me'
 #    redirectUris:
 #    - 'http://change.me/*'
 #    webOrigins:
