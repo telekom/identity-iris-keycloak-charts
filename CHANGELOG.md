@@ -4,6 +4,9 @@
 
 ## Changes
  - Identity provider configuration option added (e.g. ADFS)
+ 
+## 1.5.1
+ - Added ConfigMap for pipeline meta data
 
 ## 1.5.0
  - Add generic way to define realms with clients via Helm values
