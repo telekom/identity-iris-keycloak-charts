@@ -144,7 +144,7 @@ The following table lists the configurable parameters of this chart.
 | `realms.identityProviders.singleSignOnServiceUrl` | The single sign on service URL of the IDP                             |                                    |
 | `realms.identityProviders.encryptionPublicKey`    | The encryption public key of the IDP                                  |                                    |
 | `realms.identityProviders.mappers`                | An array of mappers for the SAML data received from the IDP after a login|                                 |
-| `realms.identityProviders.mappers.type`           | Choose between predefined mappers or type `custom` to define your own |                                    |
+| `realms.identityProviders.mappers.type`           | Choose between predefined mappers (`adfs-email` and `adfs-group`) or `custom` to define your own |         |
 | `realms.identityProviders.mappers.name`           | The name of the mapper (only type `custom`)                           |                                    |
 | `realms.identityProviders.mappers.attributeName`  | The attribute name in the IDP response (only type `custom`)           |                                    |
 | `realms.identityProviders.mappers.category`       | The category of the mapper (only type `custom`)                       | `saml-user-attribute-idp-mapper`   |
