@@ -104,8 +104,6 @@ The following table lists the configurable parameters of this chart.
 | `tls.secret`                          | TLS secret name                                                                   |                                    |
 | `admin_username`                      | Name of the Keycloak admin user                                                   | `admin`                            |
 | `admin_password`                      | Password of the Keycloak admin user                                               |                                    |
-| `realms`                              | Add the realms you want to be imported on deployment from /realms                 | `nil`                     |
-| `access_token_lifespan`               | Lifespan of a token                                                               | `300`                              |
 | `replicas`                            | Number of replicas                                                                | `1`                                |
 | `resources.requests.memory`           | Memory request for Keycloak pod                                                   | `2Gi`                              |
 | `resources.requests.cpu`              | CPU request for Keycloak pod                                                      | `200m`                             |
@@ -131,6 +129,26 @@ The following table lists the configurable parameters of this chart.
 | `prometheus.serviceMonitor.interval`       | Interval at which metrics should be scraped                                             | `15s`            |
 | `prometheus.serviceMonitor.scrapeTimeout`  | Timeout after which the scrape of prometheus is ended                                   | `3s`             |
 | `prometheus.serviceMonitor.honorLabels`    | HonorLabels chooses the metric’s labels on collisions with target labels                | `true`           |
+| **realms**                            | Configure realms                                                                  |                                    |
+| `realms.access_token_lifespan`        | Lifespan of a token                                                               | `300`                              |
+| `realms.name`                         | Realm name                                                                        |                                    |
+| `realms.clients`                      | An array of configured clients                                                    |                                    |
+| `realms.clients.name`                 | Client name                                                                       |                                    |
+| `realms.clients.redirectUris`         | Allowed redirect URIs for the client (after authorization)                        |                                    |
+| `realms.clients.webOrigins`           | Web origins accepted for authorization requests                                   |                                    |
+| `realms.identityProviders`            | An array of identity providers for this realm                                     |                                    |
+| `realms.identityProviders.name`       | An alias name of the IDP                                                          |                                    |
+| `realms.identityProviders.displayName`| The name shown when logging in via this IDP                                       |                                    |
+| `realms.identityProviders.signingCertificate`     | The signing certificate of the IDP                                    |                                    |
+| `realms.identityProviders.singleLogoutServiceUrl` | The single logout service URL of the IDP                              |                                    |
+| `realms.identityProviders.singleSignOnServiceUrl` | The single sign on service URL of the IDP                             |                                    |
+| `realms.identityProviders.encryptionPublicKey`    | The encryption public key of the IDP                                  |                                    |
+| `realms.identityProviders.mappers`                | An array of mappers for the SAML data received from the IDP after a login|                                 |
+| `realms.identityProviders.mappers.type`           | Choose between predefined mappers or type `custom` to define your own |                                    |
+| `realms.identityProviders.mappers.name`           | The name of the mapper (only type `custom`)                           |                                    |
+| `realms.identityProviders.mappers.attributeName`  | The attribute name in the IDP response (only type `custom`)           |                                    |
+| `realms.identityProviders.mappers.category`       | The category of the mapper (only type `custom`)                       | `saml-user-attribute-idp-mapper`   |
+| `realms.identityProviders.mappers.userAttribute`  | The Keycloak user attribute to map the value to (only type `custom`)  |                                    |
 | **postgresql**                        |                                                                                   |                                    |
 | `postgresql.image.repository`         | MTR repository                                                                    | `mtr.external.otc.telekomcloud.com`|
 | `postgresql.image.organization`       | MTR organization                                                                  | `tif-public`                       |

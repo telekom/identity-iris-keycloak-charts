@@ -79,21 +79,37 @@ admin_password: changeme
 # If you copy your own json files into /realms (via Sapling for example)
 # no _generated.json will be created!
 # 
-#realms:
-#- name: user-idp
-#  access_token_lifespan: 300
-#  clients:
-#  - name: chevron
-#    redirectUris:
-#    - 'http://change.me/*'
-#    webOrigins:
-#    - 'http://change.me'
-#  - name: chevron-ui
-#    rootUrl: 'http://change.me'
-#    redirectUris:
-#    - 'http://change.me/*'
-#    webOrigins:
-#    - 'http://change.me'
+# realms:
+# - name: adfs
+#   access_token_lifespan: 300
+#   clients:
+#   - name: chevron
+#     redirectUris:
+#     - 'http://change.me/*'
+#     webOrigins:
+#     - 'http://change.me'
+#   - name: chevron-ui
+#     rootUrl: 'http://change.me'
+#     redirectUris:
+#     - 'http://change.me/*'
+#     webOrigins:
+#     - 'http://change.me'
+#   identityProviders:
+#     - name: adfs-idp
+#       displayName: ADFS
+#       signingCertificate: MIIC2DCCr...
+#       singleLogoutServiceUrl: https://fed.telekom.de/adfs/ls/
+#       singleSignOnServiceUrl: https://fed.telekom.de/adfs/ls/
+#       encryptionPublicKey: MIIC3jCC...
+#       mappers:
+#       - type: adfs-email
+#       - type: adfs-group
+#       - type: custom
+#         name: firstname
+#         attributeName: http://attrurl.me/
+#         category: saml-user-attribute-idp-mapper
+#         userAttribute: firstName
+
 
 replicas: 1
 

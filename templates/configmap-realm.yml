@@ -143,6 +143,30 @@ data:
                 "authenticationFlowBindingOverrides": {},
                 "fullScopeAllowed": true,
                 "nodeReRegistrationTimeout": -1,
+                        "protocolMappers": [
+                            {{- range $idpIdx, $idp := $realm.identityProviders }}
+                            {{- range $mapperIdx, $idpMapper := $idp.mappers }}
+                            {{- if eq $idpMapper.type "adfs-group"}}
+                            {{- if not (eq $idpIdx 0) -}},{{- end}}
+                            {
+                                "name": "{{ $idp.name }}-adfs-groups-to-roles",
+                                "protocol": "openid-connect",
+                                "protocolMapper": "oidc-usermodel-attribute-mapper",
+                                "consentRequired": false,
+                                "config": {
+                                "aggregate.attrs": "true",
+                                "userinfo.token.claim": "false",
+                                "multivalued": "true",
+                                "user.attribute": "{{ $idp.name }}-adfs-groups",
+                                "id.token.claim": "true",
+                                "access.token.claim": "true",
+                                "claim.name": "realm_access.roles",
+                                "jsonType.label": "String"
+                                }
+                            }{{- end }}
+                            {{- end }}
+                            {{- end }}
+                        ],
                 "defaultClientScopes": [
                     "web-origins",
                     "role_list",
@@ -158,6 +182,98 @@ data:
                 ]
             }{{- if not (eq $clientIdx (sub (len $realm.clients) 1)) -}},{{- end }}
             {{- end }}
+        ],
+        "identityProviders": [
+            {{- range $idpIdx, $idp := $realm.identityProviders }}
+            {
+                "alias": "{{ $idp.name }}",
+                "displayName": "{{ $idp.displayName | default $idp.name }}",
+                "providerId": "saml",
+                "enabled": true,
+                "updateProfileFirstLoginMode": "on",
+                "trustEmail": false,
+                "storeToken": false,
+                "addReadTokenRoleOnCreate": false,
+                "authenticateByDefault": false,
+                "linkOnly": false,
+                "firstBrokerLoginFlowAlias": "first broker login",
+                "config": {
+                "hideOnLoginPage": "",
+                "validateSignature": "true",
+                "samlXmlKeyNameTranformer": "KEY_ID",
+                "signingCertificate": "{{ $idp.signingCertificate }}",
+                "postBindingLogout": "true",
+                "nameIDPolicyFormat": "urn:oasis:names:tc:SAML:1.1:nameid-format:WindowsDomainQualifiedName",
+                "postBindingResponse": "true",
+                "singleLogoutServiceUrl": "{{ $idp.singleLogoutServiceUrl }}",
+                "backchannelSupported": "",
+                "signatureAlgorithm": "RSA_SHA256",
+                "wantAssertionsEncrypted": "",
+                "xmlSigKeyInfoKeyNameTransformer": "CERT_SUBJECT",
+                "useJwksUrl": "true",
+                "wantAssertionsSigned": "",
+                "postBindingAuthnRequest": "true",
+                "forceAuthn": "",
+                "singleSignOnServiceUrl": "{{ $idp.singleSignOnServiceUrl }}",
+                "wantAuthnRequestsSigned": "true",
+                "allowedClockSkew": "",
+                "addExtensionsElementWithKeyInfo": "false",
+                "encryptionPublicKey": "{{ $idp.encryptionPublicKey }}",
+                "principalType": "SUBJECT"
+                }
+            }{{- if not (eq $idpIdx (sub (len $realm.identityProviders) 1)) -}},{{- end }}
+            {{- end }}
+        ],
+        "identityProviderMappers": [
+            {{- range $idpIdx, $idp := $realm.identityProviders }}
+            {{- if and (not (eq $idpIdx 0)) (not (eq (len $idp.mappers) 0)) -}},{{- end}}
+            {{- range $mapperIdx, $idpMapper := $idp.mappers }}
+            {{- if eq $idpMapper.type "adfs-email"}}
+            {
+                "name": "{{ $idp.name }}-email",
+                "identityProviderAlias": "{{ $idp.name }}",
+                "identityProviderMapper": "saml-user-attribute-idp-mapper",
+                "config": {
+                "user.attribute": "email",
+                "attribute.name": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
+                }
+            }{{- if not (eq $mapperIdx (sub (len $idp.mappers) 1)) -}},{{- end }}
+            {{- else if eq $idpMapper.type "adfs-group"}}
+            {
+                "name": "{{ $idp.name }}-adfs-groups",
+                "identityProviderAlias": "{{ $idp.name }}",
+                "identityProviderMapper": "saml-user-attribute-idp-mapper",
+                "config": {
+                "user.attribute": "{{ $idp.name }}-adfs-groups",
+                "attribute.name": "http://schemas.xmlsoap.org/claims/Group"
+                }
+            }{{- if not (eq $mapperIdx (sub (len $idp.mappers) 1)) -}},{{- end }}
+            {{- else if eq $idpMapper.type "custom"}}
+            {
+                "name": "{{ $idpMapper.name }}",
+                "identityProviderAlias": "{{ $idp.name }}",
+                "identityProviderMapper": "{{ $idpMapper.category | default "saml-user-attribute-idp-mapper" }}",
+                "config": {
+                "user.attribute": "{{ $idpMapper.userAttribute }}",
+                "attribute.name": "{{ $idpMapper.attributeName}}"
+                }
+            }{{- if not (eq $mapperIdx (sub (len $idp.mappers) 1)) -}},{{- end }}{{- end }}
+            {{- end }}
+            {{- end }}
+        ],
+        "authenticatorConfig": [
+            {
+                "alias": "create unique user config",
+                "config": {
+                "require.password.update.after.registration": "false"
+                }
+            },
+            {
+                "alias": "review profile config",
+                "config": {
+                "update.profile.on.first.login": "off"
+                }
+            }
         ]
     }{{- if not (eq $realmIdx (sub (len $.Values.realms) 1)) -}},{{- end }}
   {{- end -}}
