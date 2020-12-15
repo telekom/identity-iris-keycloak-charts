@@ -132,6 +132,7 @@ The following table lists the configurable parameters of this chart.
 | **realms**                            | Configure realms                                                                  |                                    |
 | `realms.access_token_lifespan`        | Lifespan of a token                                                               | `300`                              |
 | `realms.name`                         | Realm name                                                                        |                                    |
+| `realms.defaultProvider`              | The alias of the default IDP to redirect to when logging in                       |                                    |
 | `realms.clients`                      | An array of configured clients                                                    |                                    |
 | `realms.clients.name`                 | Client name                                                                       |                                    |
 | `realms.clients.redirectUris`         | Allowed redirect URIs for the client (after authorization)                        |                                    |

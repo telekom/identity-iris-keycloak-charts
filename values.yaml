@@ -82,6 +82,7 @@ admin_password: changeme
 # realms:
 # - name: adfs
 #   access_token_lifespan: 300
+#   defaultProvider: adfs-idp
 #   clients:
 #   - name: chevron
 #     redirectUris:

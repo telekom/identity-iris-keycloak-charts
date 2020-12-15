@@ -262,6 +262,14 @@ data:
             {{- end }}
         ],
         "authenticatorConfig": [
+            {{- if $realm.defaultProvider }}
+            {
+                "id": "5aa97971-297e-4bd2-9056-9fbe45fc9f48",
+                "alias": "adfs",
+                "config": {
+                    "defaultProvider": "{{$realm.defaultProvider}}"
+                }
+            },{{- end }}
             {
                 "alias": "create unique user config",
                 "config": {
