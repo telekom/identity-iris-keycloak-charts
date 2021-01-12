@@ -62,10 +62,11 @@ This chart contains a copy of the standalone-ha.xml stored in a config map. At s
 
 **realm**
 
-According to the documentation, the master realm should be used only for administrative purposes. This chart initialize Keycloak with an additional realm called "tif".  
-This tif-realm.json file is stored in a separate config file and mounted to the pod container.
+According to the documentation, the master realm should be used only for administrative purposes. Therefore, this chart allows for the configuration of additional realms and using the `realms.*` parameters. If no realms are configured only the master realm will be created.
 
-> **Note**: Current version of the chart does not contain any flags to replace the default config maps. Modifing the config maps must be done manually.  
+Identity providers (e.g. ADFS) can also be configured. ADFS keys, certificates and URLs can be found in the `federationmetadata.xml` (`https://ADFS_SERVER/FederationMetadata/2007-06/FederationMetadata.xml`)
+
+> **Note**: When configuring ADFS as an Identity Provider you should also make a Change Request at ADFS to register the new Iris instance with their system. You will need to provide the XML Descriptor usually found under `https://IRIS_URL/auth/realms/{realms.name}/broker/{realms.identityProvider.name}/endpoint/descriptor`.
 
 **database**
 
@@ -130,26 +131,26 @@ The following table lists the configurable parameters of this chart.
 | `prometheus.serviceMonitor.scrapeTimeout`  | Timeout after which the scrape of prometheus is ended                                   | `3s`             |
 | `prometheus.serviceMonitor.honorLabels`    | HonorLabels chooses the metric’s labels on collisions with target labels                | `true`           |
 | **realms**                            | Configure realms                                                                  |                                    |
-| `realms.access_token_lifespan`        | Lifespan of a token                                                               | `300`                              |
-| `realms.name`                         | Realm name                                                                        |                                    |
-| `realms.defaultProvider`              | The alias of the default IDP to redirect to when logging in                       |                                    |
-| `realms.clients`                      | An array of configured clients                                                    |                                    |
-| `realms.clients.name`                 | Client name                                                                       |                                    |
-| `realms.clients.redirectUris`         | Allowed redirect URIs for the client (after authorization)                        |                                    |
-| `realms.clients.webOrigins`           | Web origins accepted for authorization requests                                   |                                    |
-| `realms.identityProviders`            | An array of identity providers for this realm                                     |                                    |
-| `realms.identityProviders.name`       | An alias name of the IDP                                                          |                                    |
-| `realms.identityProviders.displayName`| The name shown when logging in via this IDP                                       |                                    |
-| `realms.identityProviders.signingCertificate`     | The signing certificate of the IDP                                    |                                    |
-| `realms.identityProviders.singleLogoutServiceUrl` | The single logout service URL of the IDP                              |                                    |
-| `realms.identityProviders.singleSignOnServiceUrl` | The single sign on service URL of the IDP                             |                                    |
-| `realms.identityProviders.encryptionPublicKey`    | The encryption public key of the IDP                                  |                                    |
-| `realms.identityProviders.mappers`                | An array of mappers for the SAML data received from the IDP after a login|                                 |
-| `realms.identityProviders.mappers.type`           | Choose between predefined mappers (`adfs-email` and `adfs-group`) or `custom` to define your own |         |
-| `realms.identityProviders.mappers.name`           | The name of the mapper (only type `custom`)                           |                                    |
-| `realms.identityProviders.mappers.attributeName`  | The attribute name in the IDP response (only type `custom`)           |                                    |
-| `realms.identityProviders.mappers.category`       | The category of the mapper (only type `custom`)                       | `saml-user-attribute-idp-mapper`   |
-| `realms.identityProviders.mappers.userAttribute`  | The Keycloak user attribute to map the value to (only type `custom`)  |                                    |
+| `realms.name`                         | Realm name                                                                        | `nil`                              |
+| `realms.access_token_lifespan`        | Lifespan of a token                                                               | `nil`                              |
+| `realms.defaultProvider`              | The alias of the default IDP to redirect to when logging in                       | `nil`                              |
+| `realms.clients`                      | An array of configured clients                                                    | `nil`                              |
+| `realms.clients.name`                 | Client name                                                                       | `nil`                              |
+| `realms.clients.redirectUris`         | Allowed redirect URIs for the client (after authorization)                        | `nil`                              |
+| `realms.clients.webOrigins`           | Web origins accepted for authorization requests                                   | `nil`                              |
+| `realms.identityProviders`            | An array of identity providers for this realm                                     | `nil`                              |
+| `realms.identityProviders.name`       | An alias name of the IDP                                                          | `nil`                              |
+| `realms.identityProviders.displayName`| The name shown when logging in via this IDP                                       | `nil`                              |
+| `realms.identityProviders.signingCertificate`     | The signing certificate of the IDP                                    | `nil`                              |
+| `realms.identityProviders.singleLogoutServiceUrl` | The single logout service URL of the IDP                              | `nil`                              |
+| `realms.identityProviders.singleSignOnServiceUrl` | The single sign on service URL of the IDP                             | `nil`                              |
+| `realms.identityProviders.encryptionPublicKey`    | The encryption public key of the IDP                                  | `nil`                              |
+| `realms.identityProviders.mappers`                | An array of mappers for the SAML data received from the IDP after a login|  `nil`                          |
+| `realms.identityProviders.mappers.type`           | Choose between predefined mappers (`adfs-email` and `adfs-group`) or `custom` to define your own | `nil`   |
+| `realms.identityProviders.mappers.name`           | The name of the mapper (only type `custom`)                           | `nil`                              |
+| `realms.identityProviders.mappers.attributeName`  | The attribute name in the IDP response (only type `custom`)           | `nil`                              |
+| `realms.identityProviders.mappers.category`       | The category of the mapper (only type `custom`)                       | `nil`                              |
+| `realms.identityProviders.mappers.userAttribute`  | The Keycloak user attribute to map the value to (only type `custom`)  | `nil`                              |
 | **postgresql**                        |                                                                                   |                                    |
 | `postgresql.image.repository`         | MTR repository                                                                    | `mtr.external.otc.telekomcloud.com`|
 | `postgresql.image.organization`       | MTR organization                                                                  | `tif-public`                       |
