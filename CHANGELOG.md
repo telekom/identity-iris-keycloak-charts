@@ -2,6 +2,10 @@
 
 [[_TOC_]]
 
+## Changes
+ - Identity provider configuration option added (e.g. ADFS)
+ - Default IDP option for automatic redirect on login
+ 
 ## 1.5.1
  - Added ConfigMap for pipeline meta data
 
