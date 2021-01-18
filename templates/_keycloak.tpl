@@ -38,15 +38,15 @@ app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
 {{- $imageTag := "12.3-debian" -}}
 {{- $imageRepository := "mtr.external.otc.telekomcloud.com" -}}
 {{- $imageOrganization := "tif-public" -}}
-{{- if .Values.image -}}
-  {{- if not (kindIs "string" .Values.image) -}}
-    {{ $imageRepository = .Values.image.repository | default $imageRepository -}}
-    {{ $imageOrganization = .Values.image.organization | default $imageOrganization -}}
-    {{ $imageName = .Values.image.name | default $imageName -}}
-    {{ $imageTag = .Values.image.tag | default $imageTag -}}
+{{- if .Values.postgresql.image -}}
+  {{- if not (kindIs "string" .Values.postgresql.image) -}}
+    {{ $imageRepository = .Values.postgresql.image.repository | default $imageRepository -}}
+    {{ $imageOrganization = .Values.postgresql.image.organization | default $imageOrganization -}}
+    {{ $imageName = .Values.postgresql.image.name | default $imageName -}}
+    {{ $imageTag = .Values.postgresql.image.tag | default $imageTag -}}
     {{- printf "%s/%s/%s:%s" $imageRepository $imageOrganization $imageName $imageTag -}}
   {{- else -}}
-    {{- .Values.image -}}
+    {{- .Values.postgresql.image -}}
   {{- end -}}
 {{- else -}}
  {{- printf "%s/%s/%s:%s" $imageRepository $imageOrganization $imageName $imageTag -}}
