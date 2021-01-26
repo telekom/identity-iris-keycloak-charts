@@ -105,12 +105,10 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
   {{- $realms = printf "%s,%s" $realms $r -}}
 {{- end }}
 {{-  if eq $realms "" -}}
-{{- /*
   {{- range .Values.realms -}}
   {{- $r := printf "%s/_generated_%s.json" $realmsPath .name -}}
   {{- $realms = printf "%s,%s" $realms $r -}}
   {{- end -}}
-*/}}
 {{- end -}}
 {{- $realms -}}
 {{ end }}
