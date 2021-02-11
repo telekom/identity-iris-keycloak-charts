@@ -430,7 +430,7 @@ data:
                     <stack name="udp">
                         <transport type="UDP" socket-binding="jgroups-udp"/>
                         <protocol type="kubernetes.KUBE_PING">
-                            <property label="app">{{ .Release.Name }}</property>
+                            <property name="labels">app={{ .Release.Name }}</property>
                             <property name="namespace">{{ .Release.Namespace }}</property>
                         </protocol>
                         <protocol type="MERGE3"/>
