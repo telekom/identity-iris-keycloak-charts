@@ -447,7 +447,7 @@ data:
                     <stack name="tcp">
                         <transport type="TCP" socket-binding="jgroups-tcp"/>
                         <protocol type="kubernetes.KUBE_PING">
-                            <property label="app">{{ .Release.Name }}</property>
+                            <property name="labels">app={{ .Release.Name }}</property>
                             <property name="namespace">{{ .Release.Namespace }}</property>
                         </protocol>
                         <protocol type="MERGE3"/>
