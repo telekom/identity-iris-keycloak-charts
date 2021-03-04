@@ -23,7 +23,7 @@ spec:
       labels: {{ include "keycloak.labels" $ | nindent 8 }}{{ include "status-monitor.labels" $ | nindent 8 }}
     spec:
       {{- include "image_pull_secrets" $ | indent 6 }}
-      serviceAccountName: default
+      serviceAccountName: {{ .Release.Name }}
       containers:
       - name: keycloak
         image: '{{ include "keycloak.image" $ }}'

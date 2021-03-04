@@ -345,13 +345,13 @@ data:
                         <object-memory size="1000"/>
                         <expiration max-idle="3600000"/>
                     </local-cache>
-                    <replicated-cache name="work"/>
-                    <distributed-cache name="sessions" owners="1"/>
-                    <distributed-cache name="authenticationSessions" owners="1"/>
-                    <distributed-cache name="offlineSessions" owners="1"/>
-                    <distributed-cache name="clientSessions" owners="1"/>
-                    <distributed-cache name="offlineClientSessions" owners="1"/>
-                    <distributed-cache name="loginFailures" owners="1"/>
+                    <distributed-cache name="work"/>
+                    <distributed-cache name="sessions" owners="2"/>
+                    <distributed-cache name="authenticationSessions" owners="2"/>
+                    <distributed-cache name="offlineSessions" owners="2"/>
+                    <distributed-cache name="clientSessions" owners="2"/>
+                    <distributed-cache name="offlineClientSessions" owners="2"/>
+                    <distributed-cache name="loginFailures" owners="2"/>
                     <distributed-cache name="actionTokens" owners="2">
                         <object-memory size="-1"/>
                         <expiration interval="300000" max-idle="-1"/>
@@ -424,12 +424,15 @@ data:
             </subsystem>
             <subsystem xmlns="urn:jboss:domain:jgroups:7.0">
                 <channels default="ee">
-                    <channel name="ee" stack="udp" cluster="ejb"/>
+                    <channel name="ee" stack="tcp" cluster="ejb"/>
                 </channels>
                 <stacks>
                     <stack name="udp">
                         <transport type="UDP" socket-binding="jgroups-udp"/>
-                        <protocol type="PING"/>
+                        <protocol type="kubernetes.KUBE_PING">
+                            <property name="labels">app={{ .Release.Name }}</property>
+                            <property name="namespace">{{ .Release.Namespace }}</property>
+                        </protocol>
                         <protocol type="MERGE3"/>
                         <socket-protocol type="FD_SOCK" socket-binding="jgroups-udp-fd"/>
                         <protocol type="FD_ALL"/>
@@ -444,7 +447,10 @@ data:
                     </stack>
                     <stack name="tcp">
                         <transport type="TCP" socket-binding="jgroups-tcp"/>
-                        <socket-protocol type="MPING" socket-binding="jgroups-mping"/>
+                        <protocol type="kubernetes.KUBE_PING">
+                            <property name="labels">app={{ .Release.Name }}</property>
+                            <property name="namespace">{{ .Release.Namespace }}</property>
+                        </protocol>
                         <protocol type="MERGE3"/>
                         <socket-protocol type="FD_SOCK" socket-binding="jgroups-tcp-fd"/>
                         <protocol type="FD_ALL"/>
