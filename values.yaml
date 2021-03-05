@@ -142,6 +142,14 @@ prometheus:
     #interval: "15s"
     #scrapeTimeout: "3s"
     #honorLabels: ""
+    targetLabels:
+    - tardis.telekom.de/cluster
+    - tardis.telekom.de/product
+    - tardis.telekom.de/subproduct
+    - tardis.telekom.de/namespace
+    - app
+    - type
+    - routeId
   podMonitor:   
     enabled: false
     #selector: "guardians-raccoon"
