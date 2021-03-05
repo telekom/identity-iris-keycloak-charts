@@ -29,4 +29,5 @@ spec:
       {{- end }}
       {{- if .Values.prometheus.serviceMonitor.targetLabels }}
       targetLabels: {{ .Values.prometheus.serviceMonitor.targetLabels}}
+      {{- end }}
 {{- end -}}
