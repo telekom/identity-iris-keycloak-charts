@@ -28,6 +28,12 @@ spec:
       honorLabels: {{ .Values.prometheus.serviceMonitor.honorLabels }}
       {{- end }}
       {{- if .Values.prometheus.serviceMonitor.targetLabels }}
-      targetLabels: {{ .Values.prometheus.serviceMonitor.targetLabels}}
-      {{- end }}
+  targetLabels:
+  - tardis.telekom.de/cluster
+  - tardis.telekom.de/product
+  - tardis.telekom.de/subproduct
+  - tardis.telekom.de/namespace
+  - app
+  - type
+  - routeId
 {{- end -}}

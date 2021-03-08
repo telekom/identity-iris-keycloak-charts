@@ -9,11 +9,12 @@ global:
     # fluentd label
     tif.telekom.de/group: tif
   ingress:
-    annotations: {}
+    annotations:
+      {}
       #external-dns.alpha.kubernetes.io/target: ""
       #kubernetes.io/ingress.class: ""
 
-  # If imagePullSecrets is not empty, a pull secret will be deployed for each entry otherwise 
+  # If imagePullSecrets is not empty, a pull secret will be deployed for each entry otherwise
   # no pull secret will be deployed
   # If you use Sapling for deployment this will be set automatically
   imagePullSecrets: []
@@ -26,10 +27,10 @@ global:
     enabled: false
     length: 12
     mustMatch:
-    - '[a-z]'
-    - '[A-Z]'
-    - '[0-9]'
-    - '[^a-zA-Z0-9]'        
+      - "[a-z]"
+      - "[A-Z]"
+      - "[0-9]"
+      - "[^a-zA-Z0-9]"
 
   # Database and credentials that will be created for Keycloak
   db:
@@ -75,10 +76,10 @@ admin_password: changeme
 # Use this configuration
 # to create realms with public clients
 # This will create a _generated.json in /realms/
-# Note: 
+# Note:
 # If you copy your own json files into /realms (via Sapling for example)
 # no _generated.json will be created!
-# 
+#
 # realms:
 # - name: adfs
 #   access_token_lifespan: 300
@@ -111,7 +112,6 @@ admin_password: changeme
 #         category: saml-user-attribute-idp-mapper
 #         userAttribute: firstName
 
-
 replicas: 1
 
 resources:
@@ -135,22 +135,14 @@ prometheus:
   #path: /metrics
   # podMonitor is used to provide a PodMonitor CRD to integrate with prometheus operator
   # prometheus has to be enabled to use this
-  serviceMonitor:   
+  serviceMonitor:
     enabled: true
     #selector: "guardians-raccoon"
     #scheme: http
     #interval: "15s"
     #scrapeTimeout: "3s"
     #honorLabels: ""
-    targetLabels:
-    - tardis.telekom.de/cluster
-    - tardis.telekom.de/product
-    - tardis.telekom.de/subproduct
-    - tardis.telekom.de/namespace
-    - app
-    - type
-    - routeId
-  podMonitor:   
+  podMonitor:
     enabled: false
     #selector: "guardians-raccoon"
     #scheme: http
@@ -171,7 +163,7 @@ customConfig:
   #   </spi>
 
 # Overwrite Java specific options used by Keycloak Wildfly application server
-javaOptions: '-XX:+UseContainerSupport -XX:MinRAMPercentage=50.0 -XX:MaxRAMPercentage=75.0 -XX:MetaspaceSize=96M -XX:MaxMetaspaceSize=256m -Djava.net.preferIPv4Stack=true -Djboss.modules.system.pkgs=org.jboss.byteman -Djava.awt.headless=true'
+javaOptions: "-XX:+UseContainerSupport -XX:MinRAMPercentage=50.0 -XX:MaxRAMPercentage=75.0 -XX:MetaspaceSize=96M -XX:MaxMetaspaceSize=256m -Djava.net.preferIPv4Stack=true -Djboss.modules.system.pkgs=org.jboss.byteman -Djava.awt.headless=true"
 
 postgresql:
   securityContext: {}
@@ -181,11 +173,11 @@ postgresql:
   max_prepared_transactions: "100"
 
   # You can force using a specific image here:
-  #image: 
-    #repository: mtr.external.otc.telekomcloud.com
-    #organization: tif-public
-    #name: postgres
-    #tag: 12.3-debian
+  #image:
+  #repository: mtr.external.otc.telekomcloud.com
+  #organization: tif-public
+  #name: postgres
+  #tag: 12.3-debian
   # Or use the flattened string form:
   #image: mtr.external.otc.telekomcloud.com/tif-public/postgres:12.3-debian
 
@@ -206,4 +198,3 @@ postgresql:
       requests:
         storage: 1Gi
     #mountDir: '/var/lib/postgresql/data'
-    
