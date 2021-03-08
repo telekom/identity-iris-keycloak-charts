@@ -27,7 +27,6 @@ spec:
       {{- if .Values.prometheus.serviceMonitor.honorLabels }}
       honorLabels: {{ .Values.prometheus.serviceMonitor.honorLabels }}
       {{- end }}
-      {{- if .Values.prometheus.serviceMonitor.targetLabels }}
   targetLabels:
   - tardis.telekom.de/cluster
   - tardis.telekom.de/product
