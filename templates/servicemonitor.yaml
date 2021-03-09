@@ -32,6 +32,7 @@ spec:
   - tardis.telekom.de/product
   - tardis.telekom.de/subproduct
   - tardis.telekom.de/namespace
+  - tardis.telekom.de/team
   - app
   - type
   - routeId
