@@ -6,6 +6,7 @@
  - Added TargetLabels to ServiceMonitor
  - Identity provider configuration option added (e.g. ADFS)
  - Default IDP option for automatic redirect on login
+ - Enabled shared cache between iris pods which enables scaling 
  
 ## 1.5.1
  - Added ConfigMap for pipeline meta data
