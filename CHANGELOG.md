@@ -2,7 +2,7 @@
 
 [[_TOC_]]
 
-## Changes
+## 1.6.0
  - Added TargetLabels to ServiceMonitor
  - Identity provider configuration option added (e.g. ADFS)
  - Default IDP option for automatic redirect on login
