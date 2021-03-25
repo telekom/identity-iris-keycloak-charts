@@ -20,10 +20,10 @@ spec:
         prometheus.io/scrape: 'true'
         prometheus.io/port: '{{ .Values.prometheus.port | default 9542 }}'
 {{- end }}
-      labels: {{ include "keycloak.labels" $ | nindent 8 }}
+      labels: {{ include "keycloak.labels" $ | nindent 8 }}{{ include "status-monitor.labels" $ | nindent 8 }}
     spec:
       {{- include "image_pull_secrets" $ | indent 6 }}
-      serviceAccountName: default
+      serviceAccountName: {{ .Release.Name }}
       containers:
       - name: keycloak
         image: '{{ include "keycloak.image" $ }}'
