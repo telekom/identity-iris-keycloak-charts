@@ -112,7 +112,7 @@ admin_password: changeme
 #         category: saml-user-attribute-idp-mapper
 #         userAttribute: firstName
 
-replicas: 1
+replicas: 4
 
 resources:
   limits:
