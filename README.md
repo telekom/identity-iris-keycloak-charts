@@ -55,13 +55,6 @@ After a succesfull installation the component can be reached at the URL: `keyclo
 
 ## Configuration
 
-### HA and multiple replicas
-
-For multiple replicas set the following ingress annotation:
-```yaml
-nginx.ingress.kubernetes.io/affinity: "cookie"
-```
-
 **configuration file**
 
 Keycloak is configured by an xml file. The default installation contains some typical configuration files.
