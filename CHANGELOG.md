@@ -2,6 +2,10 @@
 
 [[_TOC_]]
 
+## 0.0.0
+  - Image pull policy toggle
+  - Pull policy IfNotPresent as default
+
 ## 1.6.0
  - Added TargetLabels to ServiceMonitor
  - Identity provider configuration option added (e.g. ADFS)

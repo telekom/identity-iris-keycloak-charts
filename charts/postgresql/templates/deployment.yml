@@ -28,7 +28,7 @@ spec:
         env:
         {{- include "postgresql.env" $ | indent 8 }}
         image: '{{ include "postgresql.image" $ }}'
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: {{ .Values.global.imagePullPolicy }}
         securityContext: {{ .Values.securityContext | toYaml | nindent 10 }}
         ports:
         - containerPort: 5432
