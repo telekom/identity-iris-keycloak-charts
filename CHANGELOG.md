@@ -5,6 +5,7 @@
 ## 0.0.0
   - Image pull policy toggle
   - Pull policy IfNotPresent as default
+  - PodAntiAffinity for node distribution
 
 ## 1.6.0
  - Added TargetLabels to ServiceMonitor
