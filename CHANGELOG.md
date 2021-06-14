@@ -2,7 +2,7 @@
 
 [[_TOC_]]
 
-## 0.0.0
+## 1.7.0-RC
   - Image pull policy toggle
   - Pull policy IfNotPresent as default
   - PodAntiAffinity for node distribution
