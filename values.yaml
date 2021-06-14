@@ -22,6 +22,7 @@ global:
   #  registry: https://mtr.external.otc.telekomcloud.com
   #  username: changeme
   #  password: changeme
+  imagePullPolicy: IfNotPresent
 
   passwordRules:
     enabled: false
@@ -55,6 +56,8 @@ global:
     #  -----BEGIN CERTIFICATE-----
     #  <Root certificate in PEM format here>
     #  -----END CERTIFICATE-----
+
+#imagePullPolicy: IfNotPresent
 
 # You can list files (in /templates) here that should cause a re-deployment of your application
 # when their contents change
@@ -180,6 +183,7 @@ postgresql:
   #tag: 12.3-debian
   # Or use the flattened string form:
   #image: mtr.external.otc.telekomcloud.com/tif-public/postgres:12.3-debian
+  #imagePullPolicy: IfNotPresent
 
   # PostgreSQL admin user (postgres) password
   admin_password: changeme

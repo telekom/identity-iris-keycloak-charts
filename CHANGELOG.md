@@ -2,6 +2,11 @@
 
 [[_TOC_]]
 
+## 1.7.0-RC
+  - Image pull policy toggle
+  - Pull policy IfNotPresent as default
+  - PodAntiAffinity for node distribution
+
 ## 1.6.0
  - Added TargetLabels to ServiceMonitor
  - Identity provider configuration option added (e.g. ADFS)

@@ -20,14 +20,29 @@ spec:
         prometheus.io/scrape: 'true'
         prometheus.io/port: '{{ .Values.prometheus.port | default 9542 }}'
 {{- end }}
-      labels: {{ include "keycloak.labels" $ | nindent 8 }}{{ include "status-monitor.labels" $ | nindent 8 }}
+      labels: 
+      {{- include "keycloak.labels" $ | nindent 8 }}
+      {{- include "common.status-monitor.labels" $ | nindent 8 }}
+      {{- include "status-monitor.labels" $ | nindent 8 }}
     spec:
       {{- include "image_pull_secrets" $ | indent 6 }}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/instance
+                  operator: In
+                  values:
+                  - {{ .Release.Name }}-keycloak
+              topologyKey: "kubernetes.io/hostname"
       serviceAccountName: {{ .Release.Name }}
       containers:
       - name: keycloak
         image: '{{ include "keycloak.image" $ }}'
-        imagePullPolicy: Always
+        imagePullPolicy: {{ .Values.imagePullPolicy | default .Values.global.imagePullPolicy }}
         securityContext: {{ .Values.securityContext | toYaml | nindent 10 }}
         command: ['/bin/bash']
         args: ['-c', 'rm -f /opt/jboss/keycloak/standalone/configuration/keycloak-add-user.json || true; /opt/jboss/tools/docker-entrypoint.sh -b 0.0.0.0 -c customer-standalone-ha.xml']
@@ -68,7 +83,7 @@ spec:
       initContainers:
       - name: "init-standalone"
         image: '{{ include "keycloak.image" $ }}'
-        imagePullPolicy: Always
+        imagePullPolicy: {{ .Values.imagePullPolicy | default .Values.global.imagePullPolicy }}
         securityContext: {{ .Values.securityContext | toYaml | nindent 10 }}
         volumeMounts:
         - name: standalone
@@ -81,7 +96,7 @@ spec:
         args: ['-c', 'cp -av /opt/jboss/keycloak/standalone/. /standalone/ || true; cp -av /tmp/config/. /standalone/configuration/ || true; cp -av /tmp/realms/ /standalone/configuration/ || true']
       - name: "check-database"
         image: '{{ include "keycloak.init.image" $ }}'
-        imagePullPolicy: Always
+        imagePullPolicy: {{ .Values.postgresql.imagePullPolicy | default .Values.global.imagePullPolicy }}
         securityContext: {{ .Values.postgresql.securityContext | toYaml | nindent 10 }}
         command: ['/bin/bash']
         args: ['-c', 'until pg_isready -U {{ .Values.global.db.username }}; do echo waiting for database; sleep 2; done;']

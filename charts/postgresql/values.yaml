@@ -9,6 +9,9 @@ global:
     - '[^a-zA-Z0-9]' 
     
   db: {}
+  
+  imagePullPolicy: IfNotPresent
+
 
 securityContext: {}
 
