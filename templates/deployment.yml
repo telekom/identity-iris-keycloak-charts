@@ -7,7 +7,9 @@ metadata:
   {{- include "keycloak.checksums" $ | nindent 4 }}   
   labels: {{ include "keycloak.labels" $ | nindent 4 }}
 spec:
+  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicas }}
+  {{- end }}
   selector:
     matchLabels: {{ include "keycloak.selector" $ | nindent 6 }}
   template:

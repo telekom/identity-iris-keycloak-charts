@@ -117,6 +117,13 @@ admin_password: changeme
 
 replicas: 1
 
+autoscaling:
+  enabled: false
+  #minReplicas needs to be set to >= 2
+  #minReplicas: 3
+  #maxReplicas: 6
+  #targetCPUUtilizationPercentage: 80
+
 resources:
   limits:
     cpu: 1
