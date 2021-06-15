@@ -7,7 +7,9 @@ metadata:
   {{- include "keycloak.checksums" $ | nindent 4 }}   
   labels: {{ include "keycloak.labels" $ | nindent 4 }}
 spec:
+  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicas }}
+  {{- end }}
   selector:
     matchLabels: {{ include "keycloak.selector" $ | nindent 6 }}
   template:
@@ -67,13 +69,7 @@ spec:
             path: '/auth/realms/master'
             port: 8080
             scheme: 'HTTP'
-        resources:
-          limits:
-            memory: {{ .Values.resources.limits.memory }}
-            cpu: {{ .Values.resources.limits.cpu }}
-          requests:
-            memory: {{ .Values.resources.requests.memory }}
-            cpu: {{ .Values.resources.requests.cpu }}
+        resources: {{ .Values.resources | toYaml | nindent 10 }}
         volumeMounts:
         - name: tmp
           mountPath: /tmp
@@ -85,6 +81,7 @@ spec:
         image: '{{ include "keycloak.image" $ }}'
         imagePullPolicy: {{ .Values.imagePullPolicy | default .Values.global.imagePullPolicy }}
         securityContext: {{ .Values.securityContext | toYaml | nindent 10 }}
+        resources: {{ .Values.resources | toYaml | nindent 10 }}
         volumeMounts:
         - name: standalone
           mountPath: /standalone
@@ -102,6 +99,7 @@ spec:
         args: ['-c', 'until pg_isready -U {{ .Values.global.db.username }}; do echo waiting for database; sleep 2; done;']
         env:
         {{- include "keycloak.checkdatabase.env" $ | indent 8 }}
+        resources: {{ .Values.postgresql.resources | toYaml | nindent 10 }}
       volumes:
       - name: tmp
         emptyDir: {}

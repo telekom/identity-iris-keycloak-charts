@@ -113,6 +113,10 @@ The following table lists the configurable parameters of this chart.
 | `admin_username`                      | Name of the Keycloak admin user                                                   | `admin`                            |
 | `admin_password`                      | Password of the Keycloak admin user                                               |                                    |
 | `replicas`                            | Number of replicas                                                                | `1`                                |
+| `autoscaling.enabled`                 | Enables Pod Autoscaling with Target CPU usage                                     | `false`                            |
+| `autoscaling.minReplicas`             | Minimum number of replicas if autoscaling is enabled                              | `3`                                |
+| `autoscaling.maxReplicas`             | Maximum number of replicas if autoscaling is enabled                              | `6`                                |
+| `autoscaling.cpuUtilizationPercentage`| Number of target CPU Utilization                                                  | `80`                               |
 | `resources.requests.memory`           | Memory request for Keycloak pod                                                   | `2Gi`                              |
 | `resources.requests.cpu`              | CPU request for Keycloak pod                                                      | `200m`                             |
 | `resources.limit.memory`              | Memory limit for Keycloak pod                                                     | `2Gi`                              |

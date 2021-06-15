@@ -346,7 +346,7 @@ data:
                         <expiration max-idle="3600000"/>
                     </local-cache>
                     <distributed-cache name="work"/>
-{{- if gt (int .Values.replicas) 1 }}
+{{- if or (gt (int .Values.replicas) 1) .Values.autoscaling.enabled }}
                     <distributed-cache name="sessions" owners="2"/>
                     <distributed-cache name="authenticationSessions" owners="2"/>
                     <distributed-cache name="offlineSessions" owners="2"/>

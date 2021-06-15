@@ -2,6 +2,10 @@
 
 [[_TOC_]]
 
+## 1.7.0-RC2
+  - Added possibility for horizontal pod autoscaling
+  - InitContainer resources set
+
 ## 1.7.0-RC
   - Image pull policy toggle
   - Pull policy IfNotPresent as default
