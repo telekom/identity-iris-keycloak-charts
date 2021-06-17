@@ -123,7 +123,6 @@ autoscaling:
   #minReplicas: 3
   #maxReplicas: 6
   #targetCPUUtilizationPercentage: 80
-  #memoryUtilizationPercentage: 80
 
 resources:
   limits:
