@@ -2,6 +2,10 @@
 
 [[_TOC_]]
 
+## 1.7.0-RC.3
+  - (remove when release) Removed memory for autoscaling
+  - (remove when release) Scale down behaviour
+
 ## 1.7.0-RC2
   - Added possibility for horizontal pod autoscaling
   - InitContainer resources set
