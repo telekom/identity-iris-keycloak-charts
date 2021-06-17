@@ -22,11 +22,4 @@ spec:
       target:
         type: Utilization
         averageUtilization: {{ .Values.autoscaling.cpuUtilizationPercentage | default 80 }}
-  behavior:
-    scaleDown:
-      stabilizationWindowSeconds: 300
-      policies:
-        - type: Pods
-          value: 1
-          periodSeconds: 300
 {{- end }}
