@@ -44,6 +44,7 @@ data:
         # block http requests if rule applies
         http-request deny if block_url_param
         # route to iris
-        server s1 127.0.0:8080
-        
+        server s1 127.0.0.1:8080
+
+
     

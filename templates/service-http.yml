@@ -11,10 +11,6 @@ spec:
     port: 80
     protocol: TCP
     targetPort: 9090
-  - name: https
-    port: 443
-    protocol: TCP
-    targetPort: 8443
 {{- if eq .Values.prometheus.serviceMonitor.enabled true }}
   - name: metrics-http
     port: 9542
