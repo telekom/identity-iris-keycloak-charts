@@ -11,7 +11,7 @@ data:
     # Use case: Deploy a haproxy in front of KeyCloak/RHSSO
 
     global
-      log stdout format raw local0
+      log stdout format raw local0 err
 
     defaults
       log global
