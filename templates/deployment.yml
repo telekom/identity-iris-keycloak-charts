@@ -32,6 +32,13 @@ spec:
         image: '{{ include "haproxy.image" $ }}'
         ports:
         - { containerPort: 9090, protocol: TCP, name: http }
+                resources:
+        limits:
+          memory: 1Gi
+          cpu: 1
+        requests:
+          memory: 250Mi
+          cpu: 250m
         volumeMounts:
         - name: ha-proxy-config
           mountPath: /usr/local/etc/haproxy

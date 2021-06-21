@@ -8,6 +8,7 @@ data:
     # Workaround for temporary fixing CVE-2020-10770
     # 2021-06-18
     # Oleg.Fiksel@telekom.de
+    # modified by mario.eckstein@external.telekom.de
     # Use case: Deploy a haproxy in front of KeyCloak/RHSSO
 
     global
@@ -34,7 +35,6 @@ data:
     # traffic routing
     backend be_http_default
         mode http
-        # aus Doku "The parameter name is case-sensitive" Problem? 
         # access control list (rule) 
         # name of the rule
         # urlp($param_name) extract parameter
