@@ -27,9 +27,8 @@ data:
         mode http
         option httplog
         # Deny requests containing request_uri as a URL parameter
-        #acl block_url_param urlp(request_uri) -m found
-        #http-request deny if block_url_param
-
+        # acl block_url_param urlp(request_uri) -m found
+        # http-request deny if block_url_param
         default_backend be_http_default
 
     # traffic routing
@@ -46,3 +45,5 @@ data:
         http-request deny if block_url_param
         # route to iris
         server s1 127.0.0:8080
+        
+    
