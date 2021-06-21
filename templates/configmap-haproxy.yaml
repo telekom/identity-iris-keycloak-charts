@@ -4,7 +4,7 @@ metadata:
   name: {{ .Release.Name }}-ha-proxy-config
   labels: {{ include "keycloak.labels" $ | nindent 4 }}
 data:
-  haproxy.cfg: |-
+  haproxy.cfg: |
     # Workaround for temporary fixing CVE-2020-10770
     # 2021-06-18
     # Oleg.Fiksel@telekom.de
@@ -45,6 +45,3 @@ data:
         http-request deny if block_url_param
         # route to iris
         server s1 127.0.0.1:8080
-
-
-    
