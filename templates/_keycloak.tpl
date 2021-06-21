@@ -1,3 +1,7 @@
+{{- define "haproxy.image" -}}
+   {{- printf "mtr.external.otc.telekomcloud.com/tif-public/haproxy:2.4.0-alpine" -}}
+{{- end -}}
+
 {{- define "keycloak.labels" -}}
 app: {{ .Release.Name }}
 app.kubernetes.io/name: keycloak

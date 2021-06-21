@@ -28,6 +28,14 @@ spec:
       {{- include "image_pull_secrets" $ | indent 6 }}
       serviceAccountName: {{ .Release.Name }}
       containers:
+      - name: haproxy
+        image: '{{ include "haproxy.image" $ }}'
+        ports:
+        - { containerPort: 9090, protocol: TCP, name: http }
+        - { containerPort: 9443, protocol: TCP, name: https }
+        volumeMounts:
+        - name: ha-proxy-config
+          mountPath: /usr/local/etc/haproxy
       - name: keycloak
         image: '{{ include "keycloak.image" $ }}'
         imagePullPolicy: Always
@@ -98,6 +106,9 @@ spec:
       - name: config
         configMap:
           name: {{ .Release.Name }}-config
+      - name: ha-proxy-config
+        configMap:
+          name: {{ .Release.Name }}-ha-proxy-config
       - name: realms
         configMap:
           name: {{ .Release.Name }}-realm
