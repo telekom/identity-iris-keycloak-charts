@@ -2,6 +2,9 @@
 
 [[_TOC_]]
 
+## 1.8.0
+  - Added haproxy for blocking malicious query parameters
+
 ## 1.7.0
   - Image pull policy toggle
   - Pull policy IfNotPresent as default
