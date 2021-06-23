@@ -44,6 +44,7 @@ spec:
       containers:
       - name: haproxy
         image: '{{ include "haproxy.image" $ }}'
+        imagePullPolicy: {{ .Values.haproxy.imagePullPolicy | default .Values.global.imagePullPolicy }}
         ports:
         - { containerPort: 9090, protocol: TCP, name: http }
         securityContext: {{ .Values.haproxy.securityContext | toYaml | nindent 10 }}
