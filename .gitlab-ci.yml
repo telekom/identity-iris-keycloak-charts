@@ -1,4 +1,4 @@
 include:
-  - project: 'tif/gitlab-pipelines'
+  - project: 'dhei/teams/io/templates/gitlab-pipelines'
     file: '/helm/PublishChart.gitlab-ci.yml'
-    ref: master
+    ref: develop
