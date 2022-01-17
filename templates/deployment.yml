@@ -44,6 +44,7 @@ spec:
       containers:
       - name: haproxy
         image: '{{ include "haproxy.image" $ }}'
+        imagePullPolicy: {{ .Values.haproxy.imagePullPolicy | default .Values.global.imagePullPolicy }}
         ports:
         - { containerPort: 9090, protocol: TCP, name: http }
         securityContext: {{ .Values.haproxy.securityContext | toYaml | nindent 10 }}
@@ -64,18 +65,25 @@ spec:
         - { containerPort: {{ .Values.prometheus.port | default 9542 }}, protocol: TCP, name: metrics-http }
 {{- end }}
         livenessProbe:
-          initialDelaySeconds: {{ .Values.initialDelaySeconds | default 60 }}
-          periodSeconds: {{ .Values.periodSeconds | default 10 }}
-          failureThreshold: {{ .Values.failureThreshold | default 30 }}
+          initialDelaySeconds: 0
+          timeoutSeconds: 5
           httpGet:
-            path: '/auth/realms/master'
+            path: '/auth/'
             port: 8080
-            scheme: 'HTTP'
         readinessProbe:
+          initialDelaySeconds: 30
+          timeoutSeconds: 1
           httpGet:
             path: '/auth/realms/master'
             port: 8080
-            scheme: 'HTTP'
+        startupProbe:
+          httpGet:
+            path: '/auth/'
+            port: 8080
+          initialDelaySeconds: 30
+          timeoutSeconds: 1
+          failureThreshold: 60
+          periodSeconds: 5
         resources: {{ .Values.resources | toYaml | nindent 10 }}
         volumeMounts:
         - name: tmp
@@ -107,6 +115,7 @@ spec:
         env:
         {{- include "keycloak.checkdatabase.env" $ | indent 8 }}
         resources: {{ .Values.postgresql.resources | toYaml | nindent 10 }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds | default 60 }}
       volumes:
       - name: tmp
         emptyDir: {}

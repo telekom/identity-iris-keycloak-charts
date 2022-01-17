@@ -2,6 +2,11 @@
 
 [[_TOC_]]
 
+## 1.9.0
+  - Added startupProbe
+  - Updated liveness and readiness probe values
+  - Grace period for pod termination
+
 ## 1.8.0
   - Added haproxy for blocking malicious query parameters
 

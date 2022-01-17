@@ -57,9 +57,10 @@ After a succesfull installation the component can be reached at the URL: `keyclo
 
 ### HA and multiple replicas
 
-For multiple replicas set the following ingress annotation:
+For multiple replicas set the following ingress annotations:
 ```yaml
 nginx.ingress.kubernetes.io/affinity: "cookie"
+nginx.ingress.kubernetes.io/session-cookie-change-on-failure: "true"
 ```
 
 **configuration file**
