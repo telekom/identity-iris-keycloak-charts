@@ -117,6 +117,20 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- $realms -}}
 {{ end }}
 
+{{- define "keycloak.haCacheEnvParams" -}}
+{{- if or (gt (int .Values.replicas) 1) .Values.autoscaling.enabled }}
+- name: CACHE_OWNERS_COUNT
+  value: "2"
+- name: CACHE_OWNERS_AUTH_SESSIONS_COUNT
+  value: "2"
+{{- else }}
+- name: CACHE_OWNERS_COUNT
+  value: "1"
+- name: CACHE_OWNERS_AUTH_SESSIONS_COUNT
+  value: "1"
+{{- end }}
+{{ end }}
+
 {{- define "keycloak.env" }}
 - name: KEYCLOAK_USER
   value: {{ .Values.admin_username }}
@@ -125,12 +139,17 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
     secretKeyRef:
       name: {{ .Release.Name }}
       key: keycloakPassword
+- name: KEYCLOAK_LOGLEVEL
+  value: {{ .Values.logLevel | default "INFO" }}
+- name: WILDFLY_LOGLEVEL
+  value: {{ .Values.logLevel | default "INFO" }}
 {{- if not (eq (include "keycloak.realms" $) "") }}
 - name: KEYCLOAK_IMPORT
   value: {{ trimPrefix "," (include "keycloak.realms" $)  | quote }}
 {{- end }}
 - name: PROXY_ADDRESS_FORWARDING
   value: "true"
+{{- include "keycloak.haCacheEnvParams" . -}}
 - name: DB_VENDOR
   value: "postgres"
 - name: DB_PORT

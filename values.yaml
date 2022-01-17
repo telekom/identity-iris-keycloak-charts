@@ -132,6 +132,10 @@ resources:
     cpu: 100m
     memory: 600Mi
 
+terminationGracePeriodSeconds: 60
+
+#logLevel: INFO
+
 ingress:
   enabled: true
   #hostname: ""
@@ -176,6 +180,7 @@ customConfig:
 javaOptions: "-XX:+UseContainerSupport -XX:MinRAMPercentage=50.0 -XX:MaxRAMPercentage=75.0 -XX:MetaspaceSize=96M -XX:MaxMetaspaceSize=256m -Djava.net.preferIPv4Stack=true -Djboss.modules.system.pkgs=org.jboss.byteman -Djava.awt.headless=true"
 
 haproxy:
+  #imagePullPolicy: IfNotPresent
   securityContext: {}
   resources:
     limits:
