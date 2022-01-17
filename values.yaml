@@ -132,6 +132,10 @@ resources:
     cpu: 100m
     memory: 600Mi
 
+terminationGracePeriodSeconds: 60
+
+#logLevel: INFO
+
 ingress:
   enabled: true
   #hostname: ""
