@@ -1,4 +1,4 @@
-apiVersion: v1
+apiVersion: v2
 name: iris
 version: 0.0.0
 appVersion: 9.0.0
@@ -8,6 +8,9 @@ keywords:
 - tif
 - iris
 - keycloak
+dependencies:
+- name: postgresql
+  version: 1.0.0
 maintainers:
 - name: Mike Herwig
   email: Mike.Herwig@external.t-systems.com
