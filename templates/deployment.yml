@@ -64,26 +64,18 @@ spec:
 {{- if eq .Values.prometheus.enabled true }}
         - { containerPort: {{ .Values.prometheus.port | default 9542 }}, protocol: TCP, name: metrics-http }
 {{- end }}
+        {{- with .Values.livenessProbe }}
         livenessProbe:
-          initialDelaySeconds: 0
-          timeoutSeconds: 5
-          httpGet:
-            path: '/auth/'
-            port: 8080
+          {{- tpl . $ | nindent 10 }}
+        {{- end }}
+        {{- with .Values.readinessProbe }}
         readinessProbe:
-          initialDelaySeconds: 30
-          timeoutSeconds: 1
-          httpGet:
-            path: '/auth/realms/master'
-            port: 8080
+          {{- tpl . $ | nindent 10 }}
+        {{- end }}
+        {{- with .Values.startupProbe }}
         startupProbe:
-          httpGet:
-            path: '/auth/'
-            port: 8080
-          initialDelaySeconds: 30
-          timeoutSeconds: 1
-          failureThreshold: 60
-          periodSeconds: 5
+          {{- tpl . $ | nindent 10 }}
+        {{- end }}
         resources: {{ .Values.resources | toYaml | nindent 10 }}
         volumeMounts:
         - name: tmp

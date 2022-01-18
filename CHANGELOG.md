@@ -6,6 +6,7 @@
   - Added startupProbe
   - Updated liveness and readiness probe values
   - Grace period for pod termination
+  - Probe settings from values.yaml
 
 ## 1.8.0
   - Added haproxy for blocking malicious query parameters
