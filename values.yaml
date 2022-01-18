@@ -68,10 +68,6 @@ templateChangeTriggers: []
 
 securityContext: {}
 
-#initialDelaySeconds: 60
-#periodSeconds: 10
-#failureThreshold: 30
-
 # Keycloak admin role credentials
 admin_username: admin
 admin_password: changeme
@@ -131,6 +127,29 @@ resources:
   requests:
     cpu: 100m
     memory: 600Mi
+
+livenessProbe: |-
+  httpGet:
+    path: '/auth/'
+    port: 8080
+  initialDelaySeconds: 300
+  timeoutSeconds: 5
+
+readinessProbe: |-
+  httpGet:
+    path: '/auth/realms/master'
+    port: 8080
+  initialDelaySeconds: 30
+  timeoutSeconds: 1
+
+startupProbe: |-
+  httpGet:
+    path: '/auth/'
+    port: 8080
+  initialDelaySeconds: 30
+  timeoutSeconds: 1
+  failureThreshold: 60
+  periodSeconds: 5
 
 terminationGracePeriodSeconds: 60
 
