@@ -4,7 +4,6 @@ kind: ServiceMonitor
 metadata:
   name: {{ .Release.Name }}
   labels: {{ include "keycloak.labels" $ | nindent 4 }}
-          {{- include "common.status-monitor.labels" $ | nindent 4 }}
     release: {{ .Values.prometheus.serviceMonitor.selector | default "guardians-raccoon" }}
   namespace: {{ .Release.Namespace }}
 spec:
