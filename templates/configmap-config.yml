@@ -68,19 +68,10 @@ data:
         <profile>
             <subsystem xmlns="urn:jboss:domain:logging:8.0">
                 <console-handler name="CONSOLE">
-                    <level name="INFO"/>
                     <formatter>
                         <named-formatter name="COLOR-PATTERN"/>
                     </formatter>
                 </console-handler>
-                <periodic-rotating-file-handler name="FILE" autoflush="true">
-                    <formatter>
-                        <named-formatter name="PATTERN"/>
-                    </formatter>
-                    <file relative-to="jboss.server.log.dir" path="server.log"/>
-                    <suffix value=".yyyy-MM-dd"/>
-                    <append value="true"/>
-                </periodic-rotating-file-handler>
                 <logger category="com.arjuna">
                     <level name="WARN"/>
                 </logger>
@@ -93,11 +84,13 @@ data:
                 <logger category="sun.rmi">
                     <level name="WARN"/>
                 </logger>
+                <logger category="org.keycloak">
+                    <level name="${env.KEYCLOAK_LOGLEVEL:INFO}"/>
+                </logger>
                 <root-logger>
-                    <level name="INFO"/>
+                    <level name="${env.ROOT_LOGLEVEL:INFO}"/>
                     <handlers>
                         <handler name="CONSOLE"/>
-                        <handler name="FILE"/>
                     </handlers>
                 </root-logger>
                 <formatter name="PATTERN">
@@ -111,14 +104,6 @@ data:
             <subsystem xmlns="urn:jboss:domain:core-management:1.0"/>
             <subsystem xmlns="urn:jboss:domain:datasources:6.0">
                 <datasources>
-                    <datasource jndi-name="java:jboss/datasources/ExampleDS" pool-name="ExampleDS" enabled="true" use-java-context="true" statistics-enabled="${wildfly.datasources.statistics-enabled:${wildfly.statistics-enabled:false}}">
-                        <connection-url>jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE</connection-url>
-                        <driver>h2</driver>
-                        <security>
-                            <user-name>sa</user-name>
-                            <password>sa</password>
-                        </security>
-                    </datasource>
                     <datasource jndi-name="java:jboss/datasources/KeycloakDS" pool-name="KeycloakDS" enabled="true" use-java-context="true" use-ccm="true">
                         <connection-url>jdbc:postgresql://${env.DB_ADDR:postgres}/${env.DB_DATABASE:keycloak}${env.JDBC_PARAMS:}</connection-url>
                         <driver>postgresql</driver>
@@ -135,18 +120,7 @@ data:
                             <background-validation-millis>60000</background-validation-millis>
                         </validation>
                     </datasource>
-                    <datasource jndi-name="java:jboss/datasources/KeycloakDS" pool-name="KeycloakDS" enabled="true" use-java-context="true" statistics-enabled="${wildfly.datasources.statistics-enabled:${wildfly.statistics-enabled:false}}">
-                        <connection-url>jdbc:h2:${jboss.server.data.dir}/keycloak;AUTO_SERVER=TRUE</connection-url>
-                        <driver>h2</driver>
-                        <security>
-                            <user-name>sa</user-name>
-                            <password>sa</password>
-                        </security>
-                    </datasource>
                     <drivers>
-                        <driver name="h2" module="com.h2database.h2">
-                            <xa-datasource-class>org.h2.jdbcx.JdbcDataSource</xa-datasource-class>
-                        </driver>
                         <driver name="postgresql" module="org.postgresql.jdbc">
                             <xa-datasource-class>org.postgresql.xa.PGXADataSource</xa-datasource-class>
                         </driver>
@@ -172,7 +146,7 @@ data:
                         <managed-scheduled-executor-service name="default" jndi-name="java:jboss/ee/concurrency/scheduler/default" context-service="default" hung-task-termination-period="0" hung-task-threshold="60000" keepalive-time="3000"/>
                     </managed-scheduled-executor-services>
                 </concurrent>
-                <default-bindings context-service="java:jboss/ee/concurrency/context/default" datasource="java:jboss/datasources/ExampleDS" managed-executor-service="java:jboss/ee/concurrency/executor/default" managed-scheduled-executor-service="java:jboss/ee/concurrency/scheduler/default" managed-thread-factory="java:jboss/ee/concurrency/factory/default"/>
+                <default-bindings context-service="java:jboss/ee/concurrency/context/default" datasource="java:jboss/datasources/KeycloakDS" managed-executor-service="java:jboss/ee/concurrency/executor/default" managed-scheduled-executor-service="java:jboss/ee/concurrency/scheduler/default" managed-thread-factory="java:jboss/ee/concurrency/factory/default"/>
             </subsystem>
             <subsystem xmlns="urn:jboss:domain:ejb3:9.0">
                 <session-bean>
@@ -546,6 +520,8 @@ data:
                     <staticMaxAge>2592000</staticMaxAge>
                     <cacheThemes>true</cacheThemes>
                     <cacheTemplates>true</cacheTemplates>
+                    <welcomeTheme>${env.KEYCLOAK_WELCOME_THEME:keycloak}</welcomeTheme>
+                    <default>${env.KEYCLOAK_DEFAULT_THEME:keycloak}</default>
                     <dir>${jboss.home.dir}/themes</dir>
                 </theme>
                 <spi name="eventsStore">
@@ -614,6 +590,15 @@ data:
                             <property name="forceBackendUrlToFrontendUrl" value="false"/>
                         </properties>
                     </provider>
+                    <provider name="fixed" enabled="true">
+                        <properties>
+                            <property name="hostname" value="${keycloak.hostname.fixed.hostname:localhost}"/>
+                            <property name="httpPort" value="${keycloak.hostname.fixed.httpPort:-1}"/>
+                            <property name="httpsPort" value="${keycloak.hostname.fixed.httpsPort:-1}"/>
+                            <property name="alwaysHttps" value="${keycloak.hostname.fixed.alwaysHttps:false}"/>
+                        </properties>
+                    </provider>
+                </spi>
 {{- end }}
 {{- if eq .Values.prometheus.enabled true -}}
 {{- if .Values.prometheus.authToken }}
@@ -626,7 +611,6 @@ data:
                 </spi>
 {{- end -}}
 {{- end }}
-                </spi>
             </subsystem>
             <subsystem xmlns="urn:jboss:domain:mail:4.0">
                 <mail-session name="default" jndi-name="java:jboss/mail/Default">
@@ -669,8 +653,8 @@ data:
                 <buffer-cache name="default"/>
                 <server name="default-server">
                     <ajp-listener name="ajp" socket-binding="ajp"/>
-                    <http-listener name="default" socket-binding="http" redirect-socket="https" enable-http2="true"/>
-                    <https-listener name="https" socket-binding="https" ssl-context="applicationSSC" enable-http2="true"/>
+                    <http-listener name="default" socket-binding="http" redirect-socket="https" proxy-address-forwarding="${env.PROXY_ADDRESS_FORWARDING:false}" enable-http2="true"/>
+                    <https-listener name="https" socket-binding="https" ssl-context="applicationSSC" proxy-address-forwarding="${env.PROXY_ADDRESS_FORWARDING:false}" enable-http2="true"/>
                     <host name="default-host" alias="localhost">
                         <location name="/" handler="welcome-content"/>
                         <http-invoker http-authentication-factory="application-http-authentication"/>
@@ -705,6 +689,7 @@ data:
 {{- $authToken := .Values.prometheus.authToken | default "superuser" }}
                     <expression-filter name="set-metrics-auth-token-header" expression="set(attribute='%{i,X-Metrics-Auth-Token}', value='{{ $authToken }}')"/>
 {{- end }}
+                </filters>
                 <application-security-domains>
                     <application-security-domain name="other" security-domain="ApplicationDomain"/>
                 </application-security-domains>
