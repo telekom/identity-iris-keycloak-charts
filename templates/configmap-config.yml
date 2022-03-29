@@ -533,7 +533,7 @@ data:
                     </provider>
                 </spi>
                 <spi name="realmCache">
-                    <provider name="default" enabled="true"/>
+                    <provider name="default" enabled="false"/>
                 </spi>
                 <spi name="connectionsInfinispan">
                     <default-provider>default</default-provider>
