@@ -445,7 +445,7 @@ data:
                     <stack name="udp">
                         <transport type="UDP" socket-binding="jgroups-udp"/>
                         <protocol type="kubernetes.KUBE_PING">
-                            <property name="labels">app={{ .Release.Name }}</property>
+                            <property name="labels">cache.cluster={{ .Release.Name }}</property>
                             <property name="namespace">{{ .Release.Namespace }}</property>
                         </protocol>
                         <protocol type="MERGE3"/>
@@ -463,7 +463,7 @@ data:
                     <stack name="tcp">
                         <transport type="TCP" socket-binding="jgroups-tcp"/>
                         <protocol type="kubernetes.KUBE_PING">
-                            <property name="labels">app={{ .Release.Name }}</property>
+                            <property name="labels">cache.cluster={{ .Release.Name }}</property>
                             <property name="namespace">{{ .Release.Namespace }}</property>
                         </protocol>
                         <protocol type="MERGE3"/>

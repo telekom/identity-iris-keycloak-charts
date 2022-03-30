@@ -4,6 +4,7 @@
 
 {{- define "keycloak.labels" -}}
 app: {{ .Release.Name }}
+cache.cluster: {{ .Release.Name }}
 app.kubernetes.io/name: keycloak
 app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
 app.kubernetes.io/component: idp
