@@ -334,7 +334,6 @@ data:
                     <transport lock-timeout="60000"/>
                     <local-cache name="realms">
                         <object-memory size="10000"/>
-                        <expiration interval="1000"/>
                     </local-cache>
                     <local-cache name="users">
                         <object-memory size="10000"/>
