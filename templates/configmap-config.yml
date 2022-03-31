@@ -345,7 +345,7 @@ data:
                         <object-memory size="1000"/>
                         <expiration max-idle="3600000"/>
                     </local-cache>
-                    <distributed-cache name="work"/>
+                    <replicated-cache name="work"/>
 {{- if or (gt (int .Values.replicas) 1) .Values.autoscaling.enabled }}
                     <distributed-cache name="sessions" owners="2"/>
                     <distributed-cache name="authenticationSessions" owners="2"/>
