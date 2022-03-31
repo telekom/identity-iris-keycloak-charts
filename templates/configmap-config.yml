@@ -443,7 +443,7 @@ data:
                 <stacks>
                     <stack name="udp">
                         <transport type="UDP" socket-binding="jgroups-udp"/>
-                        <protocol type="kubernetes.KUBE_PING">                            
+                        <protocol type="kubernetes.KUBE_PING">
                             <property name="labels">app={{ .Release.Name }}</property>
                             <property name="namespace">{{ .Release.Namespace }}</property>
                         </protocol>
