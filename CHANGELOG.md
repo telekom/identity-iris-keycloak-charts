@@ -1,6 +1,9 @@
 **Table of contents**
 
 [[_TOC_]]
+## 0.0.0
+ - update labels for status page (include in general already with 1.10.0) using Subproduct for clustering
+
 ## 1.10.0
   - Use replicated-cache for work cache
  

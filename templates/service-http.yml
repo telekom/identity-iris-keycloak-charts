@@ -4,6 +4,7 @@ metadata:
   name: {{ .Release.Name }}
   labels: {{ include "keycloak.labels" $ | nindent 4 }}
           {{- include "common.status-monitor.labels" $ | nindent 4 }}
+          {{- include "status-monitor.labels" $ | nindent 4 }}
 spec:
   type: ClusterIP
   selector: {{ include "keycloak.selector" $ | nindent 4 }}
