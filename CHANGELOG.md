@@ -1,7 +1,9 @@
 **Table of contents**
 
 [[_TOC_]]
-
+## 1.10.0
+  - Use replicated-cache for work cache
+ 
 ## 1.9.0
   - Added startupProbe
   - Updated liveness and readiness probe values
