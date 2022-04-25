@@ -458,7 +458,7 @@ data:
             </subsystem>
             <subsystem xmlns="urn:jboss:domain:jgroups:8.0">
                 <channels default="ee">
-                    <channel name="ee" stack="udp" cluster="ejb"/>
+                    <channel name="ee" stack="tcp" cluster="ejb"/>
                 </channels>
                 <stacks>
                     <stack name="udp">
@@ -481,7 +481,6 @@ data:
                     </stack>
                     <stack name="tcp">
                         <transport type="TCP" socket-binding="jgroups-tcp"/>
-                        <socket-protocol type="MPING" socket-binding="jgroups-mping"/>
                         <protocol type="kubernetes.KUBE_PING">
                             <property name="labels">app={{ .Release.Name }}</property>
                             <property name="namespace">{{ .Release.Namespace }}</property>
