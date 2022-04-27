@@ -1,8 +1,11 @@
 **Table of contents**
 
 [[_TOC_]]
-## 0.0.0
- - update labels for status page (include in general already with 1.10.0) using Subproduct for clustering
+## 2.0.0
+ - Writable directory mounted at /opt/jboss (previously /opt/jboss/keycloak7standalone)
+ - Update default image to Keycloak 16.1.1
+ - Update configuration for Keycloak 16
+ - Update labels for status page (include in general already with 1.10.0) using Subproduct for clustering
 
 ## 1.10.0
   - Use replicated-cache for work cache
