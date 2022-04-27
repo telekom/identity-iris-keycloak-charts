@@ -32,8 +32,9 @@ Iris is a Keycloak based image that has been extended to integrate with logging 
 
 | Installed software versions      | Version Info       |    
 |----------------------------------|--------------------|
-| Keycloak                         |  9.0.0             |
-| - java                           |  11.0.6            |
+| Keycloak                         |  16.1.1            |
+| - java                           |  11.0.14           |
+| - wildfly                        |  26.0.6            |
 | PostgreSQL                       |  12.3              |
 
 ## Description
