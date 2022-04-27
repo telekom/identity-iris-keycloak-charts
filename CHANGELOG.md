@@ -3,7 +3,7 @@
 [[_TOC_]]
 ## 2.0.0
  - Writable directory mounted at /opt/jboss (previously /opt/jboss/keycloak/standalone)
- - Update default image to Keycloak 16.1.1
+ - Update default image to iris:2.0.0 (Keycloak 16.1.1)
  - Update configuration for Keycloak 16
  - Update labels for status page (include in general already with 1.10.0) using Subproduct for clustering
 
