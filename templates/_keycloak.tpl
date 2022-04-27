@@ -19,7 +19,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
 
 {{- define "keycloak.image" -}}
 {{- $imageName := "iris" -}}
-{{- $imageTag := "1.0.0" -}}
+{{- $imageTag := "2.0.0" -}}
 {{- $imageRepository := "mtr.external.otc.telekomcloud.com" -}}
 {{- $imageOrganization := "tif-public" -}}
 {{- if .Values.image -}}

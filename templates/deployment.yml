@@ -80,8 +80,8 @@ spec:
         volumeMounts:
         - name: tmp
           mountPath: /tmp
-        - name: standalone
-          mountPath: /opt/jboss/keycloak/standalone
+        - name: jboss
+          mountPath: /opt/jboss
         {{- include "keycloak.db.certificates.volumeMount" $ | indent 8 }}
       initContainers:
       - name: "init-standalone"
@@ -90,14 +90,14 @@ spec:
         securityContext: {{ .Values.securityContext | toYaml | nindent 10 }}
         resources: {{ .Values.resources | toYaml | nindent 10 }}
         volumeMounts:
-        - name: standalone
-          mountPath: /standalone
+        - name: jboss
+          mountPath: /jboss
         - name: config
           mountPath: /tmp/config
         - name: realms
           mountPath: /tmp/realms
         command: ['/bin/bash']
-        args: ['-c', 'cp -av /opt/jboss/keycloak/standalone/. /standalone/ || true; cp -av /tmp/config/. /standalone/configuration/ || true; cp -av /tmp/realms/ /standalone/configuration/ || true']
+        args: ['-c', 'cp -av /opt/jboss/. /jboss/ || true; cp -av /tmp/config/. /jboss/keycloak/standalone/configuration/ || true; cp -av /tmp/realms/ /jboss/keycloak/standalone/configuration/ || true']
       - name: "check-database"
         image: '{{ include "keycloak.init.image" $ }}'
         imagePullPolicy: {{ .Values.postgresql.imagePullPolicy | default .Values.global.imagePullPolicy }}
