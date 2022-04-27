@@ -111,7 +111,7 @@ spec:
       volumes:
       - name: tmp
         emptyDir: {}
-      - name: standalone
+      - name: jboss
         emptyDir: {}
       - name: config
         configMap:
