@@ -2,6 +2,14 @@
    {{- printf "mtr.external.otc.telekomcloud.com/tif-public/haproxy:2.4.0-alpine" -}}
 {{- end -}}
 
+{{- define "sidecar.image" -}}
+{{- if eq (.Values.haproxy.version | toString) "2" }}
+   {{- printf "mtr.external.otc.telekomcloud.com/tif-public/keycloak-proxy:latest" -}}
+{{- else }}
+   {{- printf "mtr.external.otc.telekomcloud.com/tif-public/haproxy:2.4.0-alpine" -}}
+{{- end }}
+{{- end -}}
+
 {{- define "keycloak.labels" -}}
 app: {{ .Release.Name }}
 app.kubernetes.io/name: keycloak

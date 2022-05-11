@@ -42,6 +42,18 @@ spec:
               topologyKey: "kubernetes.io/hostname"
       serviceAccountName: {{ .Release.Name }}
       containers:
+{{- if eq (.Values.haproxy.version | toString) "off" }}
+        # Caution! this pod runs without proxy sidecar
+{{- else if eq (.Values.haproxy.version | toString) "2" }}
+        # Caution: this change is only for a short time, so we keep the name "haproxy". Otherwise all metric-selectors have to be adjusted
+      - name: haproxy
+        image: '{{ include "sidecar.image" $ }}'
+        imagePullPolicy: {{ .Values.haproxy.imagePullPolicy | default .Values.global.imagePullPolicy }}
+        ports:
+        - { containerPort: 9090, protocol: TCP, name: http }
+        securityContext: {{ .Values.haproxy.securityContext | toYaml | nindent 10 }}
+        resources: {{ .Values.haproxy.resources | toYaml | nindent 10 }}
+{{- else }}
       - name: haproxy
         image: '{{ include "haproxy.image" $ }}'
         imagePullPolicy: {{ .Values.haproxy.imagePullPolicy | default .Values.global.imagePullPolicy }}
@@ -52,6 +64,7 @@ spec:
         volumeMounts:
         - name: ha-proxy-config
           mountPath: /usr/local/etc/haproxy
+{{- end }}
       - name: keycloak
         image: '{{ include "keycloak.image" $ }}'
         imagePullPolicy: {{ .Values.imagePullPolicy | default .Values.global.imagePullPolicy }}
@@ -60,7 +73,10 @@ spec:
         args: ['-c', 'rm -f /opt/jboss/keycloak/standalone/configuration/keycloak-add-user.json || true; /opt/jboss/tools/docker-entrypoint.sh -b 0.0.0.0 -c customer-standalone-ha.xml']
         env:
         {{- include "keycloak.env" $ | indent 8 }}
-        ports:
+        ports: 
+{{- if eq (.Values.haproxy.version | toString) "off" }}
+        - { containerPort: 9090, protocol: TCP, name: http }
+{{- end }}
 {{- if eq .Values.prometheus.enabled true }}
         - { containerPort: {{ .Values.prometheus.port | default 9542 }}, protocol: TCP, name: metrics-http }
 {{- end }}
@@ -116,9 +132,11 @@ spec:
       - name: config
         configMap:
           name: {{ .Release.Name }}-config
+{{- if eq (.Values.haproxy.version | toString) "1" }}
       - name: ha-proxy-config
         configMap:
           name: {{ .Release.Name }}-ha-proxy-config
+{{- end }}
       - name: realms
         configMap:
           name: {{ .Release.Name }}-realm

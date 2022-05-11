@@ -199,6 +199,12 @@ customConfig:
 javaOptions: "-XX:+UseContainerSupport -XX:MinRAMPercentage=50.0 -XX:MaxRAMPercentage=75.0 -XX:MetaspaceSize=96M -XX:MaxMetaspaceSize=256m -Djava.net.preferIPv4Stack=true -Djboss.modules.system.pkgs=org.jboss.byteman -Djava.awt.headless=true"
 
 haproxy:
+  # version can be
+  # - off = no proxy
+  # - 1 = haproxy
+  # - 2 = goproxy
+  # Caution: this change is only for a short time, so we keep the name "haproxy" for the container. Otherwise all metric-selectors have to be adjusted
+  version: 1
   #imagePullPolicy: IfNotPresent
   securityContext: {}
   resources:
