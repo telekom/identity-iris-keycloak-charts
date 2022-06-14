@@ -1,6 +1,9 @@
 **Table of contents**
 
 [[_TOC_]]
+## 2.0.1
+ - configurable forceBackendUrlToFrontendUrl (ticket SDDHEI-1334)
+
 ## 2.0.0
  - Writable directory mounted at /opt/jboss (previously /opt/jboss/keycloak/standalone)
  - Update default image to iris:2.0.0 (Keycloak 16.1.1)
