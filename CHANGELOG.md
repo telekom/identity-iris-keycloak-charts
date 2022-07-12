@@ -1,6 +1,9 @@
 **Table of contents**
 
 [[_TOC_]]
+## 2.0.2
+ - Pull image from MTR-Devops (new)
+
 ## 2.0.1
  - configurable forceBackendUrlToFrontendUrl (ticket SDDHEI-1334)
 
