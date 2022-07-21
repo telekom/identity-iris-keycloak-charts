@@ -20,7 +20,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
 {{- define "keycloak.image" -}}
 {{- $imageName := "iris" -}}
 {{- $imageTag := "2.0.0" -}}
-{{- $imageRepository := "mtr.devops.telekom.de/repository" -}}
+{{- $imageRepository := "mtr.devops.telekom.de" -}}
 {{- $imageOrganization := "tardis-internal" -}}
 {{- if .Values.image -}}
   {{- if not (kindIs "string" .Values.image) -}}
@@ -40,7 +40,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
 {{- define "keycloak.init.image" -}}
 {{- $imageName := "postgres" -}}
 {{- $imageTag := "12.3-debian" -}}
-{{- $imageRepository := "mtr.devops.telekom.de/repository" -}}
+{{- $imageRepository := "mtr.devops.telekom.de" -}}
 {{- $imageOrganization := "tardis-common" -}}
 {{- if .Values.postgresql.image -}}
   {{- if not (kindIs "string" .Values.postgresql.image) -}}

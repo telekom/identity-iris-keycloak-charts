@@ -40,7 +40,7 @@ max_prepared_transactions: "0"
 externalDatabase:
   enabled: false 
 
-image: mtr.devops.telekom.de/repository/tardis-common/postgres:12.3-debian
+image: mtr.devops.telekom.de/tardis-common/postgres:12.3-debian
 
 resources:
   limits:

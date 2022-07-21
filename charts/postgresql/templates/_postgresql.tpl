@@ -16,7 +16,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}-postgresql
 {{- define "postgresql.image" -}}
 {{- $imageName := "postgres" -}}
 {{- $imageTag := "12.3-debian" -}}
-{{- $imageRepository := "mtr.devops.telekom.de/repository" -}}
+{{- $imageRepository := "mtr.devops.telekom.de" -}}
 {{- $imageOrganization := "tardis-common" -}}
 {{- if .Values.image -}}
   {{- if not (kindIs "string" .Values.image) -}}

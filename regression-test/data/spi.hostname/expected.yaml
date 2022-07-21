@@ -1008,7 +1008,7 @@ spec:
           value: 32MB
         - name: POSTGRES_MAX_PREPARED_TRANSACTIONS
           value: "100"
-        image: 'mtr.devops.telekom.de/repository/tardis-common/postgres:12.3-debian'
+        image: 'mtr.devops.telekom.de/tardis-common/postgres:12.3-debian'
         imagePullPolicy: IfNotPresent
         securityContext: 
           {}
@@ -1207,7 +1207,7 @@ spec:
           mountPath: /opt/jboss        
       initContainers:
       - name: "init-standalone"
-        image: 'mtr.devops.telekom.de/repository/tardis-internal/iris:2.0.0'
+        image: 'mtr.devops.telekom.de/tardis-internal/iris:2.0.0'
         imagePullPolicy: IfNotPresent
         securityContext: 
           {}
