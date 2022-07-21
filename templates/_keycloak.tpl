@@ -21,7 +21,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
 {{- $imageName := "iris" -}}
 {{- $imageTag := "2.0.0" -}}
 {{- $imageRepository := "mtr.devops.telekom.de" -}}
-{{- $imageOrganization := "tardis-internal" -}}
+{{- $imageOrganization := "tardis-internal/io" -}}
 {{- if .Values.image -}}
   {{- if not (kindIs "string" .Values.image) -}}
     {{ $imageRepository = .Values.image.repository | default $imageRepository -}}

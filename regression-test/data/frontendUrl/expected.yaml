@@ -1129,7 +1129,7 @@ spec:
         - name: ha-proxy-config
           mountPath: /usr/local/etc/haproxy
       - name: keycloak
-        image: 'mtr.devops.telekom.de/repository/tardis-internal/iris:2.0.0'
+        image: 'mtr.devops.telekom.de/repository/tardis-internal/io/iris:2.0.0'
         imagePullPolicy: IfNotPresent
         securityContext: 
           {}
@@ -1206,7 +1206,7 @@ spec:
           mountPath: /opt/jboss        
       initContainers:
       - name: "init-standalone"
-        image: 'mtr.devops.telekom.de/tardis-internal/iris:2.0.0'
+        image: 'mtr.devops.telekom.de/tardis-internal/io/iris:2.0.0'
         imagePullPolicy: IfNotPresent
         securityContext: 
           {}
