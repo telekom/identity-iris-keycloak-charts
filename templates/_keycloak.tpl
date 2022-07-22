@@ -1,5 +1,5 @@
 {{- define "haproxy.image" -}}
-   {{- printf "mtr.external.otc.telekomcloud.com/tif-public/haproxy:2.4.0-alpine" -}}
+   {{- printf "mtr.devops.telekom.de/tardis-common/haproxy:2.4.0-alpine" -}}
 {{- end -}}
 
 {{- define "keycloak.labels" -}}
@@ -19,9 +19,9 @@ app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
 
 {{- define "keycloak.image" -}}
 {{- $imageName := "iris" -}}
-{{- $imageTag := "1.0.0" -}}
-{{- $imageRepository := "mtr.external.otc.telekomcloud.com" -}}
-{{- $imageOrganization := "tif-public" -}}
+{{- $imageTag := "2.0.0" -}}
+{{- $imageRepository := "mtr.devops.telekom.de" -}}
+{{- $imageOrganization := "tardis-internal/io" -}}
 {{- if .Values.image -}}
   {{- if not (kindIs "string" .Values.image) -}}
     {{ $imageRepository = .Values.image.repository | default $imageRepository -}}
@@ -40,8 +40,8 @@ app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
 {{- define "keycloak.init.image" -}}
 {{- $imageName := "postgres" -}}
 {{- $imageTag := "12.3-debian" -}}
-{{- $imageRepository := "mtr.external.otc.telekomcloud.com" -}}
-{{- $imageOrganization := "tif-public" -}}
+{{- $imageRepository := "mtr.devops.telekom.de" -}}
+{{- $imageOrganization := "tardis-common" -}}
 {{- if .Values.postgresql.image -}}
   {{- if not (kindIs "string" .Values.postgresql.image) -}}
     {{ $imageRepository = .Values.postgresql.image.repository | default $imageRepository -}}

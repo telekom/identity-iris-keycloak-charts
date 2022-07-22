@@ -1,19 +1,17 @@
 apiVersion: v2
 name: iris
 version: 0.0.0
-appVersion: 9.0.0
-description: Iris provided by DHEI
+appVersion: 16.1.1
+description: Iris provided by ENI-Hub
 keywords:
-- dhei
-- tif
+- enihub
+- tardis
 - iris
 - keycloak
 dependencies:
 - name: postgresql
   version: 1.0.0
 maintainers:
-- name: Mike Herwig
-  email: Mike.Herwig@external.t-systems.com
 - name: Christian Stein
   email: steinc@external.telekom.de
 - name: Georg Teichert-Matuschek

@@ -218,12 +218,12 @@ postgresql:
 
   # You can force using a specific image here:
   #image:
-  #repository: mtr.external.otc.telekomcloud.com
-  #organization: tif-public
+  #repository: mtr.devops.telekom.de
+  #organization: tardis-common
   #name: postgres
   #tag: 12.3-debian
   # Or use the flattened string form:
-  #image: mtr.external.otc.telekomcloud.com/tif-public/postgres:12.3-debian
+  #image: mtr.devops.telekom.de/tardis-common/postgres:12.3-debian
   #imagePullPolicy: IfNotPresent
 
   # PostgreSQL admin user (postgres) password

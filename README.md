@@ -32,8 +32,9 @@ Iris is a Keycloak based image that has been extended to integrate with logging 
 
 | Installed software versions      | Version Info       |    
 |----------------------------------|--------------------|
-| Keycloak                         |  9.0.0             |
-| - java                           |  11.0.6            |
+| Keycloak                         |  16.1.1            |
+| - java                           |  11.0.14           |
+| - wildfly                        |  26.0.6            |
 | PostgreSQL                       |  12.3              |
 
 ## Description
@@ -41,7 +42,7 @@ Iris is a Keycloak based image that has been extended to integrate with logging 
 **Important internal links:**
  - [this repository](https://ceiser-wbench.psst.t-online.corp/nexus3/#browse/browse:tif-public-raw:tif%2Finfr%2Fcharts%2Firis)
  - [chart in nexus](https://ceiser-wbench.psst.t-online.corp/nexus3/#browse/browse:tif-public-raw:tif%2Finfr%2Fcharts%2F2Firis)
- - [mtr-repo "tif-public"](https://mtr.external.otc.telekomcloud.com/organization/tif-public)
+ - [mtr-repo "common"](https://mtr.devops.telekom.de/repository/tardis-common/keycloak)
 
 **Important external links:**
 - Keycloak
@@ -106,8 +107,8 @@ The following table lists the configurable parameters of this chart.
 | `global.externalDatabase.sslCert`     | Client certificate, set for mTLS                                                  | `nil`                              |
 | `global.externalDatabase.sslKey`      | Client key, set for mTLS                                                          | `nil`                              |
 | `global.externalDatabase.sslRootCert` | Root certificate                                                                  | `nil`                              |
-| `image.repository`                    | MTR repository                                                                    | `mtr.external.otc.telekomcloud.com`|
-| `image.organization`                  | MTR organization                                                                  | `tif-public`                       |
+| `image.repository`                    | MTR repository                                                                    | `mtr.devops.telekom.de/repository/`|
+| `image.organization`                  | MTR organization                                                                  | `tardis-common`                    |
 | `image.name`                          | Docker image name in MTR                                                          | `iris`                             |
 | `image.tag`                           | Selected image tag                                                                | `1.0.0`                            |
 | `tls.secret`                          | TLS secret name                                                                   |                                    |
