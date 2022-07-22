@@ -612,8 +612,8 @@ data:
                     <default-provider>${keycloak.hostname.provider:default}</default-provider>
                     <provider name="default" enabled="true">
                         <properties>
-                            <property name="frontendUrl" value="${keycloak.frontendUrl:}"/>
-                            <property name="forceBackendUrlToFrontendUrl" value="false"/>
+                            <property name="frontendUrl" value="myhost.telekom.de"/>
+                            <property name="forceBackendUrlToFrontendUrl" value="true"/>
                         </properties>
                     </provider>
                     <provider name="fixed" enabled="true">
@@ -1057,7 +1057,7 @@ metadata:
   name: keycloak
   annotations:
     ops.eni.telekom.de/pipeline-meta-ref: keycloak-pipeline-metadata
-    checksum/config: 34c6100d4d68a6e61d58cf600a9b6901696693d356a3d585e2dbc0269c5fc8b9
+    checksum/config: 8c23eeaffc12ffdd9a535a2e88ed2d7f5ca6b5d266a54e3398e170bff08899f1
     checksum/realm: 0d21ef3d11e207984981fdbce8b702ba135347108076aa28a6378c3520f99a84   
   labels: 
     app: keycloak
@@ -1077,7 +1077,7 @@ spec:
     metadata:
       annotations:
         ops.eni.telekom.de/pipeline-meta-ref: keycloak-pipeline-metadata
-        checksum/config: 34c6100d4d68a6e61d58cf600a9b6901696693d356a3d585e2dbc0269c5fc8b9
+        checksum/config: 8c23eeaffc12ffdd9a535a2e88ed2d7f5ca6b5d266a54e3398e170bff08899f1
         checksum/realm: 0d21ef3d11e207984981fdbce8b702ba135347108076aa28a6378c3520f99a84
         prometheus.io/path: '/metrics'
         prometheus.io/scrape: 'true'
@@ -1129,7 +1129,7 @@ spec:
         - name: ha-proxy-config
           mountPath: /usr/local/etc/haproxy
       - name: keycloak
-        image: 'mtr.devops.telekom.de/tardis-internal/io/iris:2.0.0'
+        image: 'mtr.devops.telekom.de/repository/tardis-internal/io/iris:2.0.0'
         imagePullPolicy: IfNotPresent
         securityContext: 
           {}
