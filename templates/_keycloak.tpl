@@ -1,5 +1,5 @@
 {{- define "haproxy.image" -}}
-   {{- printf "mtr.external.otc.telekomcloud.com/tif-public/haproxy:2.4.0-alpine" -}}
+   {{- printf "mtr.devops.telekom.de/tardis-common/haproxy:2.4.0-alpine" -}}
 {{- end -}}
 
 {{- define "keycloak.labels" -}}

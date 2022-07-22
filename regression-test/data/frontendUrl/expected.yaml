@@ -1112,7 +1112,7 @@ spec:
       serviceAccountName: keycloak
       containers:
       - name: haproxy
-        image: 'mtr.external.otc.telekomcloud.com/tif-public/haproxy:2.4.0-alpine'
+        image: 'mtr.devops.telekom.de/tardis-common/haproxy:2.4.0-alpine'
         imagePullPolicy: IfNotPresent
         ports:
         - { containerPort: 9090, protocol: TCP, name: http }
