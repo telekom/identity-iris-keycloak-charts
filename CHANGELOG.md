@@ -2,10 +2,11 @@
 
 [[_TOC_]]
 ## 0.0.0
- - Using networking.k8s.io/v1 for ingress
+ - 
 
-## 2.0.2
- - Pull image from MTR-Devops (new)
+## 3.0.0
+ - Pull image from new MTR
+ - Using networking.k8s.io/v1 for ingress
 
 ## 2.0.1
  - configurable forceBackendUrlToFrontendUrl (ticket SDDHEI-1334)
