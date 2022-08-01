@@ -218,3 +218,10 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
   mountPath: /certificates
 {{- end -}}
 {{ end -}}
+
+{{- define "keycloak.ingress.tlsSecret" -}}
+{{- if not (and (empty .Values.ingress.tlsSecret) (empty .Values.global.ingress.tlsSecret)) -}}
+secretName: {{ .Values.ingress.tlsSecret | default .Values.global.ingress.tlsSecret -}}
+{{- end -}}
+{{- end -}}
+

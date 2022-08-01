@@ -21,8 +21,6 @@ spec:
   tls:
   - hosts:
     - {{ include "keycloak.host" . }}
-    {{- if .Values.ingress.tlsSecret }}
-    secretName: {{ .Values.ingress.tlsSecret }}
-    {{- end }}
+{{- include "keycloak.ingress.tlsSecret" . | nindent 4 -}}
 {{- end }}
 {{- end }}

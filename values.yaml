@@ -9,6 +9,7 @@ global:
     # fluentd label
     tif.telekom.de/group: tif
   ingress:
+    #tlsSecret: ""
     annotations:
       {}
       #external-dns.alpha.kubernetes.io/target: ""
