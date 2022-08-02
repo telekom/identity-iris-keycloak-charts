@@ -7,13 +7,27 @@ global:
     - '[A-Z]'
     - '[0-9]'
     - '[^a-zA-Z0-9]' 
+
+  labels:
+    # fluentd label
+    tif.telekom.de/group: tif
     
   db: {}
-  
+
+  externalDatabase:
+    enabled: false
+
+  imagePullSecrets: []
+  #- name: mtr-tif-public
+  #  registry: https://mtr.external.otc.telekomcloud.com
+  #  username: changeme
+  #  password: changeme
+
   imagePullPolicy: IfNotPresent
 
 
 securityContext: {}
+  #fsGroup: 999
 
 # database admin credentials
 admin_username: "postgres"

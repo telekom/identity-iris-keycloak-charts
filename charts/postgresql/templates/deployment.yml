@@ -23,7 +23,7 @@ spec:
     spec:
       {{- include "image_pull_secrets" $ | indent 6 }}
       securityContext:
-        fsGroup: {{ .Values.fsGroup | default 999 }}
+        fsGroup: {{ .Values.securityContext.fsGroup | default 999 }}
       containers:
       - name: {{ .Release.Name }}-{{ .Chart.Name }}
         resources: {{ .Values.resources | toYaml | nindent 10 }}
