@@ -3,6 +3,7 @@
 [[_TOC_]]
 ## 0.0.0
  - Global tlsSecret setting possible
+ - PostgreSQL: fsGroup added
 
 ## 3.0.0
  - Pull image from new MTR
