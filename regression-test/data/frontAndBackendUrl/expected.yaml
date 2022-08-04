@@ -975,6 +975,8 @@ spec:
         tardis.telekom.de/product: "iris"
         tardis.telekom.de/subproduct: "keycloak-database"
     spec:      
+      securityContext:
+        fsGroup: 999
       containers:
       - name: keycloak-postgresql
         resources: 
@@ -1129,7 +1131,7 @@ spec:
         - name: ha-proxy-config
           mountPath: /usr/local/etc/haproxy
       - name: keycloak
-        image: 'mtr.devops.telekom.de/repository/tardis-internal/io/iris:2.0.0'
+        image: 'mtr.devops.telekom.de/tardis-internal/io/iris:2.0.0'
         imagePullPolicy: IfNotPresent
         securityContext: 
           {}
@@ -1269,7 +1271,7 @@ spec:
           name: keycloak-realm
 ---
 # Source: iris/templates/ingress.yml
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: keycloak
@@ -1289,9 +1291,12 @@ spec:
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: keycloak
-          servicePort: 80
+          service:
+            name: keycloak
+            port:
+              number: 80
   tls:
   - hosts:
     - keycloak-default.lab.tif.telekom.de

@@ -212,6 +212,7 @@ haproxy:
 
 postgresql:
   securityContext: {}
+    #fsGroup: 999
 
   max_connections: "100"
   shared_buffers: "32MB"
