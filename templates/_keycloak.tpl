@@ -225,3 +225,8 @@ secretName: {{ .Values.ingress.tlsSecret | default .Values.global.ingress.tlsSec
 {{- end -}}
 {{- end -}}
 
+{{- define "keycloak.ingress.ingressClassName" -}}
+{{- if eq .Values.global.platform "tdi" -}}
+ingressClassName: {{ .Values.ingress.ingressClassName | default "triton-ingress" -}}
+{{- end -}}
+{{- end -}}
