@@ -2,8 +2,11 @@
 
 [[_TOC_]]
 ## 0.0.0
+
+## 3.0.1
  - Global tlsSecret setting possible
  - PostgreSQL: fsGroup added
+ - enilogin theme
 
 ## 3.0.0
  - Pull image from new MTR
