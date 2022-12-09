@@ -3,6 +3,9 @@
 [[_TOC_]]
 ## 0.0.0
 
+## 3.0.2
+ - Update enilogin theme
+
 ## 3.0.1
  - Global tlsSecret setting possible
  - PostgreSQL: fsGroup added
