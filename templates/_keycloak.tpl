@@ -92,14 +92,6 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- printf "ssl=%s&sslmode=%s%s%s%s" $ssl $sslMode $sslCert $sslKey $sslRootCert -}}
 {{ end -}}
 
-{{- define "keycloak.javaOptions" -}}
-{{- if .Values.javaOptions -}}
-{{ .Values.javaOptions }}
-{{- else -}}
--Xms64m -Xmx512m -XX:MetaspaceSize=96M -XX:MaxMetaspaceSize=256m -Djava.net.preferIPv4Stack=true -Djboss.modules.system.pkgs=org.jboss.byteman -Djava.awt.headless=true
-{{- end -}}
-{{- end -}}
-
 {{- define "keycloak.realms" }}
 {{- $realmsPath := "/opt/jboss/keycloak/standalone/configuration/realms" -}}
 {{- $realms := "" -}}
@@ -168,10 +160,6 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- if .Values.global.externalDatabase.ssl }}
 - name: JDBC_PARAMS
   value: {{ include "keycloak.jdbcParams" $ | quote }}
-{{- end -}}
-{{- if .Values.javaOptions }}
-- name: JAVA_OPTS
-  value: {{ include "keycloak.javaOptions" $ | quote }}
 {{- end -}}
 {{- end -}}
 
