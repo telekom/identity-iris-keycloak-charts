@@ -57,7 +57,7 @@ spec:
         imagePullPolicy: {{ .Values.imagePullPolicy | default .Values.global.imagePullPolicy }}
         securityContext: {{ .Values.securityContext | toYaml | nindent 10 }}
         command: ['/bin/bash']
-        args: ['-c', 'rm -f /opt/keycloak/standalone/configuration/keycloak-add-user.json || true; /opt/tools/docker-entrypoint.sh -b 0.0.0.0 -c customer-standalone-ha.xml']
+        args: ['-c', 'rm -f /opt/jboss/keycloak/standalone/configuration/keycloak-add-user.json || true; /opt/jboss/tools/docker-entrypoint.sh -b 0.0.0.0 -c customer-standalone-ha.xml']
         env:
         {{- include "keycloak.env" $ | indent 8 }}
         ports:
@@ -80,6 +80,8 @@ spec:
         volumeMounts:
         - name: tmp
           mountPath: /tmp
+        - name: jboss
+          mountPath: /opt/jboss
         {{- include "keycloak.db.certificates.volumeMount" $ | indent 8 }}
       initContainers:
       - name: "init-standalone"
@@ -88,10 +90,14 @@ spec:
         securityContext: {{ .Values.securityContext | toYaml | nindent 10 }}
         resources: {{ .Values.resources | toYaml | nindent 10 }}
         volumeMounts:
+        - name: jboss
+          mountPath: /jboss
         - name: config
           mountPath: /tmp/config
         - name: realms
           mountPath: /tmp/realms
+        command: ['/bin/bash']
+        args: ['-c', 'cp -av /opt/jboss/. /jboss/ || true; cp -av /tmp/config/. /jboss/keycloak/standalone/configuration/ || true; cp -av /tmp/realms/ /jboss/keycloak/standalone/configuration/ || true']
       - name: "check-database"
         image: '{{ include "keycloak.init.image" $ }}'
         imagePullPolicy: {{ .Values.postgresql.imagePullPolicy | default .Values.global.imagePullPolicy }}
@@ -105,7 +111,11 @@ spec:
       volumes:
       - name: tmp
         emptyDir: {}
+      - name: jboss
+        emptyDir: {}
       - name: config
+        configMap:
+          name: {{ .Release.Name }}-config
       - name: ha-proxy-config
         configMap:
           name: {{ .Release.Name }}-ha-proxy-config
