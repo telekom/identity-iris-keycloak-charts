@@ -123,9 +123,13 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- end }}
 {{ end }}
 
+{{- define "keycloak.url" }}
+{{ printf "https://%s:%s" (include "keycloak.host" $) 80 }}
+{{- end }}
+
 {{- define "keycloak.env" }}
-- name: KC_HOSTNAME
-  value: {{ include "keycloak.host" $ }}
+- name: KC_HOSTNAME_URL
+  value: {{ include "keycloak.url" $ }}
 - name: KC_HTTP_ENABLED
   value: "true"
 - name: KEYCLOAK_ADMIN
