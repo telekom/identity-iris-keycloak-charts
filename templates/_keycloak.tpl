@@ -128,11 +128,9 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
   value: {{ include "keycloak.host" $ }}
 - name: KC_HTTP_ENABLED
   value: "true"
-- name: KC_HTTP_RELATIVE_PATH
-  value: "/auth"
-- name: KEYCLOAK_USER
+- name: KEYCLOAK_ADMIN
   value: {{ .Values.admin_username }}
-- name: KEYCLOAK_PASSWORD
+- name: KEYCLOAK_ADMIN_PASSWORD
   valueFrom:
     secretKeyRef:
       name: {{ .Release.Name }}
@@ -146,8 +144,6 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 - name: PROXY_ADDRESS_FORWARDING
   value: "true"
 {{- include "keycloak.haCacheEnvParams" . -}}
-- name: KC_DB
-  value: "postgres"
 - name: KC_DB_URL_PORT
   value: "5432"
 - name: KC_DB_URL_HOST
