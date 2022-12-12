@@ -146,17 +146,17 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 - name: PROXY_ADDRESS_FORWARDING
   value: "true"
 {{- include "keycloak.haCacheEnvParams" . -}}
-- name: DB_VENDOR
+- name: KC_DB
   value: "postgres"
-- name: DB_PORT
+- name: KC_DB_URL_PORT
   value: "5432"
-- name: DB_ADDR
+- name: KC_DB_URL_HOST
   value: {{ include "db.host" $ }}
-- name: DB_DATABASE
+- name: KC_DB_URL_DATABASE
   value: {{ .Values.global.db.database }} 
-- name: DB_USER
+- name: KC_DB_USERNAME
   value: {{ .Values.global.db.username }}
-- name: DB_PASSWORD
+- name: KC_DB_PASSWORD
   valueFrom:
     secretKeyRef:
       name: {{ .Release.Name }}
