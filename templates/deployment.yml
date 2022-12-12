@@ -56,7 +56,7 @@ spec:
         image: '{{ include "keycloak.image" $ }}'
         imagePullPolicy: {{ .Values.imagePullPolicy | default .Values.global.imagePullPolicy }}
         securityContext: {{ .Values.securityContext | toYaml | nindent 10 }}
-        args: ['start']
+        args: ['start', '--optimized' , '--verbose']
         env:
         {{- include "keycloak.env" $ | indent 8 }}
         ports:
