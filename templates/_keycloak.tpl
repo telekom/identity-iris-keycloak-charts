@@ -139,8 +139,6 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
       key: keycloakPassword
 - name: KEYCLOAK_LOGLEVEL
   value: {{ .Values.logLevel | default "INFO" }}
-- name: WILDFLY_LOGLEVEL
-  value: {{ .Values.logLevel | default "INFO" }}
 {{- if not (eq (include "keycloak.realms" $) "") }}
 - name: KEYCLOAK_IMPORT
   value: {{ trimPrefix "," (include "keycloak.realms" $)  | quote }}
