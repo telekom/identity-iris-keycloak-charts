@@ -65,7 +65,6 @@ ops.eni.telekom.de/pipeline-force-redeploy: '{{ now | date "2006-01-02T15:04:05Z
 {{- end -}}
 
 {{- define "keycloak.checksums" -}}
-checksum/config: {{ include (print $.Template.BasePath "/configmap-config.yml") . | sha256sum }}
 checksum/realm: {{ include (print $.Template.BasePath "/configmap-realm.yml") . | sha256sum }}
 {{- range .Values.templateChangeTriggers }}
 checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
@@ -93,7 +92,7 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{ end -}}
 
 {{- define "keycloak.realms" }}
-{{- $realmsPath := "/opt/jboss/keycloak/standalone/configuration/realms" -}}
+{{- $realmsPath := "/opt/keycloak/standalone/configuration/realms" -}}
 {{- $realms := "" -}}
 {{- range $path, $_ := .Files.Glob "realms/*.json" -}}
   {{- $jsonFilename := base $path -}}
