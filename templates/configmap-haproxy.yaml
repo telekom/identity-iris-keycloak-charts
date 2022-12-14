@@ -41,7 +41,9 @@ data:
         # -m string match
         # found pattern matching method which means "only check if the requested sample could be found in the stream" 
         acl block_url_param urlp(request_uri) -m found
+        acl protect_metrics path -m sub metrics
         # block http requests if rule applies
         http-request deny if block_url_param
+        http-request deny if protect_metrics
         # route to iris
         server s1 127.0.0.1:8080
