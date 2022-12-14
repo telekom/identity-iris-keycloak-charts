@@ -3,6 +3,9 @@
 [[_TOC_]]
 ## 0.0.0
 
+## 3.0.3
+ - Suppress metrics in path via ha-proxy acl
+
 ## 3.0.2
  - Update enilogin theme
 
