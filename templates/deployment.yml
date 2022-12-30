@@ -76,6 +76,8 @@ spec:
         {{- end }}
         resources: {{ .Values.resources | toYaml | nindent 10 }}
         volumeMounts:
+        - name: config
+          mountPath: /opt/keycloak/conf/
         - name: tmp
           mountPath: /tmp
         {{- include "keycloak.db.certificates.volumeMount" $ | indent 8 }}
