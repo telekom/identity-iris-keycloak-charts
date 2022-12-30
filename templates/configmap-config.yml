@@ -734,13 +734,19 @@ data:
     </server>
   cache-ispn.xml: |-
     <?xml version="1.0" encoding="UTF-8"?>
+    <jgroups>
+        <stack name="eni-kubernetes" extends="kubernetes">
+            <property name="labels">app={{ .Release.Name }}</property>
+            <property name="namespace">{{ .Release.Namespace }}</property>
+        </stack>
+    </jgroups>
     <infinispan
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="urn:infinispan:config:13.0 http://www.infinispan.org/schemas/infinispan-config-13.0.xsd"
             xmlns="urn:infinispan:config:13.0">
 
       <cache-container name="keycloak">
-        <transport lock-timeout="60000"/>
+        <transport stack="eni-kubernetes" lock-timeout="60000"/>
             <local-cache name="realms">
               <memory storage="HEAP" max-size="10000"/>            
             </local-cache>

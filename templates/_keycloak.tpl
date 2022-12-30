@@ -109,20 +109,6 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- $realms -}}
 {{ end }}
 
-{{- define "keycloak.haCacheEnvParams" -}}
-{{- if or (gt (int .Values.replicas) 1) .Values.autoscaling.enabled }}
-- name: CACHE_OWNERS_COUNT
-  value: "2"
-- name: CACHE_OWNERS_AUTH_SESSIONS_COUNT
-  value: "2"
-{{- else }}
-- name: CACHE_OWNERS_COUNT
-  value: "1"
-- name: CACHE_OWNERS_AUTH_SESSIONS_COUNT
-  value: "1"
-{{- end }}
-{{ end }}
-
 {{- define "keycloak.url" }}
 {{- printf "https://%s:%s" (include "keycloak.host" $) "80" }}
 {{- end }}
@@ -149,7 +135,6 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- end }}
 - name: PROXY_ADDRESS_FORWARDING
   value: "true"
-{{- include "keycloak.haCacheEnvParams" . -}}
 - name: KC_DB_URL_PORT
   value: "5432"
 - name: KC_DB_URL_HOST
