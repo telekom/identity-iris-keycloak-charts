@@ -31,6 +31,14 @@ data:
         # acl block_url_param urlp(request_uri) -m found
         # http-request deny if block_url_param
         default_backend be_http_default
+    
+    frontend metrics_http
+        bind :9542
+        mode http
+        option httplog
+        # use metrics backend if the path is /metrics
+        use_backend be_metrics_default if { path /metrics } 
+
 
     # traffic routing
     backend be_http_default
@@ -43,7 +51,12 @@ data:
         acl block_url_param urlp(request_uri) -m found
         acl protect_metrics path -m sub metrics
         # block http requests if rule applies
-        http-request deny if block_url_param
-        http-request deny if protect_metrics
+        http-request deny if block_url_param || protect_metrics
         # route to iris
         server s1 127.0.0.1:8080
+    
+    backend be_metrics_default
+        mode http
+        http-request set-path /auth/realms/master/metrics
+        server s1 127.0.0.1:8080
+
