@@ -732,7 +732,7 @@ data:
             </outbound-socket-binding>
         </socket-binding-group>
     </server>
-  cache-ispn.xml: |-
+  eni-infinispan.xml: |-
     <?xml version="1.0" encoding="UTF-8"?>
     <jgroups>
         <stack name="eni-kubernetes" extends="kubernetes">

@@ -120,6 +120,8 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
   value: edge
 - name: KC_HTTP_ENABLED
   value: "true"
+- name: KC_CACHE_CONFIG_FILE  
+  value: eni-infinispan.xml
 - name: KEYCLOAK_ADMIN
   value: {{ .Values.admin_username }}
 - name: KEYCLOAK_ADMIN_PASSWORD
