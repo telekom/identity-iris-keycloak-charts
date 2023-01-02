@@ -5,4 +5,5 @@ metadata:
   labels: {{ include "keycloak.labels" $ | nindent 4 }}
 spec:
   type: ClusterIP
+  clusterIP: None
   selector: {{ include "keycloak.selector" $ | nindent 4 }}
