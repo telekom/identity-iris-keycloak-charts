@@ -33,7 +33,7 @@ data:
         default_backend be_http_default
     
     frontend metrics_http
-        bind :9542
+        bind :{{ .Values.prometheus.port | default 9542 }}
         mode http
         option httplog
         # use metrics backend if the path is /metrics

@@ -122,6 +122,8 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
   value: "true"
 - name: KC_CACHE_CONFIG_FILE  
   value: eni-infinispan.xml
+- name: jgroups.dns.query
+  value: {{ .Release.Name }}-jgroups.{{ .Release.Namespace }}
 - name: KEYCLOAK_ADMIN
   value: {{ .Values.admin_username }}
 - name: KEYCLOAK_ADMIN_PASSWORD
