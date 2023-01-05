@@ -756,7 +756,6 @@ data:
             <replicated-cache name="work">
                 <expiration lifespan="900000000000000000"/>
             </replicated-cache>
-{{- if or (gt (int .Values.replicas) 1) .Values.autoscaling.enabled }}
             <distributed-cache name="sessions" owners="2">
                 <expiration lifespan="900000000000000000"/>
             </distributed-cache>
@@ -779,29 +778,5 @@ data:
                 <memory storage="HEAP" max-size="-1"/>
                 <expiration interval="300000" lifespan="900000000000000000" max-idle="-1"/>
             </distributed-cache>
-{{- else }}
-            <distributed-cache name="sessions" owners="1">
-            <expiration lifespan="900000000000000000"/>
-            </distributed-cache>
-            <distributed-cache name="authenticationSessions" owners="1">
-                <expiration lifespan="900000000000000000"/>
-            </distributed-cache>
-            <distributed-cache name="offlineSessions" owners="1">
-                <expiration lifespan="900000000000000000"/>
-            </distributed-cache>
-            <distributed-cache name="clientSessions" owners="1">
-                <expiration lifespan="900000000000000000"/>
-            </distributed-cache>
-            <distributed-cache name="offlineClientSessions" owners="1">
-                <expiration lifespan="900000000000000000"/>
-            </distributed-cache>
-            <distributed-cache name="loginFailures" owners="1">
-                <expiration lifespan="900000000000000000"/>
-            </distributed-cache>
-            <distributed-cache name="actionTokens" owners="1">
-                <memory storage="HEAP" max-size="-1"/>
-                <expiration interval="300000" lifespan="900000000000000000" max-idle="-1"/>
-            </distributed-cache>
-{{- end }}
         </cache-container>
     </infinispan>
