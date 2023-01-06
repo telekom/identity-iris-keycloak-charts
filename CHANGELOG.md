@@ -2,6 +2,9 @@
 
 [[_TOC_]]
 
+## 4.0.1
+ - removed one `-` 
+
 ## 4.0.0 
  - Usage of keycloak 20
  - removed route.yaml since it was openshift legacy
