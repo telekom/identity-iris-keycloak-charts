@@ -32,7 +32,7 @@ Iris is a Keycloak based image that has been extended to integrate with logging 
 
 | Installed software versions      | Version Info       |    
 |----------------------------------|--------------------|
-| Keycloak                         |  20.0.1            |
+| Keycloak                         |  20.0.2            |
 | - java                           |  11.0.14           |
 | PostgreSQL                       |  12.3              |
 

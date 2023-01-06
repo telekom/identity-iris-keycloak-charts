@@ -1,7 +1,6 @@
 **Table of contents**
 
 [[_TOC_]]
-## 0.0.0
 
 ## 4.0.0 
  - Usage of keycloak 20
@@ -22,6 +21,9 @@
 ## 3.0.0
  - Pull image from new MTR
  - Using networking.k8s.io/v1 for ingress
+
+## 2.0.2
+ - Pull image from MTR-Devops (new)
 
 ## 2.0.1
  - configurable forceBackendUrlToFrontendUrl (ticket SDDHEI-1334)
