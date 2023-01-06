@@ -82,6 +82,8 @@ spec:
           mountPath: /opt/keycloak/data/import/ 
         - name: tmp
           mountPath: /tmp
+        - name: tmp
+          mountPath: /opt/keycloak/data/tmp
         {{- include "keycloak.db.certificates.volumeMount" $ | indent 8 }}
       initContainers:
       - name: "check-database"
