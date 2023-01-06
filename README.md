@@ -207,6 +207,7 @@ Because of this following settings are already set in Docker image of iris:
 - Health enabled
 - Caching mode: Infinispan
 - clustering detection kubernetes
+
 These configurations can't be overridden in the chart.
 
 ## Prometheus / Metrics-SPI
