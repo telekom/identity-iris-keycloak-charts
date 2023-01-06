@@ -47,6 +47,9 @@ spec:
         imagePullPolicy: {{ .Values.haproxy.imagePullPolicy | default .Values.global.imagePullPolicy }}
         ports:
         - { containerPort: 9090, protocol: TCP, name: http }
+        {{- if eq .Values.prometheus.enabled true }}
+        - { containerPort: {{ .Values.prometheus.port | default 9542 }}, protocol: TCP, name: metrics-http }
+        {{- end }}
         securityContext: {{ .Values.haproxy.securityContext | toYaml | nindent 10 }}
         resources: {{ .Values.haproxy.resources | toYaml | nindent 10 }}
         volumeMounts:
@@ -56,14 +59,9 @@ spec:
         image: '{{ include "keycloak.image" $ }}'
         imagePullPolicy: {{ .Values.imagePullPolicy | default .Values.global.imagePullPolicy }}
         securityContext: {{ .Values.securityContext | toYaml | nindent 10 }}
-        command: ['/bin/bash']
-        args: ['-c', 'rm -f /opt/jboss/keycloak/standalone/configuration/keycloak-add-user.json || true; /opt/jboss/tools/docker-entrypoint.sh -b 0.0.0.0 -c customer-standalone-ha.xml']
+        args: ['start --optimized --import-realm']
         env:
         {{- include "keycloak.env" $ | indent 8 }}
-        ports:
-{{- if eq .Values.prometheus.enabled true }}
-        - { containerPort: {{ .Values.prometheus.port | default 9542 }}, protocol: TCP, name: metrics-http }
-{{- end }}
         {{- with .Values.livenessProbe }}
         livenessProbe:
           {{- tpl . $ | nindent 10 }}
@@ -78,26 +76,14 @@ spec:
         {{- end }}
         resources: {{ .Values.resources | toYaml | nindent 10 }}
         volumeMounts:
+        - name: config
+          mountPath: /opt/keycloak/conf/
+        - name: realms
+          mountPath: /opt/keycloak/data/import/ 
         - name: tmp
           mountPath: /tmp
-        - name: jboss
-          mountPath: /opt/jboss
         {{- include "keycloak.db.certificates.volumeMount" $ | indent 8 }}
       initContainers:
-      - name: "init-standalone"
-        image: '{{ include "keycloak.image" $ }}'
-        imagePullPolicy: {{ .Values.imagePullPolicy | default .Values.global.imagePullPolicy }}
-        securityContext: {{ .Values.securityContext | toYaml | nindent 10 }}
-        resources: {{ .Values.resources | toYaml | nindent 10 }}
-        volumeMounts:
-        - name: jboss
-          mountPath: /jboss
-        - name: config
-          mountPath: /tmp/config
-        - name: realms
-          mountPath: /tmp/realms
-        command: ['/bin/bash']
-        args: ['-c', 'cp -av /opt/jboss/. /jboss/ || true; cp -av /tmp/config/. /jboss/keycloak/standalone/configuration/ || true; cp -av /tmp/realms/ /jboss/keycloak/standalone/configuration/ || true']
       - name: "check-database"
         image: '{{ include "keycloak.init.image" $ }}'
         imagePullPolicy: {{ .Values.postgresql.imagePullPolicy | default .Values.global.imagePullPolicy }}

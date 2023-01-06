@@ -19,7 +19,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
 
 {{- define "keycloak.image" -}}
 {{- $imageName := "iris" -}}
-{{- $imageTag := "2.0.3" -}}
+{{- $imageTag := "3.0.0" -}}
 {{- $imageRepository := "mtr.devops.telekom.de" -}}
 {{- $imageOrganization := "tardis-internal/io" -}}
 {{- if .Values.image -}}
@@ -92,14 +92,6 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- printf "ssl=%s&sslmode=%s%s%s%s" $ssl $sslMode $sslCert $sslKey $sslRootCert -}}
 {{ end -}}
 
-{{- define "keycloak.javaOptions" -}}
-{{- if .Values.javaOptions -}}
-{{ .Values.javaOptions }}
-{{- else -}}
--Xms64m -Xmx512m -XX:MetaspaceSize=96M -XX:MaxMetaspaceSize=256m -Djava.net.preferIPv4Stack=true -Djboss.modules.system.pkgs=org.jboss.byteman -Djava.awt.headless=true
-{{- end -}}
-{{- end -}}
-
 {{- define "keycloak.realms" }}
 {{- $realmsPath := "/opt/jboss/keycloak/standalone/configuration/realms" -}}
 {{- $realms := "" -}}
@@ -117,31 +109,29 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- $realms -}}
 {{ end }}
 
-{{- define "keycloak.haCacheEnvParams" -}}
-{{- if or (gt (int .Values.replicas) 1) .Values.autoscaling.enabled }}
-- name: CACHE_OWNERS_COUNT
-  value: "2"
-- name: CACHE_OWNERS_AUTH_SESSIONS_COUNT
-  value: "2"
-{{- else }}
-- name: CACHE_OWNERS_COUNT
-  value: "1"
-- name: CACHE_OWNERS_AUTH_SESSIONS_COUNT
-  value: "1"
+{{- define "keycloak.url" }}
+{{- printf "https://%s:%s" (include "keycloak.host" $) "80" }}
 {{- end }}
-{{ end }}
 
 {{- define "keycloak.env" }}
-- name: KEYCLOAK_USER
+- name: KC_HOSTNAME
+  value: {{ include "keycloak.host" $ }}
+- name: KC_PROXY
+  value: edge
+- name: KC_HTTP_ENABLED
+  value: "true"
+- name: KC_CACHE_CONFIG_FILE  
+  value: eni-infinispan.xml
+- name: jgroups.dns.query
+  value: {{ .Release.Name }}-jgroups.{{ .Release.Namespace }}
+- name: KEYCLOAK_ADMIN
   value: {{ .Values.admin_username }}
-- name: KEYCLOAK_PASSWORD
+- name: KEYCLOAK_ADMIN_PASSWORD
   valueFrom:
     secretKeyRef:
       name: {{ .Release.Name }}
       key: keycloakPassword
 - name: KEYCLOAK_LOGLEVEL
-  value: {{ .Values.logLevel | default "INFO" }}
-- name: WILDFLY_LOGLEVEL
   value: {{ .Values.logLevel | default "INFO" }}
 {{- if not (eq (include "keycloak.realms" $) "") }}
 - name: KEYCLOAK_IMPORT
@@ -149,18 +139,15 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- end }}
 - name: PROXY_ADDRESS_FORWARDING
   value: "true"
-{{- include "keycloak.haCacheEnvParams" . -}}
-- name: DB_VENDOR
-  value: "postgres"
-- name: DB_PORT
+- name: KC_DB_URL_PORT
   value: "5432"
-- name: DB_ADDR
+- name: KC_DB_URL_HOST
   value: {{ include "db.host" $ }}
-- name: DB_DATABASE
+- name: KC_DB_URL_DATABASE
   value: {{ .Values.global.db.database }} 
-- name: DB_USER
+- name: KC_DB_USERNAME
   value: {{ .Values.global.db.username }}
-- name: DB_PASSWORD
+- name: KC_DB_PASSWORD
   valueFrom:
     secretKeyRef:
       name: {{ .Release.Name }}
@@ -168,10 +155,6 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- if .Values.global.externalDatabase.ssl }}
 - name: JDBC_PARAMS
   value: {{ include "keycloak.jdbcParams" $ | quote }}
-{{- end -}}
-{{- if .Values.javaOptions }}
-- name: JAVA_OPTS
-  value: {{ include "keycloak.javaOptions" $ | quote }}
 {{- end -}}
 {{- end -}}
 

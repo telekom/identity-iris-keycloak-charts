@@ -3,6 +3,10 @@
 [[_TOC_]]
 ## 0.0.0
 
+## 4.0.0 
+ - Usage of keycloak 20
+ - removed route.yaml since it was openshift legacy
+
 ## 3.0.3
  - Suppress metrics in path via ha-proxy acl
 
