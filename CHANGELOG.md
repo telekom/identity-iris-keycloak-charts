@@ -1,6 +1,27 @@
 **Table of contents**
 
 [[_TOC_]]
+
+## 4.0.0 
+ - Usage of keycloak 20
+ - removed route.yaml since it was openshift legacy
+ - added configuration of db schema
+
+## 3.0.3
+ - Suppress metrics in path via ha-proxy acl
+
+## 3.0.2
+ - Update enilogin theme
+
+## 3.0.1
+ - Global tlsSecret setting possible
+ - PostgreSQL: fsGroup added
+ - enilogin theme
+
+## 3.0.0
+ - Pull image from new MTR
+ - Using networking.k8s.io/v1 for ingress
+
 ## 2.0.2
  - Pull image from MTR-Devops (new)
 

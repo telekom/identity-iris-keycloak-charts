@@ -1,6 +1,6 @@
-{{- if eq .Values.global.platform "kubernetes" -}}
+{{- if or (eq .Values.global.platform "kubernetes") (eq .Values.global.platform "tdi") -}}
 {{- if .Values.ingress.enabled }}
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ .Release.Name }}
@@ -12,14 +12,16 @@ spec:
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: {{ .Release.Name }}
-          servicePort: 80
+          service:
+            name: {{ .Release.Name }}
+            port:
+              number: 80
+{{- include "keycloak.ingress.ingressClassName" . | nindent 2 }}
   tls:
   - hosts:
     - {{ include "keycloak.host" . }}
-    {{- if .Values.ingress.tlsSecret }}
-    secretName: {{ .Values.ingress.tlsSecret }}
-    {{- end }}
+{{- include "keycloak.ingress.tlsSecret" . | nindent 4 -}}
 {{- end }}
 {{- end }}

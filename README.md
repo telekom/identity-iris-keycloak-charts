@@ -32,9 +32,8 @@ Iris is a Keycloak based image that has been extended to integrate with logging 
 
 | Installed software versions      | Version Info       |    
 |----------------------------------|--------------------|
-| Keycloak                         |  16.1.1            |
+| Keycloak                         |  20.0.2            |
 | - java                           |  11.0.14           |
-| - wildfly                        |  26.0.6            |
 | PostgreSQL                       |  12.3              |
 
 ## Description
@@ -100,7 +99,7 @@ The following table lists the configurable parameters of this chart.
 | `global.storageclass`                 | Storage class for PersistenVolumeClaims                                           | `gp2`                              |
 | `global.domain`                       | Base cluster URL reachable from Telekom network                                   | `nil`                              |
 | `global.labels`                       | Define global labels                                                              | `tif.telekom.de/group`             |
-| `global.ingress.annotations`          | Set annotations for all ingress, can be extended by ingress specific ones         | `nil`                              |
+| `global.ingress`                      | Set ingress parameters for all ingress, can be extended by ingress specific ones  | `nil`                              |
 | `global.externalDatabase.enabled`     | Should the setup use an external database?                                        | `false`                            |
 | `global.externalDatabase.host`        | Hostname of the external database                                                 | `nil`                              |
 | `global.externalDatabase.ssl`         | Encrypt the database connection                                                   | `false`                            |
@@ -195,7 +194,37 @@ Please note also, that the IDP is an important component of the security concept
 
 | Environment | Compatible |
 |-------------|------------|
-| OTC         | Yes        |
 | AppAgile    | Yes        |
 | AWS EKS     | Yes        |
 | CaaS        | Yes        |
+
+# Changes from Wildfly based Keycloak to Quarkus based
+
+## Build time configuration with Quarkus
+Keycloak on Quarkus is using a two staged approach where the command `kc.sh build` creates the specific configuration and `kc.sh start` runs the preconfigured Keycloak.
+Because of this following settings are already set in Docker image of iris:
+- Metrics enabled
+- Health enabled
+- Caching mode: Infinispan
+- clustering detection kubernetes
+
+These configurations can't be overridden in the chart.
+
+## Prometheus / Metrics-SPI
+The Metrics-SPI can be used as before in keycloak. It is added in the keycloak Docker image. 
+
+The Wildfly redirection from /auth/realms/master/metrics to /metric does not work anymore. This functionality is now done within ha-proxy. 
+Ha-Proxy provides (in the chart default configuration) and frontend at port 9542 where requests that are send to the path /metrics are forwarded to the metrics path of Keycloak. 
+All other requests to this port are blocked and result in an 503 http error. 
+
+The path /auth/realms/master/metrics is also blocked for port 8080 on Keycloak because its not secured by any authentication. 
+
+## JGroups 
+For detecting instances that should build a cache-cluster (formerly known as ha-mode) Quarkus uses the DNS_PING functionality of JGroups. By providing a headless service (a service without ports) for the 
+Keycloak pods there is an kubernetes internal dns address that allows JGroups to find all pod that shall form a cluster. The DNS address which should be used is set with the environment variable jgroups.dns.query on the keycloak container. 
+
+## Infinispan clustering
+To configure the infinispan caches (mainly number of owners per cache) the file eni-infinispan.xml is mounted to the Keycloak pod.
+
+## Open Questions
+- prometheus.authtoken seams to be intended to secure /metrics but was never set to something else than "change" not sure if it ever worked
