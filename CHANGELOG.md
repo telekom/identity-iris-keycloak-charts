@@ -6,6 +6,7 @@
 ## 4.0.0 
  - Usage of keycloak 20
  - removed route.yaml since it was openshift legacy
+ - added configuration of db schema
 
 ## 3.0.3
  - Suppress metrics in path via ha-proxy acl

@@ -145,6 +145,10 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
   value: {{ include "db.host" $ }}
 - name: KC_DB_URL_DATABASE
   value: {{ .Values.global.db.database }} 
+{{- if .Values.global.db.schema }}
+- name: KC_DB_SCHEMA
+  value: {{ .Values.global.db.schema }}
+{{- end }}
 - name: KC_DB_USERNAME
   value: {{ .Values.global.db.username }}
 - name: KC_DB_PASSWORD

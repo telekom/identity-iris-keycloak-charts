@@ -39,6 +39,7 @@ global:
     database: sso
     username: sso
     password: changeme
+    #schema: public 
 
   externalDatabase:
     enabled: false
