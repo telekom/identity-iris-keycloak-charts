@@ -227,4 +227,3 @@ To configure the infinispan caches (mainly number of owners per cache) the file 
 
 ## Open Questions
 - prometheus.authtoken seams to be intended to secure /metrics but was never set to something else than "change" not sure if it ever worked
-- realm import via chart

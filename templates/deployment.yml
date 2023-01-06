@@ -59,7 +59,7 @@ spec:
         image: '{{ include "keycloak.image" $ }}'
         imagePullPolicy: {{ .Values.imagePullPolicy | default .Values.global.imagePullPolicy }}
         securityContext: {{ .Values.securityContext | toYaml | nindent 10 }}
-        args: ['start --optimized']
+        args: ['start --optimized --import-realm']
         env:
         {{- include "keycloak.env" $ | indent 8 }}
         {{- with .Values.livenessProbe }}
@@ -78,6 +78,8 @@ spec:
         volumeMounts:
         - name: config
           mountPath: /opt/keycloak/conf/
+        - name: realms
+          mountPath: /opt/keycloak/data/import/ 
         - name: tmp
           mountPath: /tmp
         {{- include "keycloak.db.certificates.volumeMount" $ | indent 8 }}
