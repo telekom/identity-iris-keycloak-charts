@@ -32,7 +32,7 @@ Iris is a Keycloak based image that has been extended to integrate with logging 
 
 | Installed software versions      | Version Info       |    
 |----------------------------------|--------------------|
-| Keycloak                         |  20.0.1            |
+| Keycloak                         |  20.0.2            |
 | - java                           |  11.0.14           |
 | PostgreSQL                       |  12.3              |
 
@@ -51,7 +51,7 @@ Iris is a Keycloak based image that has been extended to integrate with logging 
 - PostgreSQL
   - [docker image documentation](https://hub.docker.com/_/postgres)
 
-After a succesfull installation the component can be reached at the URL: `keycloak-internal-<namespace>.<domain.internal.url>`
+After a successful installation the component can be reached at the URL: `keycloak-internal-<namespace>.<domain.internal.url>`
 
 ## Configuration
 
