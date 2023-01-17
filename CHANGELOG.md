@@ -2,6 +2,9 @@
 
 [[_TOC_]]
 
+## 4.1.0
+ - Update default image to iris:3.1.0
+
 ## 4.0.2
  - added second mountpath for tmp volume to /opt/keycloak/data/tmp 
 
