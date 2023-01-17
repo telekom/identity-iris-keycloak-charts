@@ -19,7 +19,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
 
 {{- define "keycloak.image" -}}
 {{- $imageName := "iris" -}}
-{{- $imageTag := "3.0.0" -}}
+{{- $imageTag := "3.1.0" -}}
 {{- $imageRepository := "mtr.devops.telekom.de" -}}
 {{- $imageOrganization := "tardis-internal/io" -}}
 {{- if .Values.image -}}
