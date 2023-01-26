@@ -59,17 +59,6 @@ global:
     #  <Root certificate in PEM format here>
     #  -----END CERTIFICATE-----
 
-  # Truststore for Keycloak
-  # When Keystorer project is used, just use the base64 string from the pipeline log
-  # If not used, watch out for the secret, as it will be printed in there as a raw string
-  truststore: {}
-  # Needed to access the Truststore
-  truststorePassword: password
-  # Set the hostname verification policy
-  # ANY: do no verification
-  # WILDCARD: *.hostname
-  # STRICT: host.hostname
-  hostnameVerificationPolicy: WILDCARD
 
 #imagePullPolicy: IfNotPresent
 
@@ -86,6 +75,17 @@ securityContext: {}
 admin_username: admin
 admin_password: changeme
 
+# Truststore for Keycloak
+# When Keystorer project is used, just use the base64 string from the pipeline log
+# If not used, watch out for the secret, as it will be printed in there as a raw string
+truststore: {}
+# Needed to access the Truststore
+truststorePassword: password
+# Set the hostname verification policy
+# ANY: do no verification
+# WILDCARD: *.hostname
+# STRICT: host.hostname
+hostnameVerificationPolicy: WILDCARD
 # Use this configuration
 # to create realms with public clients
 # This will create a _generated.json in /realms/

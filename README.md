@@ -106,8 +106,8 @@ The following table lists the configurable parameters of this chart.
 | `global.externalDatabase.sslCert`                   | Client certificate, set for mTLS                                                                 | `nil`                               |
 | `global.externalDatabase.sslKey`                    | Client key, set for mTLS                                                                         | `nil`                               |
 | `global.externalDatabase.sslRootCert`               | Root certificate                                                                                 | `nil`                               |
-| `global.truststore`                                 | Truststore in Base64                                                                             | `nil`                               |
-| `global.truststorePassword`                         | Password to access the truststore                                                                | `password`                          |
+| `truststore`                                        | Truststore in Base64                                                                             | `nil`                               |
+| `truststorePassword`                                | Password to access the truststore                                                                | `password`                          |
 | `global.hostnameVerificationPolicy`                 | Choose a hostname verification policy                                                            | `WILDCARD`                          |
 | `image.repository`                                  | MTR repository                                                                                   | `mtr.devops.telekom.de/repository/` |
 | `image.organization`                                | MTR organization                                                                                 | `tardis-common`                     |
