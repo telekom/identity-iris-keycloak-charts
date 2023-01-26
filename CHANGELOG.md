@@ -2,6 +2,9 @@
 
 [[_TOC_]]
 
+## 4.2.0
+ - Added truststore configuration for custom certificates and root-ca
+
 ## 4.1.0
  - Update default image to iris:3.1.0
 

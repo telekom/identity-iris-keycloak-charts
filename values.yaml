@@ -59,6 +59,7 @@ global:
     #  <Root certificate in PEM format here>
     #  -----END CERTIFICATE-----
 
+
 #imagePullPolicy: IfNotPresent
 
 # You can list files (in /templates) here that should cause a re-deployment of your application
@@ -74,6 +75,23 @@ securityContext: {}
 admin_username: admin
 admin_password: changeme
 
+# Truststore for Keycloak
+# When Keystorer project is used, just use the base64 string from the pipeline log
+# If not used, watch out for the secret, as it will be printed in there as a raw string
+# Example:
+#  truststore: |
+#    MIIVaAIBAzCCFRIGCSqGSIb3DQEHAaCCFQMEghT/MIIU+zCCBbIGCSqGSIb3DQEHAaCCBaMEggWf
+#    ... data as created from JKS keystore by "cat ./keystore.jks | base64"
+#    ... details see Gitlab ".../io/products/keystorer"
+#    yMsfLrPfvuYCAicQ 
+truststore: {}
+# Needed to access the Truststore
+truststorePassword: password
+# Set the hostname verification policy
+# ANY: do no verification
+# WILDCARD: *.hostname
+# STRICT: host.hostname
+hostnameVerificationPolicy: WILDCARD
 # Use this configuration
 # to create realms with public clients
 # This will create a _generated.json in /realms/

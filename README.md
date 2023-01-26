@@ -93,87 +93,90 @@ We made the metrics accessible under the container's ``:9542/metrics`` endpoint 
 
 The following table lists the configurable parameters of this chart.
 
-| Parameter                             | Description                                                                       | Default                            |
-|---------------------------------------|-----------------------------------------------------------------------------------|------------------------------------|
-| `global.platform`                     | Platform (openshift or kubernetes)                                                | `stable`                           |
-| `global.storageclass`                 | Storage class for PersistenVolumeClaims                                           | `gp2`                              |
-| `global.domain`                       | Base cluster URL reachable from Telekom network                                   | `nil`                              |
-| `global.labels`                       | Define global labels                                                              | `tif.telekom.de/group`             |
-| `global.ingress`                      | Set ingress parameters for all ingress, can be extended by ingress specific ones  | `nil`                              |
-| `global.externalDatabase.enabled`     | Should the setup use an external database?                                        | `false`                            |
-| `global.externalDatabase.host`        | Hostname of the external database                                                 | `nil`                              |
-| `global.externalDatabase.ssl`         | Encrypt the database connection                                                   | `false`                            |
-| `global.externalDatabase.sslCert`     | Client certificate, set for mTLS                                                  | `nil`                              |
-| `global.externalDatabase.sslKey`      | Client key, set for mTLS                                                          | `nil`                              |
-| `global.externalDatabase.sslRootCert` | Root certificate                                                                  | `nil`                              |
-| `image.repository`                    | MTR repository                                                                    | `mtr.devops.telekom.de/repository/`|
-| `image.organization`                  | MTR organization                                                                  | `tardis-common`                    |
-| `image.name`                          | Docker image name in MTR                                                          | `iris`                             |
-| `image.tag`                           | Selected image tag                                                                | `1.0.0`                            |
-| `tls.secret`                          | TLS secret name                                                                   |                                    |
-| `admin_username`                      | Name of the Keycloak admin user                                                   | `admin`                            |
-| `admin_password`                      | Password of the Keycloak admin user                                               |                                    |
-| `replicas`                            | Number of replicas                                                                | `1`                                |
-| `autoscaling.enabled`                 | Enables Pod Autoscaling with Target CPU usage                                     | `false`                            |
-| `autoscaling.minReplicas`             | Minimum number of replicas if autoscaling is enabled                              | `3`                                |
-| `autoscaling.maxReplicas`             | Maximum number of replicas if autoscaling is enabled                              | `6`                                |
-| `autoscaling.cpuUtilizationPercentage`| Number of target CPU Utilization                                                  | `80`                               |
-| `resources.requests.memory`           | Memory request for Keycloak pod                                                   | `2Gi`                              |
-| `resources.requests.cpu`              | CPU request for Keycloak pod                                                      | `200m`                             |
-| `resources.limit.memory`              | Memory limit for Keycloak pod                                                     | `2Gi`                              |
-| `resources.limit.cpu`                 | CPU limit for Keycloak pod                                                        | `2000m`                            |
-| `ingress.enabled`                     | Create ingress for external access                                                | `true`                             |
-| `ingress.hostname`                    | Set dedicated hostname for ingress/route, overwrites global URL                   | `nil`                              |
-| `ingress.tlsSecret`                   | Set secret name                                                                   | `nil`                              |
-| `ingress.annotations`                 | Merges specific into global ingress annotations                                   | `nil`                              |
-| `customConfig.frontendUrl`            | Allows to configure another frontend URL                                          | `${keycloak.frontendUrl:}`         |
-| `customConfig.spi.hostname`           | Allows to overwrite the complete <spi name="hostname"> config incl. frontendUrl   | s. configmap-config.yml for details |
-| `prometheus.enabled`                 | Controls whether to annotate pods with prometheus scraping information or not  | `true`           |
-| `prometheus.authToken`                | Authentication token that is used in order to secure the exposed metrics endpoint | `changeme`                         |
-| `prometheus.port`                     | Sets the port at which metrics can be accessed                                    | `9542`                             |
-| `prometheus.path`                     | Sets the endpoint at which at which metrics can be accessed                       | `/metrics`                         |
-| `prometheus.podMonitor.enabled`        | Enables a podmonitor which can be used by the prometheus operator to collect metrics    | `false`          |
-| `prometheus.podMonitor.scheme`         | HTTP scheme to use for scraping                                                         | `http`           |
-| `prometheus.podMonitor.interval`       | Interval at which metrics should be scraped                                             | `15s`            |
-| `prometheus.podMonitor.scrapeTimeout`  | Timeout after which the scrape of prometheus is ended                                   | `3s`             |
-| `prometheus.podMonitor.honorLabels`    | HonorLabels chooses the metric’s labels on collisions with target labels                | `true`           |
-| `prometheus.serviceMonitor.enabled`        | Enables a servicemonitor which can be used by the prometheus operator to collect metrics    | `true`          |
-| `prometheus.serviceMonitor.scheme`         | HTTP scheme to use for scraping                                                         | `http`           |
-| `prometheus.serviceMonitor.interval`       | Interval at which metrics should be scraped                                             | `15s`            |
-| `prometheus.serviceMonitor.scrapeTimeout`  | Timeout after which the scrape of prometheus is ended                                   | `3s`             |
-| `prometheus.serviceMonitor.honorLabels`    | HonorLabels chooses the metric’s labels on collisions with target labels                | `true`           |
-| **realms**                            | Configure realms                                                                  |                                    |
-| `realms.name`                         | Realm name                                                                        | `nil`                              |
-| `realms.access_token_lifespan`        | Lifespan of a token                                                               | `nil`                              |
-| `realms.defaultProvider`              | The alias of the default IDP to redirect to when logging in                       | `nil`                              |
-| `realms.clients`                      | An array of configured clients                                                    | `nil`                              |
-| `realms.clients.name`                 | Client name                                                                       | `nil`                              |
-| `realms.clients.redirectUris`         | Allowed redirect URIs for the client (after authorization)                        | `nil`                              |
-| `realms.clients.webOrigins`           | Web origins accepted for authorization requests                                   | `nil`                              |
-| `realms.identityProviders`            | An array of identity providers for this realm                                     | `nil`                              |
-| `realms.identityProviders.name`       | An alias name of the IDP                                                          | `nil`                              |
-| `realms.identityProviders.displayName`| The name shown when logging in via this IDP                                       | `nil`                              |
-| `realms.identityProviders.signingCertificate`     | The signing certificate of the IDP                                    | `nil`                              |
-| `realms.identityProviders.singleLogoutServiceUrl` | The single logout service URL of the IDP                              | `nil`                              |
-| `realms.identityProviders.singleSignOnServiceUrl` | The single sign on service URL of the IDP                             | `nil`                              |
-| `realms.identityProviders.encryptionPublicKey`    | The encryption public key of the IDP                                  | `nil`                              |
-| `realms.identityProviders.mappers`                | An array of mappers for the SAML data received from the IDP after a login|  `nil`                          |
-| `realms.identityProviders.mappers.type`           | Choose between predefined mappers (`adfs-email` and `adfs-group`) or `custom` to define your own | `nil`   |
-| `realms.identityProviders.mappers.name`           | The name of the mapper (only type `custom`)                           | `nil`                              |
-| `realms.identityProviders.mappers.attributeName`  | The attribute name in the IDP response (only type `custom`)           | `nil`                              |
-| `realms.identityProviders.mappers.category`       | The category of the mapper (only type `custom`)                       | `nil`                              |
-| `realms.identityProviders.mappers.userAttribute`  | The Keycloak user attribute to map the value to (only type `custom`)  | `nil`                              |
-| **postgresql**                        |                                                                                   |                                    |
-| `postgresql.image.repository`         | MTR repository                                                                    | `mtr.external.otc.telekomcloud.com`|
-| `postgresql.image.organization`       | MTR organization                                                                  | `tif-public`                       |
-| `postgresql.image.name`               | Docker image name in MTR                                                          | `postgres`                         |
-| `postgresql.image.tag`                | Selected image tag                                                                | `12.3-debian`                      |
-| `postgresql.replicas`                 | Number of replicas                                                                | `1`                                |
-| `postgresql.resources.requests.memory`| Memory request for postgresql pod                                                 | `200Mi`                            |
-| `postgresql.resources.requests.cpu`   | CPU request for postgresql pod                                                    | `20m`                              |
-| `postgresql.resources.limit.memory`   | Memory limit for postgresql pod                                                   | `500Mi`                            |
-| `postgresql.resources.limit.cpu`      | CPU limit for postgresql pod                                                      | `100m`                             |
-| `postgresql.persistence.resources.requests.storage`| Volume storage space for postgresql                                  | `1Gi`                              |
+| Parameter                                           | Description                                                                                      | Default                             |
+|-----------------------------------------------------|--------------------------------------------------------------------------------------------------|-------------------------------------|
+| `global.platform`                                   | Platform (openshift or kubernetes)                                                               | `stable`                            |
+| `global.storageclass`                               | Storage class for PersistenVolumeClaims                                                          | `gp2`                               |
+| `global.domain`                                     | Base cluster URL reachable from Telekom network                                                  | `nil`                               |
+| `global.labels`                                     | Define global labels                                                                             | `tif.telekom.de/group`              |
+| `global.ingress`                                    | Set ingress parameters for all ingress, can be extended by ingress specific ones                 | `nil`                               |
+| `global.externalDatabase.enabled`                   | Should the setup use an external database?                                                       | `false`                             |
+| `global.externalDatabase.host`                      | Hostname of the external database                                                                | `nil`                               |
+| `global.externalDatabase.ssl`                       | Encrypt the database connection                                                                  | `false`                             |
+| `global.externalDatabase.sslCert`                   | Client certificate, set for mTLS                                                                 | `nil`                               |
+| `global.externalDatabase.sslKey`                    | Client key, set for mTLS                                                                         | `nil`                               |
+| `global.externalDatabase.sslRootCert`               | Root certificate                                                                                 | `nil`                               |
+| `truststore`                                        | Truststore in Base64                                                                             | `nil`                               |
+| `truststorePassword`                                | Password to access the truststore                                                                | `password`                          |
+| `global.hostnameVerificationPolicy`                 | Choose a hostname verification policy                                                            | `WILDCARD`                          |
+| `image.repository`                                  | MTR repository                                                                                   | `mtr.devops.telekom.de/repository/` |
+| `image.organization`                                | MTR organization                                                                                 | `tardis-common`                     |
+| `image.name`                                        | Docker image name in MTR                                                                         | `iris`                              |
+| `image.tag`                                         | Selected image tag                                                                               | `1.0.0`                             |
+| `tls.secret`                                        | TLS secret name                                                                                  |                                     |
+| `admin_username`                                    | Name of the Keycloak admin user                                                                  | `admin`                             |
+| `admin_password`                                    | Password of the Keycloak admin user                                                              |                                     |
+| `replicas`                                          | Number of replicas                                                                               | `1`                                 |
+| `autoscaling.enabled`                               | Enables Pod Autoscaling with Target CPU usage                                                    | `false`                             |
+| `autoscaling.minReplicas`                           | Minimum number of replicas if autoscaling is enabled                                             | `3`                                 |
+| `autoscaling.maxReplicas`                           | Maximum number of replicas if autoscaling is enabled                                             | `6`                                 |
+| `autoscaling.cpuUtilizationPercentage`              | Number of target CPU Utilization                                                                 | `80`                                |
+| `resources.requests.memory`                         | Memory request for Keycloak pod                                                                  | `2Gi`                               |
+| `resources.requests.cpu`                            | CPU request for Keycloak pod                                                                     | `200m`                              |
+| `resources.limit.memory`                            | Memory limit for Keycloak pod                                                                    | `2Gi`                               |
+| `resources.limit.cpu`                               | CPU limit for Keycloak pod                                                                       | `2000m`                             |
+| `ingress.enabled`                                   | Create ingress for external access                                                               | `true`                              |
+| `ingress.hostname`                                  | Set dedicated hostname for ingress/route, overwrites global URL                                  | `nil`                               |
+| `ingress.tlsSecret`                                 | Set secret name                                                                                  | `nil`                               |
+| `ingress.annotations`                               | Merges specific into global ingress annotations                                                  | `nil`                               |
+| `customConfig.frontendUrl`                          | Allows to configure another frontend URL                                                         | `${keycloak.frontendUrl:}`          |
+| `customConfig.spi.hostname`                         | Allows to overwrite the complete <spi name="hostname"> config incl. frontendUrl                  | s. configmap-config.yml for details |
+| `prometheus.enabled`                                | Controls whether to annotate pods with prometheus scraping information or not                    | `true`                              |
+| `prometheus.authToken`                              | Authentication token that is used in order to secure the exposed metrics endpoint                | `changeme`                          |
+| `prometheus.port`                                   | Sets the port at which metrics can be accessed                                                   | `9542`                              |
+| `prometheus.path`                                   | Sets the endpoint at which at which metrics can be accessed                                      | `/metrics`                          |
+| `prometheus.podMonitor.enabled`                     | Enables a podmonitor which can be used by the prometheus operator to collect metrics             | `false`                             |
+| `prometheus.podMonitor.scheme`                      | HTTP scheme to use for scraping                                                                  | `http`                              |
+| `prometheus.podMonitor.interval`                    | Interval at which metrics should be scraped                                                      | `15s`                               |
+| `prometheus.podMonitor.scrapeTimeout`               | Timeout after which the scrape of prometheus is ended                                            | `3s`                                |
+| `prometheus.podMonitor.honorLabels`                 | HonorLabels chooses the metric’s labels on collisions with target labels                         | `true`                              |
+| `prometheus.serviceMonitor.enabled`                 | Enables a servicemonitor which can be used by the prometheus operator to collect metrics         | `true`                              |
+| `prometheus.serviceMonitor.scheme`                  | HTTP scheme to use for scraping                                                                  | `http`                              |
+| `prometheus.serviceMonitor.interval`                | Interval at which metrics should be scraped                                                      | `15s`                               |
+| `prometheus.serviceMonitor.scrapeTimeout`           | Timeout after which the scrape of prometheus is ended                                            | `3s`                                |
+| `prometheus.serviceMonitor.honorLabels`             | HonorLabels chooses the metric’s labels on collisions with target labels                         | `true`                              |
+| **realms**                                          | Configure realms                                                                                 |                                     |
+| `realms.name`                                       | Realm name                                                                                       | `nil`                               |
+| `realms.access_token_lifespan`                      | Lifespan of a token                                                                              | `nil`                               |
+| `realms.defaultProvider`                            | The alias of the default IDP to redirect to when logging in                                      | `nil`                               |
+| `realms.clients`                                    | An array of configured clients                                                                   | `nil`                               |
+| `realms.clients.name`                               | Client name                                                                                      | `nil`                               |
+| `realms.clients.redirectUris`                       | Allowed redirect URIs for the client (after authorization)                                       | `nil`                               |
+| `realms.clients.webOrigins`                         | Web origins accepted for authorization requests                                                  | `nil`                               |
+| `realms.identityProviders`                          | An array of identity providers for this realm                                                    | `nil`                               |
+| `realms.identityProviders.name`                     | An alias name of the IDP                                                                         | `nil`                               |
+| `realms.identityProviders.displayName`              | The name shown when logging in via this IDP                                                      | `nil`                               |
+| `realms.identityProviders.signingCertificate`       | The signing certificate of the IDP                                                               | `nil`                               |
+| `realms.identityProviders.singleLogoutServiceUrl`   | The single logout service URL of the IDP                                                         | `nil`                               |
+| `realms.identityProviders.singleSignOnServiceUrl`   | The single sign on service URL of the IDP                                                        | `nil`                               |
+| `realms.identityProviders.encryptionPublicKey`      | The encryption public key of the IDP                                                             | `nil`                               |
+| `realms.identityProviders.mappers`                  | An array of mappers for the SAML data received from the IDP after a login                        | `nil`                               |
+| `realms.identityProviders.mappers.type`             | Choose between predefined mappers (`adfs-email` and `adfs-group`) or `custom` to define your own | `nil`                               |
+| `realms.identityProviders.mappers.name`             | The name of the mapper (only type `custom`)                                                      | `nil`                               |
+| `realms.identityProviders.mappers.attributeName`    | The attribute name in the IDP response (only type `custom`)                                      | `nil`                               |
+| `realms.identityProviders.mappers.category`         | The category of the mapper (only type `custom`)                                                  | `nil`                               |
+| `realms.identityProviders.mappers.userAttribute`    | The Keycloak user attribute to map the value to (only type `custom`)                             | `nil`                               |
+| **postgresql**                                      |                                                                                                  |                                     |
+| `postgresql.image.repository`                       | MTR repository                                                                                   | `mtr.external.otc.telekomcloud.com` |
+| `postgresql.image.organization`                     | MTR organization                                                                                 | `tif-public`                        |
+| `postgresql.image.name`                             | Docker image name in MTR                                                                         | `postgres`                          |
+| `postgresql.image.tag`                              | Selected image tag                                                                               | `12.3-debian`                       |
+| `postgresql.replicas`                               | Number of replicas                                                                               | `1`                                 |
+| `postgresql.resources.requests.memory`              | Memory request for postgresql pod                                                                | `200Mi`                             |
+| `postgresql.resources.requests.cpu`                 | CPU request for postgresql pod                                                                   | `20m`                               |
+| `postgresql.resources.limit.memory`                 | Memory limit for postgresql pod                                                                  | `500Mi`                             |
+| `postgresql.resources.limit.cpu`                    | CPU limit for postgresql pod                                                                     | `100m`                              |
+| `postgresql.persistence.resources.requests.storage` | Volume storage space for postgresql                                                              | `1Gi`                               |
 
 ## Secrets
 

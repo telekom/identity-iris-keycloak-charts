@@ -59,7 +59,11 @@ spec:
         image: '{{ include "keycloak.image" $ }}'
         imagePullPolicy: {{ .Values.imagePullPolicy | default .Values.global.imagePullPolicy }}
         securityContext: {{ .Values.securityContext | toYaml | nindent 10 }}
+        {{- if .Values.truststore }}
+        args: ['start --optimized --import-realm --spi-truststore-file-file=/truststore/truststore.jks --spi-truststore-file-password={{ .Values.truststorePassword }} --spi-truststore-file-hostname-verification-policy={{ .Values.hostnameVerificationPolicy }}']
+        {{- else }}
         args: ['start --optimized --import-realm']
+        {{- end }}
         env:
         {{- include "keycloak.env" $ | indent 8 }}
         {{- with .Values.livenessProbe }}
@@ -84,6 +88,11 @@ spec:
           mountPath: /tmp
         - name: tmp
           mountPath: /opt/keycloak/data/tmp
+        {{- if .Values.truststore }}
+        - name: secrets
+          mountPath: /truststore
+          readOnly: true
+        {{- end }}
         {{- include "keycloak.db.certificates.volumeMount" $ | indent 8 }}
       initContainers:
       - name: "check-database"
@@ -110,4 +119,12 @@ spec:
       - name: realms
         configMap:
           name: {{ .Release.Name }}-realm
+      {{- if .Values.truststore }}
+      - name: secrets
+        secret:
+          secretName: {{ .Release.Name }}
+          items:
+            - key: truststore.jks
+              path: truststore.jks
+      {{- end }}
       {{- include "keycloak.db.certificates.volume" $ | indent 6 }}
