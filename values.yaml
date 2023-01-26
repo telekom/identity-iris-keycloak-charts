@@ -78,6 +78,12 @@ admin_password: changeme
 # Truststore for Keycloak
 # When Keystorer project is used, just use the base64 string from the pipeline log
 # If not used, watch out for the secret, as it will be printed in there as a raw string
+# Example:
+#  truststore: |
+#    MIIVaAIBAzCCFRIGCSqGSIb3DQEHAaCCFQMEghT/MIIU+zCCBbIGCSqGSIb3DQEHAaCCBaMEggWf
+#    ... data as created from JKS keystore by "cat ./keystore.jks | base64"
+#    ... details see Gitlab ".../io/products/keystorer"
+#    yMsfLrPfvuYCAicQ 
 truststore: {}
 # Needed to access the Truststore
 truststorePassword: password
