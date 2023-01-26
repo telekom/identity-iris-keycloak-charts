@@ -1,9 +1,8 @@
 **Table of contents**
 
 [[_TOC_]]
-## 4.2.0-RC.2
- - Moved truststore from global to toplevel 
-## 4.2.0-RC.1
+
+## 4.2.0
  - Added truststore configuration for custom certificates and root-ca
 
 ## 4.1.0
