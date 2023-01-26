@@ -60,7 +60,7 @@ spec:
         imagePullPolicy: {{ .Values.imagePullPolicy | default .Values.global.imagePullPolicy }}
         securityContext: {{ .Values.securityContext | toYaml | nindent 10 }}
         {{- if .Values.truststore }}
-        args: ['start --optimized --import-realm --spi-truststore-file-file=/tmp/truststore.jks --spi-truststore-file-password={{ .Values.truststorePassword }} --spi-truststore-file-hostname-verification-policy={{ .Values.hostnameVerificationPolicy }}']
+        args: ['start --optimized --import-realm --spi-truststore-file-file=/truststore/truststore.jks --spi-truststore-file-password={{ .Values.truststorePassword }} --spi-truststore-file-hostname-verification-policy={{ .Values.hostnameVerificationPolicy }}']
         {{- else }}
         args: ['start --optimized --import-realm']
         {{- end }}
@@ -90,7 +90,7 @@ spec:
           mountPath: /opt/keycloak/data/tmp
         {{- if .Values.truststore }}
         - name: secrets
-          mountPath: /tmp
+          mountPath: /truststore
           readOnly: true
         {{- end }}
         {{- include "keycloak.db.certificates.volumeMount" $ | indent 8 }}
