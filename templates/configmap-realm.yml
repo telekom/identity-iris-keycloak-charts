@@ -25,22 +25,7 @@ data:
             "jboss-logging"
         ],
         "roles": {
-            "realm": [
-                {
-                    "name": "admin",
-                    "composite": false,
-                    "clientRole": false,
-                    "containerId": "{{ $realm.name }}",
-                    "attributes": {}
-                },
-                {
-                    "name": "user",
-                    "composite": false,
-                    "clientRole": false,
-                    "containerId": "{{ $realm.name }}",
-                    "attributes": {}
-                }
-            ],
+            "realm": [],
             "client": {
                 {{- range $idx, $client := $realm.clients }}
                 "{{ $client.name }}": []{{- if not (eq $idx (sub (len $realm.clients) 1)) -}},{{- end }}
@@ -100,27 +85,23 @@ data:
                 "surrogateAuthRequired": false,
                 "enabled": true,
                 "alwaysDisplayInConsole": false,
-                "clientAuthenticatorType": "client-secret",
+                "clientAuthenticatorType": "{{- $client.clientAuthenticatorType }}",
                 "redirectUris": [
                     {{- range $idx, $redirectUri := $client.redirectUris }}
                     "{{ $redirectUri }}"{{- if not (eq $idx (sub (len $client.redirectUris) 1)) -}},{{- end }}
-                    {{- else }}
-                    "http://change.me/*"
                     {{- end }}
                 ],
                 "webOrigins": [
                     {{- range $idx, $webOrigin := $client.webOrigins }}
                     "{{ $webOrigin }}"{{- if not (eq $idx (sub (len $client.webOrigins) 1)) -}},{{- end }}
-                    {{- else }}
-                    "http://change.me"
                     {{- end }}
                 ],
                 "notBefore": 0,
                 "bearerOnly": false,
                 "consentRequired": false,
-                "standardFlowEnabled": true,
+                "standardFlowEnabled": {{- $client.standardFlowEnabled }},
                 "implicitFlowEnabled": false,
-                "directAccessGrantsEnabled": true,
+                "directAccessGrantsEnabled":  {{- $client.directAccessGrantsEnabled }},
                 "serviceAccountsEnabled": false,
                 "publicClient": true,
                 "frontchannelLogout": false,
