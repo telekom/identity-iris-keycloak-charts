@@ -11,12 +11,12 @@ data:
   {{- if and .Values.realms -}}
   {{- if not (eq (len .Values.realms) 0) }}
   {{- range $realmIdx, $realm := .Values.realms }}
-  {{- if eq $realm.enabled true }}
+  {{- if or (eq $realm.enabled true) (eq $.Values.enableRoverRealm true) }}
   '_generated_{{ $realm.name }}.json': |
     {
         "id": "{{ $realm.name }}",
         "realm": "{{ $realm.name }}",
-        "enabled": {{ $realm.enabled | default true }},
+        "enabled": true,
         "accessTokenLifespan": {{ $realm.access_token_lifespan | default 300 }},
         "eventsEnabled": true,
         "eventsListeners": [
