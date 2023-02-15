@@ -32,52 +32,7 @@ data:
                 {{- end }}
             }
         },
-        "users": [
-            {
-                "username": "admin",
-                "enabled": true,
-                "totp": false,
-                "emailVerified": false,
-                "credentials": [],
-                "disableableCredentialTypes": [],
-                "requiredActions": [],
-                "realmRoles": [
-                    "admin",
-                    "uma_authorization",
-                    "offline_access"
-                ],
-                "clientRoles": {
-                    "account": [
-                        "view-profile",
-                        "manage-account"
-                    ]
-                },
-                "notBefore": 0,
-                "groups": []
-            },
-            {
-                "username": "user",
-                "enabled": true,
-                "totp": false,
-                "emailVerified": false,
-                "credentials": [],
-                "disableableCredentialTypes": [],
-                "requiredActions": [],
-                "realmRoles": [
-                    "user",
-                    "uma_authorization",
-                    "offline_access"
-                ],
-                "clientRoles": {
-                    "account": [
-                        "view-profile",
-                        "manage-account"
-                    ]
-                },
-                "notBefore": 0,
-                "groups": []
-            }
-        ],
+        "users": [],
         "clients": [
             {{- range $clientIdx, $client := $realm.clients }}
             {
@@ -85,7 +40,7 @@ data:
                 "surrogateAuthRequired": false,
                 "enabled": true,
                 "alwaysDisplayInConsole": false,
-                "clientAuthenticatorType": "{{- $client.clientAuthenticatorType }}",
+                "clientAuthenticatorType": "{{- $client.clientAuthenticatorType | default "client-secret" | quote }}",
                 "redirectUris": [
                     {{- range $idx, $redirectUri := $client.redirectUris }}
                     "{{ $redirectUri }}"{{- if not (eq $idx (sub (len $client.redirectUris) 1)) -}},{{- end }}
@@ -99,9 +54,9 @@ data:
                 "notBefore": 0,
                 "bearerOnly": false,
                 "consentRequired": false,
-                "standardFlowEnabled": {{- $client.standardFlowEnabled }},
+                "standardFlowEnabled": {{- $client.standardFlowEnabled | default true }},
                 "implicitFlowEnabled": false,
-                "directAccessGrantsEnabled":  {{- $client.directAccessGrantsEnabled }},
+                "directAccessGrantsEnabled": {{- $client.directAccessGrantsEnabled | default true }},
                 "serviceAccountsEnabled": false,
                 "publicClient": true,
                 "frontchannelLogout": false,

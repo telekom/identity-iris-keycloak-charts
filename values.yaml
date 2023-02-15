@@ -130,12 +130,12 @@ hostnameVerificationPolicy: WILDCARD
 #        attributeName: http://attrurl.me/
 #        category: saml-user-attribute-idp-mapper
 #        userAttribute: firstName
-# - name: rover
-#   clients:
-#   - name: rover
-#     clientAuthenticatorType: "client-secret"
-#     standardFlowEnabled: false
-#     directAccessGrantsEnabled: false
+#- name: rover
+#  clients:
+#  - name: rover
+#    clientAuthenticatorType: "client-secret"
+#    standardFlowEnabled: false
+#    directAccessGrantsEnabled: false
 
 replicas: 1
 
