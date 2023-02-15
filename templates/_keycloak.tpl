@@ -116,8 +116,6 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- define "keycloak.env" }}
 - name: KC_HOSTNAME
   value: {{ include "keycloak.host" $ }}
-- name: KC_HOSTNAME_ADMIN
-  value: {{ include "keycloak.host" $ }}
 - name: KC_PROXY
   value: edge
 - name: KC_HTTP_ENABLED
