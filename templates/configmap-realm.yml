@@ -11,6 +11,7 @@ data:
   {{- if and .Values.realms -}}
   {{- if not (eq (len .Values.realms) 0) }}
   {{- range $realmIdx, $realm := .Values.realms }}
+  {{- if eq $realm.enabled true }}
   '_generated_{{ $realm.name }}.json': |
     {
         "id": "{{ $realm.name }}",
@@ -57,7 +58,7 @@ data:
                 "standardFlowEnabled": {{ if eq $client.standardFlowEnabled false }}false{{ else }}true{{ end }},
                 "implicitFlowEnabled": false,
                 "directAccessGrantsEnabled": {{ if eq $client.directAccessGrantsEnabled false }}false{{ else }}true{{ end }},
-                "serviceAccountsEnabled": false,
+                "serviceAccountsEnabled": {{ if eq $client.serviceAccountsEnabled true }}true{{ else }}false{{ end }},
                 "publicClient": {{ if eq $client.publicClient false }}false{{ else }}true{{ end }},
                 "frontchannelLogout": false,
                 "protocol": "openid-connect",
@@ -735,6 +736,7 @@ data:
             }
         ]
     }{{- if not (eq $realmIdx (sub (len $.Values.realms) 1)) -}},{{- end }}
+  {{- end -}}
   {{- end -}}
   {{- end -}}
   {{- end -}}
