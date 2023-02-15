@@ -11,7 +11,7 @@ data:
   {{- if and .Values.realms -}}
   {{- if not (eq (len .Values.realms) 0) }}
   {{- range $realmIdx, $realm := .Values.realms }}
-  {{- if or (eq $realm.enabled true) (eq $.Values.roverRealmEnabled true) }}
+  {{- if or (eq $realm.enabled true) (and (eq $realm.name "rover") $.Values.roverRealmEnabled "true") }}
   '_generated_{{ $realm.name }}.json': |
     {
         "id": "{{ $realm.name }}",

@@ -93,7 +93,7 @@ truststorePassword: password
 # STRICT: host.hostname
 hostnameVerificationPolicy: WILDCARD
 # Enable the preconfigured rover realm for rover client access. If you overwrite the realms config, this will be invalidated.
-roverRealmEnabled: false
+roverRealmEnabled: "true"
 # Use this configuration
 # to create realms with public clients
 # This will create a _generated.json in /realms/
