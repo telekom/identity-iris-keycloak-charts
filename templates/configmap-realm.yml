@@ -40,7 +40,7 @@ data:
                 "surrogateAuthRequired": false,
                 "enabled": true,
                 "alwaysDisplayInConsole": false,
-                "clientAuthenticatorType": "{{- $client.clientAuthenticatorType | default "client-secret" | quote }}",
+                "clientAuthenticatorType": "client-secret",
                 "redirectUris": [
                     {{- range $idx, $redirectUri := $client.redirectUris }}
                     "{{ $redirectUri }}"{{- if not (eq $idx (sub (len $client.redirectUris) 1)) -}},{{- end }}
@@ -54,11 +54,11 @@ data:
                 "notBefore": 0,
                 "bearerOnly": false,
                 "consentRequired": false,
-                "standardFlowEnabled": {{- $client.standardFlowEnabled | default true }},
+                "standardFlowEnabled": {{ $client.standardFlowEnabled | default true }},
                 "implicitFlowEnabled": false,
-                "directAccessGrantsEnabled": {{- $client.directAccessGrantsEnabled | default true }},
+                "directAccessGrantsEnabled": {{ $client.directAccessGrantsEnabled | default true }},
                 "serviceAccountsEnabled": false,
-                "publicClient": true,
+                "publicClient": {{ $client.publicClient | default true }},
                 "frontchannelLogout": false,
                 "protocol": "openid-connect",
                 "attributes": {

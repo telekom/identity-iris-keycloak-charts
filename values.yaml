@@ -133,9 +133,9 @@ hostnameVerificationPolicy: WILDCARD
 #- name: rover
 #  clients:
 #  - name: rover
-#    clientAuthenticatorType: "client-secret"
 #    standardFlowEnabled: false
 #    directAccessGrantsEnabled: false
+#    publicClient: false
 
 replicas: 1
 
