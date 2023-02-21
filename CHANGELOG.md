@@ -2,6 +2,9 @@
 
 [[_TOC_]]
 
+## 4.3.1
+ - Update default image to iris:3.1.1
+
 ## 4.3.0
  - Allow realm toggling
  - Added rover realm and client
