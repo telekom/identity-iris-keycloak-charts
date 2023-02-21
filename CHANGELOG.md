@@ -2,6 +2,10 @@
 
 [[_TOC_]]
 
+## 4.3.0
+ - Allow realm toggling
+ - Added rover realm and client
+
 ## 4.2.0
  - Added truststore configuration for custom certificates and root-ca
 
