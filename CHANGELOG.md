@@ -2,6 +2,9 @@
 
 [[_TOC_]]
 
+## 4.3.1
+ - Realm type comparison fix and enhancement
+
 ## 4.3.0
  - Allow realm toggling
  - Added rover realm and client
