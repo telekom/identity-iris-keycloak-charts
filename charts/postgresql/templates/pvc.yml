@@ -1,11 +1,11 @@
-{{- if not (.Values.global.externalDatabase.enabled | default .Values.externalDatabase.enabled) }}
+{{- if eq .Values.global.database.location "local" }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: {{ .Release.Name }}-{{ .Chart.Name }}-data
   labels: {{ include "postgresql.labels" $ | nindent 4 }}
 spec:
-  storageClassName: {{ .Values.global.storageclass | default .Values.persistence.storageclass }}
+  storageClassName: {{ .Values.persistence.storageclass }}
   accessModes:
     - ReadWriteOnce
   resources: {{ .Values.persistence.resources | toYaml | nindent 4 }}

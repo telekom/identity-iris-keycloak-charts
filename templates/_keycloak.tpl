@@ -74,18 +74,18 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 
 {{- define "keycloak.jdbcParams" -}}
 {{- $ssl := "true" }}
-{{- $sslMode := .Values.global.externalDatabase.sslMode | default "verify-full" }}
+{{- $sslMode := .Values.externalDatabase.sslMode | default "verify-full" }}
 {{- $sslCert := "&sslcert=" }}
 {{- $sslKey := "&sslkey=" }}
 {{- $sslRootCert := "&sslrootcert=" }}
 
-{{- if .Values.global.externalDatabase.sslCert }}
+{{- if .Values.externalDatabase.sslCert }}
 {{- $sslCert = "&sslcert=/certificates/sslcert.crt" }}
 {{- end -}}
-{{- if .Values.global.externalDatabase.sslKey }}
+{{- if .Values.externalDatabase.sslKey }}
 {{- $sslKey = "&sslkey=/certificates/sslkey.pk8" }}
 {{- end -}}
-{{- if .Values.global.externalDatabase.sslRootCert }}
+{{- if .Values.externalDatabase.sslRootCert }}
 {{- $sslRootCert = "&sslrootcert=/certificates/sslrootcert.crt" }}
 {{- end -}}
 
@@ -144,21 +144,21 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 - name: KC_DB_URL_PORT
   value: "5432"
 - name: KC_DB_URL_HOST
-  value: {{ include "db.host" $ }}
+  value: {{ include "keycloak.database.host" $ }}
 - name: KC_DB_URL_DATABASE
-  value: {{ .Values.global.db.database }} 
-{{- if .Values.global.db.schema }}
+  value: {{ .Values.global.database.database }} 
+{{- if .Values.global.database.schema }}
 - name: KC_DB_SCHEMA
-  value: {{ .Values.global.db.schema }}
+  value: {{ .Values.global.database.schema }}
 {{- end }}
 - name: KC_DB_USERNAME
-  value: {{ .Values.global.db.username }}
+  value: {{ .Values.global.database.username }}
 - name: KC_DB_PASSWORD
   valueFrom:
     secretKeyRef:
       name: {{ .Release.Name }}
       key: dbPassword
-{{- if .Values.global.externalDatabase.ssl }}
+{{- if .Values.externalDatabase.ssl }}
 - name: JDBC_PARAMS
   value: {{ include "keycloak.jdbcParams" $ | quote }}
 {{- end -}}
@@ -166,11 +166,11 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 
 {{- define "keycloak.checkdatabase.env" }}
 - name: PGHOST
-  value: {{ include "db.host" $ }}
+  value: {{ include "keycloak.database.host" $ }}
 - name: PGDATABASE
-  value: {{ .Values.global.db.database }}
+  value: {{ .Values.global.database.database }}
 - name: PGUSER
-  value: {{ .Values.global.db.username }}
+  value: {{ .Values.global.database.username }}
 - name: PGPASSWORD
   valueFrom:
     secretKeyRef:
@@ -194,7 +194,7 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{ end -}}
 
 {{- define "keycloak.db.certificates.volume" }}
-{{- if .Values.global.externalDatabase.ssl }}
+{{- if .Values.externalDatabase.ssl }}
 - name: certificates
   secret:
     secretName: {{ .Release.Name }}-certificates
@@ -202,7 +202,7 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{ end -}}
 
 {{- define "keycloak.db.certificates.volumeMount" }}
-{{- if .Values.global.externalDatabase.ssl }}
+{{- if .Values.externalDatabase.ssl }}
 - name: certificates
   mountPath: /certificates
 {{- end -}}
@@ -218,4 +218,13 @@ secretName: {{ .Values.ingress.tlsSecret | default .Values.global.ingress.tlsSec
 {{- if eq .Values.global.platform "tdi" -}}
 ingressClassName: {{ .Values.ingress.ingressClassName | default "triton-ingress" -}}
 {{- end -}}
+{{- end -}}
+
+
+{{- define "keycloak.database.host" -}}
+  {{- if and (eq .Values.global.database.location "external") .Values.externalDatabase.host  -}}
+    {{- .Values.externalDatabase.host -}}
+  {{- else -}}
+    {{ .Release.Name -}}-postgresql
+  {{- end -}}
 {{- end -}}

@@ -11,11 +11,6 @@ global:
   labels:
     # fluentd label
     tif.telekom.de/group: tif
-    
-  db: {}
-
-  externalDatabase:
-    enabled: false
 
   imagePullSecrets: []
   #- name: mtr-tif-public
@@ -25,6 +20,24 @@ global:
 
   imagePullPolicy: IfNotPresent
 
+  database:
+    location: local
+    # Set host if you use an external database or service name is not sufficient
+    #host: ''
+    database: sso
+    username: sso
+    password: changeme
+
+# You can force using a specific image here:
+#image:
+  #repository: mtr.devops.telekom.de
+  #organization: tardis-common
+  #name: postgres
+  #tag: 12.3-debian
+# Or use the flattened string form:
+#image: mtr.devops.telekom.de/tardis-common/postgres:12.3-debian
+#imagePullPolicy: IfNotPresent
+
 
 securityContext: {}
   #fsGroup: 999
@@ -32,13 +45,6 @@ securityContext: {}
 # database admin credentials
 admin_username: "postgres"
 admin_password: "changeme"
-
-# name of the database which should be created
-database: "change_me"
-
-# credentials of user that should be created for database
-username: "change_me"
-password: "change_me"
 
 # maximum number of client connections
 max_connections: "100"
@@ -49,12 +55,6 @@ shared_buffers: "32MB"
 # maximum number of transactions that can be in the "prepared" state simultaneously
 # setting this parameter to zero (default) disables the prepared-transaction feature
 max_prepared_transactions: "0"
-
-# if set to true no objects will be created at all
-externalDatabase:
-  enabled: false 
-
-image: mtr.devops.telekom.de/tardis-common/postgres:12.3-debian
 
 resources:
   limits:

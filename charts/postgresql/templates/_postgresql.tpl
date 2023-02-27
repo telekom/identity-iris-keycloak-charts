@@ -37,14 +37,14 @@ app.kubernetes.io/instance: {{ .Release.Name }}-postgresql
 - name: PGDATA
   value: {{ .Values.persistence.mountDir | default "/var/lib/postgresql/data" }}/pgdata
 - name: POSTGRES_USER
-  value: {{ .Values.global.db.username | default .Values.username }}
+  value: {{ .Values.global.database.username | default .Values.username }}
 - name: POSTGRES_PASSWORD
   valueFrom:
     secretKeyRef:
       name: {{ .Release.Name }}-{{ .Chart.Name }}
       key: password
 - name: POSTGRES_DATABASE
-  value: {{ .Values.global.db.database | default .Values.database }}
+  value: {{ .Values.global.database.database }}
 - name: POSTGRES_ADMIN_PASSWORD
   valueFrom:
     secretKeyRef:

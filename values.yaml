@@ -34,31 +34,14 @@ global:
       - "[0-9]"
       - "[^a-zA-Z0-9]"
 
-  # Database and credentials that will be created for Keycloak
-  db:
+  database:
+    location: local
+    # Set host if you use an external database or service name is not sufficient
+    #host: ''
     database: sso
+    #schema: keycloak 
     username: sso
     password: changeme
-    #schema: public 
-
-  externalDatabase:
-    enabled: false
-    #host: ''
-    #ssl: false
-    #sslMode: 'verify-full'
-    #sslCert: |
-    #  -----BEGIN CERTIFICATE-----
-    #  <CA certificate in PEM format here>
-    #  -----END CERTIFICATE-----
-    #sslKey: |
-    #  -----BEGIN PRIVATE KEY-----
-    #  <pk8 in PEM format here>
-    #  -----END PRIVATE KEY-----
-    #sslRootCert: |
-    #  -----BEGIN CERTIFICATE-----
-    #  <Root certificate in PEM format here>
-    #  -----END CERTIFICATE-----
-
 
 #imagePullPolicy: IfNotPresent
 
@@ -237,37 +220,21 @@ haproxy:
       cpu: 250m
 
 postgresql:
-  securityContext: {}
-    #fsGroup: 999
 
-  max_connections: "100"
-  shared_buffers: "32MB"
   max_prepared_transactions: "100"
-
-  # You can force using a specific image here:
-  #image:
-  #repository: mtr.devops.telekom.de
-  #organization: tardis-common
-  #name: postgres
-  #tag: 12.3-debian
-  # Or use the flattened string form:
-  #image: mtr.devops.telekom.de/tardis-common/postgres:12.3-debian
-  #imagePullPolicy: IfNotPresent
-
-  # PostgreSQL admin user (postgres) password
-  admin_password: changeme
-
-  resources:
-    limits:
-      cpu: 100m
-      memory: 500Mi
-    requests:
-      cpu: 20m
-      memory: 200Mi
-
-  persistence:
-    storageclass: gp2
-    resources:
-      requests:
-        storage: 1Gi
-    #mountDir: '/var/lib/postgresql/data'
+  
+externalDatabase:
+  ssl: false
+  #sslMode: 'verify-full'
+  #sslCert: |
+  #  -----BEGIN CERTIFICATE-----
+  #  <CA certificate in PEM format here>
+  #  -----END CERTIFICATE-----
+  #sslKey: |
+  #  -----BEGIN PRIVATE KEY-----
+  #  <pk8 in PEM format here>
+  #  -----END PRIVATE KEY-----
+  #sslRootCert: |
+  #  -----BEGIN CERTIFICATE-----
+  #  <Root certificate in PEM format here>
+  #  -----END CERTIFICATE-----

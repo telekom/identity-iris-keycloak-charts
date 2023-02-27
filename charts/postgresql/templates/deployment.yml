@@ -1,4 +1,4 @@
-{{- if not (.Values.global.externalDatabase.enabled | default .Values.externalDatabase.enabled ) }}
+{{- if eq .Values.global.database.location "local" }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -55,7 +55,7 @@ spec:
             command:
             - /bin/bash
             - -c
-            - pg_isready -U {{ .Values.global.db.database | default .Values.database }}
+            - pg_isready -U {{ .Values.global.database.username }}
           initialDelaySeconds: 60
           periodSeconds: 10
           timeoutSeconds: 3

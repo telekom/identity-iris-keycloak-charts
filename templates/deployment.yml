@@ -100,7 +100,7 @@ spec:
         imagePullPolicy: {{ .Values.postgresql.imagePullPolicy | default .Values.global.imagePullPolicy }}
         securityContext: {{ .Values.postgresql.securityContext | toYaml | nindent 10 }}
         command: ['/bin/bash']
-        args: ['-c', 'until pg_isready -U {{ .Values.global.db.username }}; do echo waiting for database; sleep 2; done;']
+        args: ['-c', 'until pg_isready -U {{ .Values.global.database.username }}; do echo waiting for database; sleep 2; done;']
         env:
         {{- include "keycloak.checkdatabase.env" $ | indent 8 }}
         resources: {{ .Values.postgresql.resources | toYaml | nindent 10 }}

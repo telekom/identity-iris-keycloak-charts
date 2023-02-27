@@ -1,5 +1,4 @@
----
-{{- if not (.Values.global.externalDatabase.enabled | default .Values.externalDatabase.enabled ) }}
+{{- if eq .Values.global.database.location "local" }}
 apiVersion: v1
 kind: Service
 metadata:
