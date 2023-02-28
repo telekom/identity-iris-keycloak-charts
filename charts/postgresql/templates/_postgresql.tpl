@@ -4,8 +4,6 @@ app.kubernetes.io/name: postgresql
 app.kubernetes.io/instance: {{ .Release.Name }}-postgresql
 app.kubernetes.io/component: database
 app.kubernetes.io/part-of: tif-runtime
-app.kubernetes.io/managed-by: {{ .Values.global.installed_by | default "tif" }}
-helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
 {{ .Values.global.labels | toYaml }}
 {{- end -}}
 
@@ -26,7 +24,11 @@ app.kubernetes.io/instance: {{ .Release.Name }}-postgresql
     {{ $imageTag = .Values.image.tag | default $imageTag -}}
     {{- printf "%s/%s/%s:%s" $imageRepository $imageOrganization $imageName $imageTag -}}
   {{- else -}}
-    {{- .Values.image -}}
+    {{- if .Values.global.image.force -}}
+      {{- .Values.image | replace "mtr.devops.telekom.de" .Values.global.image.repository | replace "tardis-common" .Values.global.image.organization -}}
+    {{- else -}}
+      {{- .Values.database.postgres.image -}}
+    {{- end -}}
   {{- end -}}
 {{- else -}}
  {{- printf "%s/%s/%s:%s" $imageRepository $imageOrganization $imageName $imageTag -}}
@@ -42,8 +44,8 @@ app.kubernetes.io/instance: {{ .Release.Name }}-postgresql
   valueFrom:
     secretKeyRef:
       name: {{ .Release.Name }}-{{ .Chart.Name }}
-      key: password
-- name: POSTGRES_DATABASE
+      key: databasePassword
+- name: POSTGRES_DB
   value: {{ .Values.global.database.database }}
 - name: POSTGRES_ADMIN_PASSWORD
   valueFrom:

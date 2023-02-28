@@ -1,4 +1,7 @@
 global:
+  metadata:
+    pipeline: {}
+    
   passwordRules:
     enabled: false
     length: 12
@@ -18,12 +21,16 @@ global:
   #  username: changeme
   #  password: changeme
 
+  #image:
+    #force: false
+
   imagePullPolicy: IfNotPresent
 
   database:
     location: local
     # Set host if you use an external database or service name is not sufficient
     #host: ''
+    #port: 5432
     database: sso
     username: sso
     password: changeme

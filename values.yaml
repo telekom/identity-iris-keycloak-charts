@@ -38,6 +38,7 @@ global:
     location: local
     # Set host if you use an external database or service name is not sufficient
     #host: ''
+    #port: 5432
     database: sso
     #schema: keycloak 
     username: sso
@@ -220,8 +221,29 @@ haproxy:
       cpu: 250m
 
 postgresql:
+  #image:
+    #repository: mtr.devops.telekom.de
+    #organization: tardis-common
+    #name: postgres
+    #tag: 12.3-debian
+  # Or use the flattened string form:
+  #image: mtr.devops.telekom.de/tardis-common/postgres:12.3-debian
+  #imagePullPolicy: IfNotPresent
+
+  admin_password: changeme
 
   max_prepared_transactions: "100"
+
+  securityContext: {}
+    #fsGroup: 999
+
+  resources:
+    limits:
+      cpu: 100m
+      memory: 500Mi
+    requests:
+      cpu: 20m
+      memory: 200Mi
   
 externalDatabase:
   ssl: false

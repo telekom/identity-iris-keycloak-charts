@@ -33,7 +33,7 @@ spec:
         imagePullPolicy: {{ .Values.global.imagePullPolicy }}
         securityContext: {{ .Values.securityContext | toYaml | nindent 10 }}
         ports:
-        - containerPort: 5432
+        - containerPort: {{ .Values.global.database.port | default 5432 }}
           protocol: TCP
         volumeMounts:
         - mountPath: /tmp
@@ -44,8 +44,8 @@ spec:
           name: {{ .Release.Name }}-{{ .Chart.Name }}-data
         livenessProbe:
           tcpSocket:
-            port: 5432
-          initialDelaySeconds: 120
+            port: {{ .Values.global.database.port | default 5432 }}
+          initialDelaySeconds: 30
           periodSeconds: 10
           timeoutSeconds: 1
           successThreshold: 1
@@ -70,5 +70,7 @@ spec:
         persistentVolumeClaim:
           claimName: {{ .Release.Name }}-{{ .Chart.Name }}-data
       restartPolicy: Always
+      dnsPolicy: ClusterFirst
+      terminationGracePeriodSeconds: 30
 {{- end }}
 

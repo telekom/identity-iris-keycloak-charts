@@ -144,7 +144,7 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 - name: KC_DB_URL_PORT
   value: "5432"
 - name: KC_DB_URL_HOST
-  value: {{ include "keycloak.database.host" $ }}
+  value: {{ include "database.host" $ }}
 - name: KC_DB_URL_DATABASE
   value: {{ .Values.global.database.database }} 
 {{- if .Values.global.database.schema }}
@@ -166,7 +166,7 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 
 {{- define "keycloak.checkdatabase.env" }}
 - name: PGHOST
-  value: {{ include "keycloak.database.host" $ }}
+  value: {{ include "database.host" $ }}
 - name: PGDATABASE
   value: {{ .Values.global.database.database }}
 - name: PGUSER
@@ -218,13 +218,4 @@ secretName: {{ .Values.ingress.tlsSecret | default .Values.global.ingress.tlsSec
 {{- if eq .Values.global.platform "tdi" -}}
 ingressClassName: {{ .Values.ingress.ingressClassName | default "triton-ingress" -}}
 {{- end -}}
-{{- end -}}
-
-
-{{- define "keycloak.database.host" -}}
-  {{- if and (eq .Values.global.database.location "external") .Values.externalDatabase.host  -}}
-    {{- .Values.externalDatabase.host -}}
-  {{- else -}}
-    {{ .Release.Name -}}-postgresql
-  {{- end -}}
 {{- end -}}

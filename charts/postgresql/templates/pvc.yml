@@ -4,6 +4,12 @@ kind: PersistentVolumeClaim
 metadata:
   name: {{ .Release.Name }}-{{ .Chart.Name }}-data
   labels: {{ include "postgresql.labels" $ | nindent 4 }}
+{{- if .Values.persistence }}
+  {{- if .Values.persistence.keepOnDelete }}
+  annotations:
+    "helm.sh/resource-policy": keep
+  {{- end -}}
+{{- end }}
 spec:
   storageClassName: {{ .Values.persistence.storageclass }}
   accessModes:
