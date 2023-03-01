@@ -1,7 +1,7 @@
 global:
   metadata:
     pipeline: {}
-    
+
   passwordRules:
     enabled: false
     length: 12
@@ -50,8 +50,7 @@ securityContext: {}
   #fsGroup: 999
 
 # database admin credentials
-admin_username: "postgres"
-admin_password: "changeme"
+#admin_password: "changeme"
 
 # maximum number of client connections
 max_connections: "100"

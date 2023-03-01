@@ -47,11 +47,13 @@ app.kubernetes.io/instance: {{ .Release.Name }}-postgresql
       key: databasePassword
 - name: POSTGRES_DB
   value: {{ .Values.global.database.database }}
+{{- if .Values.admin_password }}
 - name: POSTGRES_ADMIN_PASSWORD
   valueFrom:
     secretKeyRef:
       name: {{ .Release.Name }}-{{ .Chart.Name }}
       key: adminPassword
+{{- end }}
 - name: POSTGRES_MAX_CONNECTIONS
   value: "{{ .Values.max_connections }}"
 - name: POSTGRES_SHARED_BUFFERS

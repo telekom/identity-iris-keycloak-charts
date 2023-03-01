@@ -230,8 +230,6 @@ postgresql:
   #image: mtr.devops.telekom.de/tardis-common/postgres:12.3-debian
   #imagePullPolicy: IfNotPresent
 
-  admin_password: changeme
-
   max_prepared_transactions: "100"
 
   securityContext: {}

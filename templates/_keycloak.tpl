@@ -157,7 +157,7 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
   valueFrom:
     secretKeyRef:
       name: {{ .Release.Name }}
-      key: dbPassword
+      key: databasePassword
 {{- if .Values.externalDatabase.ssl }}
 - name: JDBC_PARAMS
   value: {{ include "keycloak.jdbcParams" $ | quote }}
@@ -175,7 +175,7 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
   valueFrom:
     secretKeyRef:
       name: {{ .Release.Name }}
-      key: dbPassword
+      key: databasePassword
 {{- end -}}
 
 {{- define "keycloak.host" -}}
