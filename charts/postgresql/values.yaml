@@ -50,17 +50,17 @@ securityContext: {}
   #fsGroup: 999
 
 # database admin credentials
-#admin_password: "changeme"
+#adminPassword: "changeme"
 
 # maximum number of client connections
-max_connections: "100"
+maxConnections: "100"
 
 # memory dedicated to PostgreSQL for caching data
-shared_buffers: "32MB"
+sharedBuffers: "32MB"
 
 # maximum number of transactions that can be in the "prepared" state simultaneously
 # setting this parameter to zero (default) disables the prepared-transaction feature
-max_prepared_transactions: "0"
+maxPreparedTransactions: "0"
 
 resources:
   limits:

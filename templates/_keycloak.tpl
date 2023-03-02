@@ -127,7 +127,7 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 - name: jgroups.dns.query
   value: {{ .Release.Name }}-jgroups.{{ .Release.Namespace }}
 - name: KEYCLOAK_ADMIN
-  value: {{ .Values.admin_username }}
+  value: {{ .Values.adminUsername }}
 - name: KEYCLOAK_ADMIN_PASSWORD
   valueFrom:
     secretKeyRef:

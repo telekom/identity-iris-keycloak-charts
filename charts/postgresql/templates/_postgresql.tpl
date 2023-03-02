@@ -47,7 +47,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}-postgresql
       key: databasePassword
 - name: POSTGRES_DB
   value: {{ .Values.global.database.database }}
-{{- if .Values.admin_password }}
+{{- if .Values.adminPassword }}
 - name: POSTGRES_ADMIN_PASSWORD
   valueFrom:
     secretKeyRef:
@@ -55,9 +55,9 @@ app.kubernetes.io/instance: {{ .Release.Name }}-postgresql
       key: adminPassword
 {{- end }}
 - name: POSTGRES_MAX_CONNECTIONS
-  value: "{{ .Values.max_connections }}"
+  value: "{{ .Values.maxConnections }}"
 - name: POSTGRES_SHARED_BUFFERS
-  value: {{ .Values.shared_buffers }}
+  value: {{ .Values.sharedBuffers }}
 - name: POSTGRES_MAX_PREPARED_TRANSACTIONS
-  value: "{{ .Values.max_prepared_transactions }}"
+  value: "{{ .Values.maxPreparedTransactions }}"
 {{- end -}}

@@ -56,8 +56,8 @@ templateChangeTriggers: []
 securityContext: {}
 
 # Keycloak admin role credentials
-admin_username: admin
-admin_password: changeme
+adminUsername: admin
+adminPassword: changeme
 
 # Truststore for Keycloak
 # When Keystorer project is used, just use the base64 string from the pipeline log
@@ -230,7 +230,7 @@ postgresql:
   #image: mtr.devops.telekom.de/tardis-common/postgres:12.3-debian
   #imagePullPolicy: IfNotPresent
 
-  max_prepared_transactions: "100"
+  maxPreparedTransactions: "100"
 
   securityContext: {}
     #fsGroup: 999
