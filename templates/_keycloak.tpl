@@ -142,7 +142,7 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 - name: PROXY_ADDRESS_FORWARDING
   value: "true"
 - name: KC_DB_URL_PORT
-  value: "5432"
+  value: {{ .Values.global.database.port | default "5432" | quote }}
 - name: KC_DB_URL_HOST
   value: {{ include "database.host" $ }}
 - name: KC_DB_URL_DATABASE
