@@ -71,6 +71,7 @@ resources:
     memory: 200Mi
 
 persistence:
+  keepOnDelete: false
   storageclass: gp2
   resources:
     requests:

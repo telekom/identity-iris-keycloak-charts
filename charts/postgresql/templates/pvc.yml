@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ .Release.Name }}-{{ .Chart.Name }}-data
+  name: {{ include "postgresql.pvcName" . }}
   labels: {{ include "postgresql.labels" $ | nindent 4 }}
 {{- if .Values.persistence }}
   {{- if .Values.persistence.keepOnDelete }}

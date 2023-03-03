@@ -242,7 +242,7 @@ postgresql:
     requests:
       cpu: 20m
       memory: 200Mi
-  
+
 externalDatabase:
   ssl: false
   #sslMode: 'verify-full'

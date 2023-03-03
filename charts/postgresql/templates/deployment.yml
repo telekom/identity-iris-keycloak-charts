@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-{{ .Chart.Name }}
+  name: {{ include "postgresql.deploymentName" . }}
   labels: {{ include "postgresql.labels" $ | nindent 4 }}
   {{- with .Values.deployment.annotations }}
   annotations:
@@ -25,7 +25,7 @@ spec:
       securityContext:
         fsGroup: {{ .Values.securityContext.fsGroup | default 999 }}
       containers:
-      - name: {{ .Release.Name }}-{{ .Chart.Name }}
+      - name: {{ include "postgresql.deploymentName" . }}
         resources: {{ .Values.resources | toYaml | nindent 10 }}
         env:
         {{- include "postgresql.env" $ | indent 8 }}
@@ -37,11 +37,11 @@ spec:
           protocol: TCP
         volumeMounts:
         - mountPath: /tmp
-          name: {{ .Release.Name }}-{{ .Chart.Name }}-tmp
+          name: {{ include "postgresql.deploymentName" . }}-tmp
         - mountPath: /var/run/postgresql
-          name: {{ .Release.Name }}-{{ .Chart.Name }}-run
+          name: {{ include "postgresql.deploymentName" . }}-run
         - mountPath: {{ .Values.persistence.mountDir | default "/var/lib/postgresql/data" }}
-          name: {{ .Release.Name }}-{{ .Chart.Name }}-data
+          name: {{ include "postgresql.deploymentName" . }}-data
         livenessProbe:
           tcpSocket:
             port: {{ .Values.global.database.port | default 5432 }}
@@ -62,13 +62,13 @@ spec:
           successThreshold: 1
           failureThreshold: 3
       volumes:
-      - name: {{ .Release.Name }}-{{ .Chart.Name }}-run
+      - name: {{ include "postgresql.deploymentName" . }}-run
         emptyDir: {}
-      - name: {{ .Release.Name }}-{{ .Chart.Name }}-tmp
+      - name: {{ include "postgresql.deploymentName" . }}-tmp
         emptyDir: {}
-      - name: {{ .Release.Name }}-{{ .Chart.Name }}-data
+      - name: {{ include "postgresql.deploymentName" . }}-data
         persistentVolumeClaim:
-          claimName: {{ .Release.Name }}-{{ .Chart.Name }}-data
+          claimName: {{ include "postgresql.pvcName" . }}
       restartPolicy: Always
       dnsPolicy: ClusterFirst
       terminationGracePeriodSeconds: 30

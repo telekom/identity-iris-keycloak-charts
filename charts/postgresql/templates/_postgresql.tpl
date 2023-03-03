@@ -43,7 +43,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}-postgresql
 - name: POSTGRES_PASSWORD
   valueFrom:
     secretKeyRef:
-      name: {{ .Release.Name }}-{{ .Chart.Name }}
+      name: {{ include "postgresql.secretName" . }}
       key: databasePassword
 - name: POSTGRES_DB
   value: {{ .Values.global.database.database }}
@@ -51,7 +51,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}-postgresql
 - name: POSTGRES_ADMIN_PASSWORD
   valueFrom:
     secretKeyRef:
-      name: {{ .Release.Name }}-{{ .Chart.Name }}
+      name: {{ include "postgresql.secretName" . }}
       key: adminPassword
 {{- end }}
 - name: POSTGRES_MAX_CONNECTIONS
@@ -60,4 +60,20 @@ app.kubernetes.io/instance: {{ .Release.Name }}-postgresql
   value: {{ .Values.sharedBuffers }}
 - name: POSTGRES_MAX_PREPARED_TRANSACTIONS
   value: "{{ .Values.maxPreparedTransactions }}"
+{{- end -}}
+
+{{- define "postgresql.deploymentName" -}}
+{{- printf "%s-%s" .Release.Name .Chart.Name -}}
+{{- end -}}
+
+{{- define "postgresql.pvcName" -}}
+{{- printf "%s-%s-data" .Release.Name .Chart.Name -}}
+{{- end -}}
+
+{{- define "postgresql.secretName" -}}
+{{- printf "%s-%s" .Release.Name .Chart.Name -}}
+{{- end -}}
+
+{{- define "postgresql.serviceName" -}}
+{{- printf "%s-%s" .Release.Name .Chart.Name -}}
 {{- end -}}
