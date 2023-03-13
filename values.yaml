@@ -8,6 +8,7 @@ global:
   labels:
     # fluentd label
     tif.telekom.de/group: tif
+  product: "iris"
   ingress:
     #tlsSecret: ""
     annotations:

@@ -10,6 +10,5 @@ tardis.telekom.de/subproduct: {{ .Release.Name | quote }}
 {{- end -}}
 
 {{- define "database.status-monitor.labels" -}}
-tardis.telekom.de/product: {{ .Values.global.product | default .Chart.Name | quote }}
 tardis.telekom.de/subproduct: {{ printf "%s-%s" .Release.Name "database" | quote }}
 {{- end -}}
