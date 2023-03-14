@@ -37,8 +37,6 @@ global:
 
   database:
     location: local
-    # Set host if you use an external database or service name is not sufficient
-    #host: ''
     #port: 5432
     database: sso
     #schema: keycloak 
@@ -245,6 +243,8 @@ postgresql:
       memory: 200Mi
 
 externalDatabase:
+  # Set host if you use an external database or service name is not sufficient
+  #host: ''
   ssl: false
   #sslMode: 'verify-full'
   #sslCert: |
