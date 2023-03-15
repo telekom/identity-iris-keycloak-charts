@@ -4,6 +4,7 @@
 
 ## 4.4.0
  - removed rbac configuration since it is not necessary with keycloak 20
+ - Update default image to iris:3.1.2 (keycloak 20.0.5)
 
 ## 4.3.1
  - Realm type comparison fix and enhancement
