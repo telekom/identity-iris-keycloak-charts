@@ -25,7 +25,7 @@ spec:
       securityContext:
         fsGroup: {{ .Values.securityContext.fsGroup | default 999 }}
       containers:
-      - name: {{ include "postgresql.deploymentName" . }}
+      - name: postgresql
         resources: {{ .Values.resources | toYaml | nindent 10 }}
         env:
         {{- include "postgresql.env" $ | indent 8 }}
