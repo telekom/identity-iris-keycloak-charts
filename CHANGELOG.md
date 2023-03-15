@@ -2,6 +2,9 @@
 
 [[_TOC_]]
 
+## 4.4.0
+ - removed rbac configuration since it is not necessary with keycloak 20
+
 ## 4.3.1
  - Realm type comparison fix and enhancement
 
