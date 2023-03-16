@@ -2,6 +2,12 @@
 
 [[_TOC_]]
 
+## 5.x.x
+ - Reworked database configuration
+ - Labels cleaned up
+ - Corrected product names
+ - Split common service to dedicated service files
+
 ## 4.4.0
  - removed rbac configuration since it is not necessary with keycloak 20
  - Update default image to iris:3.1.2 (keycloak 20.0.5)
