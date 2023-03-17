@@ -22,9 +22,7 @@ spec:
       {{- include "database.status-monitor.labels" $ | nindent 8 }}
     spec:
       {{- include "image_pull_secrets" $ | indent 6 }}
-      securityContext:
-        fsGroup: {{ .Values.podSecurityContext.fsGroup | default 999 }}
-        supplementalGroups: {{ .Values.podSecurityContext.supplementalGroups | default 999 }}
+      securityContext: {{ .Values.podSecurityContext | toYaml | nindent 8 }}
       containers:
       - name: {{ .Release.Name }}-{{ .Chart.Name }}
         resources: {{ .Values.resources | toYaml | nindent 10 }}
