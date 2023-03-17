@@ -69,7 +69,12 @@ global:
 templateChangeTriggers: []
 #- my-custom-configmap.yaml
 
-securityContext: {}
+podSecurityContext: {}
+  #fsGroup: 999
+  #supplementalGroups: 999
+
+containerSecurityContext: {}
+
 
 # Keycloak admin role credentials
 admin_username: admin
@@ -227,7 +232,7 @@ customConfig:
 
 haproxy:
   #imagePullPolicy: IfNotPresent
-  securityContext: {}
+  containerSecurityContext: {}
   resources:
     limits:
       memory: 1Gi
@@ -237,8 +242,10 @@ haproxy:
       cpu: 250m
 
 postgresql:
-  securityContext: {}
+  containerSecurityContext: {}
+  podSecurityContext: {}
     #fsGroup: 999
+    #supplementalGroups: 999
 
   max_connections: "100"
   shared_buffers: "32MB"
