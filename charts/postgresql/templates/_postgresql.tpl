@@ -5,7 +5,6 @@ app.kubernetes.io/name: postgresql
 app.kubernetes.io/instance: {{ .Release.Name }}-postgresql
 app.kubernetes.io/component: database
 app.kubernetes.io/part-of: tif-runtime
-app.kubernetes.io/managed-by: {{ .Values.global.installed_by | default "tif" }}
 {{ .Values.global.labels | toYaml }}
 {{- end -}}
 
