@@ -100,12 +100,12 @@ The following table lists the configurable parameters of this chart.
 | `global.domain`                                     | Base cluster URL reachable from Telekom network                                                  | `nil`                               |
 | `global.labels`                                     | Define global labels                                                                             | `tif.telekom.de/group`              |
 | `global.ingress`                                    | Set ingress parameters for all ingress, can be extended by ingress specific ones                 | `nil`                               |
-| `global.externalDatabase.enabled`                   | Should the setup use an external database?                                                       | `false`                             |
-| `global.externalDatabase.host`                      | Hostname of the external database                                                                | `nil`                               |
-| `global.externalDatabase.ssl`                       | Encrypt the database connection                                                                  | `false`                             |
-| `global.externalDatabase.sslCert`                   | Client certificate, set for mTLS                                                                 | `nil`                               |
-| `global.externalDatabase.sslKey`                    | Client key, set for mTLS                                                                         | `nil`                               |
-| `global.externalDatabase.sslRootCert`               | Root certificate                                                                                 | `nil`                               |
+| `global.database.location`                          | Specifiy if you want to deploy a PostgreSQL or use an external database                          | `local`                             |
+| `global.database.port`                              | Port of the database                                                                             | `5432`                              |
+| `global.database.database`                          | Name of the database                                                                             | `kong`                              |
+| `global.database.schema`                            | Name of the schema                                                                               | `public`                            |
+| `global.database.user`                              | Username for accessing the database                                                              | `kong`                              |
+| `global.database.password`                          | The users password                                                                               | `changeme`                          |
 | `truststore`                                        | Truststore in Base64                                                                             | `nil`                               |
 | `truststorePassword`                                | Password to access the truststore                                                                | `password`                          |
 | `global.hostnameVerificationPolicy`                 | Choose a hostname verification policy                                                            | `WILDCARD`                          |
@@ -166,17 +166,13 @@ The following table lists the configurable parameters of this chart.
 | `realms.identityProviders.mappers.attributeName`    | The attribute name in the IDP response (only type `custom`)                                      | `nil`                               |
 | `realms.identityProviders.mappers.category`         | The category of the mapper (only type `custom`)                                                  | `nil`                               |
 | `realms.identityProviders.mappers.userAttribute`    | The Keycloak user attribute to map the value to (only type `custom`)                             | `nil`                               |
-| **postgresql**                                      |                                                                                                  |                                     |
-| `postgresql.image.repository`                       | MTR repository                                                                                   | `mtr.external.otc.telekomcloud.com` |
-| `postgresql.image.organization`                     | MTR organization                                                                                 | `tif-public`                        |
-| `postgresql.image.name`                             | Docker image name in MTR                                                                         | `postgres`                          |
-| `postgresql.image.tag`                              | Selected image tag                                                                               | `12.3-debian`                       |
-| `postgresql.replicas`                               | Number of replicas                                                                               | `1`                                 |
-| `postgresql.resources.requests.memory`              | Memory request for postgresql pod                                                                | `200Mi`                             |
-| `postgresql.resources.requests.cpu`                 | CPU request for postgresql pod                                                                   | `20m`                               |
-| `postgresql.resources.limit.memory`                 | Memory limit for postgresql pod                                                                  | `500Mi`                             |
-| `postgresql.resources.limit.cpu`                    | CPU limit for postgresql pod                                                                     | `100m`                              |
-| `postgresql.persistence.resources.requests.storage` | Volume storage space for postgresql                                                              | `1Gi`                               |
+| `postgresql.image`                                  | Specifiy the PostgreSQL image                                                                    | `postgres-12.3-debian`              |
+| `postgresql.securityContext`                        | Specifiy the security context                                                                    | `nil`                               |
+| `postgresql.resources`                              | Assign ressources, e.g. limits, for Postgres                                                     | `Memory limits`                     |
+| `externalDatabase.host`                             | If an external database is used, this is the url of the database instance                        | `nil`                               |
+| `externalDatabase.ssl`                              | Use ssl for connection                                                                           | `false`                             |
+| `externalDatabase.sslVerify`                        | Use the provided certificate                                                                     | `false`                             |
+| `externalDatabase.luaSslTrustedCertificate`         | Provide certificate                                                                              | `nil`                               |
 
 ## Secrets
 
