@@ -49,7 +49,7 @@ spec:
         {{- if eq .Values.prometheus.enabled true }}
         - { containerPort: {{ .Values.prometheus.port | default 9542 }}, protocol: TCP, name: metrics-http }
         {{- end }}
-        securityContext: {{ .Values.haproxy.securityContext | toYaml | nindent 10 }}
+        securityContext: {{ .Values.haproxy.containerSecurityContext | toYaml | nindent 10 }}
         resources: {{ .Values.haproxy.resources | toYaml | nindent 10 }}
         volumeMounts:
         - name: ha-proxy-config
@@ -57,7 +57,7 @@ spec:
       - name: keycloak
         image: '{{ include "keycloak.image" $ }}'
         imagePullPolicy: {{ .Values.imagePullPolicy | default .Values.global.imagePullPolicy }}
-        securityContext: {{ .Values.securityContext | toYaml | nindent 10 }}
+        securityContext: {{ .Values.containerSecurityContext | toYaml | nindent 10 }}
         {{- if .Values.truststore }}
         args: ['start --optimized --import-realm --spi-truststore-file-file=/truststore/truststore.jks --spi-truststore-file-password={{ .Values.truststorePassword }} --spi-truststore-file-hostname-verification-policy={{ .Values.hostnameVerificationPolicy }}']
         {{- else }}
@@ -97,7 +97,7 @@ spec:
       - name: "check-database"
         image: '{{ include "keycloak.init.image" $ }}'
         imagePullPolicy: {{ .Values.postgresql.imagePullPolicy | default .Values.global.imagePullPolicy }}
-        securityContext: {{ .Values.postgresql.securityContext | toYaml | nindent 10 }}
+        securityContext: {{ .Values.postgresql.containerSecurityContext | toYaml | nindent 10 }}
         command: ['/bin/bash']
         args: ['-c', 'until pg_isready -U {{ .Values.global.db.username }}; do echo waiting for database; sleep 2; done;']
         env:

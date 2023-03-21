@@ -26,8 +26,11 @@ global:
   imagePullPolicy: IfNotPresent
 
 
-securityContext: {}
+podSecurityContext: {}
   #fsGroup: 999
+  #supplementalGroups: 999
+
+containerSecurityContext: {}
 
 # database admin credentials
 admin_username: "postgres"

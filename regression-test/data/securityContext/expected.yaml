@@ -342,7 +342,9 @@ spec:
         tardis.telekom.de/subproduct: "keycloak-database"
     spec:      
       securityContext: 
-        {}
+        fsGroup: 999
+        supplementalGroups:
+        - 999
       containers:
       - name: keycloak-postgresql
         resources: 
@@ -378,7 +380,15 @@ spec:
         image: 'mtr.devops.telekom.de/tardis-common/postgres:12.3-debian'
         imagePullPolicy: IfNotPresent
         securityContext: 
-          {}
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+          runAsGroup: 999
+          runAsNonRoot: true
+          runAsUser: 999
         ports:
         - containerPort: 5432
           protocol: TCP
@@ -485,7 +495,15 @@ spec:
         - { containerPort: 9090, protocol: TCP, name: http }
         - { containerPort: 9542, protocol: TCP, name: metrics-http }
         securityContext: 
-          {}
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+          runAsGroup: 99
+          runAsNonRoot: true
+          runAsUser: 99
         resources: 
           limits:
             cpu: 1
@@ -500,7 +518,8 @@ spec:
         image: 'mtr.devops.telekom.de/tardis-internal/io/iris:3.1.2'
         imagePullPolicy: IfNotPresent
         securityContext: 
-          {}
+          runAsGroup: 1000
+          runAsUser: 1000
         args: ['start --optimized --import-realm']
         env:        
         - name: KC_HOSTNAME
@@ -578,7 +597,15 @@ spec:
         image: 'mtr.devops.telekom.de/tardis-common/postgres:12.3-debian'
         imagePullPolicy: IfNotPresent
         securityContext: 
-          {}
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+          runAsGroup: 999
+          runAsNonRoot: true
+          runAsUser: 999
         command: ['/bin/bash']
         args: ['-c', 'until pg_isready -U sso; do echo waiting for database; sleep 2; done;']
         env:        
