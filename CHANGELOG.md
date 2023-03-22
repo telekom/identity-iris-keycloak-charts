@@ -7,6 +7,7 @@
  - Labels cleaned up
  - Corrected product names
  - Split common service to dedicated service files
+ - Prohibit changeme
 
 ## 4.4.0
  - removed rbac configuration since it is not necessary with keycloak 20
