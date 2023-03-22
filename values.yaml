@@ -54,7 +54,12 @@ global:
 templateChangeTriggers: []
 #- my-custom-configmap.yaml
 
-securityContext: {}
+podSecurityContext: {}
+  #fsGroup: 999
+  #supplementalGroups: 999
+
+containerSecurityContext: {}
+
 
 # Keycloak admin role credentials
 adminUsername: admin
@@ -212,7 +217,7 @@ customConfig:
 
 haproxy:
   #imagePullPolicy: IfNotPresent
-  securityContext: {}
+  containerSecurityContext: {}
   resources:
     limits:
       memory: 1Gi
@@ -222,6 +227,14 @@ haproxy:
       cpu: 250m
 
 postgresql:
+  containerSecurityContext: {}
+  podSecurityContext: {}
+    #fsGroup: 999
+    #supplementalGroups: 999
+
+  max_prepared_transactions: "100"
+
+  # You can force using a specific image here:
   #image:
     #repository: mtr.devops.telekom.de
     #organization: tardis-common
@@ -230,8 +243,6 @@ postgresql:
   # Or use the flattened string form:
   #image: mtr.devops.telekom.de/tardis-common/postgres:12.3-debian
   #imagePullPolicy: IfNotPresent
-
-  maxPreparedTransactions: "100"
 
   securityContext: {}
     #fsGroup: 999

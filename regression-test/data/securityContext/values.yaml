@@ -1,0 +1,38 @@
+podSecurityContext:
+  fsGroup: 1000
+  supplementalGroups: [1000]
+  runAsNonRoot: true
+  readOnlyRootFilesystem: true
+  allowPrivilegeEscalation: false
+  privileged: false
+
+containerSecurityContext:
+  runAsUser: 1000
+  runAsGroup: 1000
+
+haproxy:
+  containerSecurityContext:
+    runAsGroup: 99
+    runAsUser: 99
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    privileged: false
+    capabilities:
+      drop:
+      - ALL
+
+postgresql:
+  podSecurityContext:
+    fsGroup: 999
+    supplementalGroups: [999]    
+  containerSecurityContext:
+    runAsGroup: 999
+    runAsUser: 999
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    privileged: false
+    capabilities:
+      drop:
+      - ALL
