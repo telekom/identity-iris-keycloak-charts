@@ -35,6 +35,8 @@ global:
     username: sso
     password: changeme
 
+  failOnUnsetValues: true
+
 # You can force using a specific image here:
 #image:
   #repository: mtr.devops.telekom.de
