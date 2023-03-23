@@ -44,31 +44,31 @@ data:
             }
         },
         "users": [
-            {{- range $userIdx, $user := $realm.users }}
-             {
-                 "username": "{{- $user.name }}",
-                 "enabled": true,
-                 "totp": false,
-                 "emailVerified": false,
-                 "credentials": [],
-                 "disableableCredentialTypes": [],
-                 "requiredActions": [],
-                 "realmRoles": [
-                     "admin",
-                     "uma_authorization",
-                     "offline_access"
-                 ],
-                 "clientRoles": {
-                     "account": [
-                         "view-profile",
-                         "manage-account"
-                     ]
-                 },
-                 "notBefore": 0,
-                 "groups": []
-             }{{- if not (eq $userIdx (sub (len $realm.users) 1)) -}},{{- end }}
-                {{- end }}
-          ],
+          {{- range $userIdx, $user := $realm.users }}
+            {
+                "username": "{{- $user.name }}",
+                "enabled": true,
+                "totp": false,
+                "emailVerified": false,
+                "credentials": [],
+                "disableableCredentialTypes": [],
+                "requiredActions": [],
+                "realmRoles": [
+                    "admin",
+                    "uma_authorization",
+                    "offline_access"
+                ],
+                "clientRoles": {
+                    "account": [
+                        "view-profile",
+                        "manage-account"
+                    ]
+                },
+                "notBefore": 0,
+                "groups": []
+            }{{- if not (eq $userIdx (sub (len $realm.users) 1)) -}},{{- end }}
+              {{- end }}
+        ],
         "clients": [
             {{- range $clientIdx, $client := $realm.clients }}
             {
