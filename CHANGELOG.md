@@ -2,12 +2,13 @@
 
 [[_TOC_]]
 
-## 5.x.x
+## 5.0.0
  - Reworked database configuration
  - Labels cleaned up
  - Corrected product names
  - Split common service to dedicated service files
  - Prohibit changeme
+ - Enhanced realm creation for realm roles and users
  
 ## 4.5.0
  - securityContext divided into containerSecurityContext and podSecurityContext to satisfy CaaS cluster t21 policy
