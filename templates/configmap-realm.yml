@@ -26,14 +26,49 @@ data:
             "jboss-logging"
         ],
         "roles": {
-            "realm": [],
+            "realm": [
+                {{- range $rolesRealmIdx, $rolesRealm := $realm.realmRoles }}
+                {
+                    "name": "{{- $rolesRealm.name }}",
+                    "composite": false,
+                    "clientRole": false,
+                    "containerId": "{{ $realm.name }}",
+                    "attributes": {}
+                }{{- if not (eq $rolesRealmIdx (sub (len $realm.realmRoles) 1)) -}},{{- end }}
+                {{- end }}
+            ],
             "client": {
                 {{- range $idx, $client := $realm.clients }}
                 "{{ $client.name }}": []{{- if not (eq $idx (sub (len $realm.clients) 1)) -}},{{- end }}
                 {{- end }}
             }
         },
-        "users": [],
+        "users": [
+            {{- range $userIdx, $user := $realm.users }}
+             {
+                 "username": "{{- $user.name }}",
+                 "enabled": true,
+                 "totp": false,
+                 "emailVerified": false,
+                 "credentials": [],
+                 "disableableCredentialTypes": [],
+                 "requiredActions": [],
+                 "realmRoles": [
+                     "admin",
+                     "uma_authorization",
+                     "offline_access"
+                 ],
+                 "clientRoles": {
+                     "account": [
+                         "view-profile",
+                         "manage-account"
+                     ]
+                 },
+                 "notBefore": 0,
+                 "groups": []
+             }{{- if not (eq $userIdx (sub (len $realm.users) 1)) -}},{{- end }}
+                {{- end }}
+          ],
         "clients": [
             {{- range $clientIdx, $client := $realm.clients }}
             {
