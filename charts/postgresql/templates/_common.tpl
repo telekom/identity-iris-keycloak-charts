@@ -10,11 +10,3 @@ imagePullSecrets:
 {{- end -}}
 {{- end -}}
 {{- end -}}
-
-{{- define "db.host" -}}
-  {{- if eq .Values.global.externalDatabase.enabled true -}}
-    {{- .Values.global.externalDatabase.host -}}
-  {{- else -}}
-    {{ .Release.Name -}}-postgresql
-  {{- end -}}
-{{- end -}}

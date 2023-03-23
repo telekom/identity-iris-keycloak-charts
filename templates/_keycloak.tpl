@@ -4,12 +4,11 @@
 
 {{- define "keycloak.labels" -}}
 app: {{ .Release.Name }}
+helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
 app.kubernetes.io/name: keycloak
 app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
 app.kubernetes.io/component: idp
 app.kubernetes.io/part-of: tif-runtime
-app.kubernetes.io/managed-by: {{ .Values.global.installed_by | default "tif" }}
-helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
 {{ .Values.global.labels | toYaml }}
 {{- end -}}
 
@@ -74,18 +73,18 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 
 {{- define "keycloak.jdbcParams" -}}
 {{- $ssl := "true" }}
-{{- $sslMode := .Values.global.externalDatabase.sslMode | default "verify-full" }}
+{{- $sslMode := .Values.externalDatabase.sslMode | default "verify-full" }}
 {{- $sslCert := "&sslcert=" }}
 {{- $sslKey := "&sslkey=" }}
 {{- $sslRootCert := "&sslrootcert=" }}
 
-{{- if .Values.global.externalDatabase.sslCert }}
+{{- if .Values.externalDatabase.sslCert }}
 {{- $sslCert = "&sslcert=/certificates/sslcert.crt" }}
 {{- end -}}
-{{- if .Values.global.externalDatabase.sslKey }}
+{{- if .Values.externalDatabase.sslKey }}
 {{- $sslKey = "&sslkey=/certificates/sslkey.pk8" }}
 {{- end -}}
-{{- if .Values.global.externalDatabase.sslRootCert }}
+{{- if .Values.externalDatabase.sslRootCert }}
 {{- $sslRootCert = "&sslrootcert=/certificates/sslrootcert.crt" }}
 {{- end -}}
 
@@ -127,7 +126,7 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 - name: jgroups.dns.query
   value: {{ .Release.Name }}-jgroups.{{ .Release.Namespace }}
 - name: KEYCLOAK_ADMIN
-  value: {{ .Values.admin_username }}
+  value: {{ .Values.adminUsername }}
 - name: KEYCLOAK_ADMIN_PASSWORD
   valueFrom:
     secretKeyRef:
@@ -142,23 +141,23 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 - name: PROXY_ADDRESS_FORWARDING
   value: "true"
 - name: KC_DB_URL_PORT
-  value: "5432"
+  value: {{ .Values.global.database.port | default "5432" | quote }}
 - name: KC_DB_URL_HOST
-  value: {{ include "db.host" $ }}
+  value: {{ include "database.host" $ }}
 - name: KC_DB_URL_DATABASE
-  value: {{ .Values.global.db.database }} 
-{{- if .Values.global.db.schema }}
+  value: {{ .Values.global.database.database }} 
+{{- if .Values.global.database.schema }}
 - name: KC_DB_SCHEMA
-  value: {{ .Values.global.db.schema }}
+  value: {{ .Values.global.database.schema }}
 {{- end }}
 - name: KC_DB_USERNAME
-  value: {{ .Values.global.db.username }}
+  value: {{ .Values.global.database.username }}
 - name: KC_DB_PASSWORD
   valueFrom:
     secretKeyRef:
       name: {{ .Release.Name }}
-      key: dbPassword
-{{- if .Values.global.externalDatabase.ssl }}
+      key: databasePassword
+{{- if .Values.externalDatabase.ssl }}
 - name: JDBC_PARAMS
   value: {{ include "keycloak.jdbcParams" $ | quote }}
 {{- end -}}
@@ -166,16 +165,16 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 
 {{- define "keycloak.checkdatabase.env" }}
 - name: PGHOST
-  value: {{ include "db.host" $ }}
+  value: {{ include "database.host" $ }}
 - name: PGDATABASE
-  value: {{ .Values.global.db.database }}
+  value: {{ .Values.global.database.database }}
 - name: PGUSER
-  value: {{ .Values.global.db.username }}
+  value: {{ .Values.global.database.username }}
 - name: PGPASSWORD
   valueFrom:
     secretKeyRef:
       name: {{ .Release.Name }}
-      key: dbPassword
+      key: databasePassword
 {{- end -}}
 
 {{- define "keycloak.host" -}}
@@ -194,7 +193,7 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{ end -}}
 
 {{- define "keycloak.db.certificates.volume" }}
-{{- if .Values.global.externalDatabase.ssl }}
+{{- if .Values.externalDatabase.ssl }}
 - name: certificates
   secret:
     secretName: {{ .Release.Name }}-certificates
@@ -202,7 +201,7 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{ end -}}
 
 {{- define "keycloak.db.certificates.volumeMount" }}
-{{- if .Values.global.externalDatabase.ssl }}
+{{- if .Values.externalDatabase.ssl }}
 - name: certificates
   mountPath: /certificates
 {{- end -}}

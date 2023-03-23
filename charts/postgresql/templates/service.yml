@@ -1,5 +1,4 @@
----
-{{- if not (.Values.global.externalDatabase.enabled | default .Values.externalDatabase.enabled ) }}
+{{- if eq .Values.global.database.location "local" }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -9,9 +8,9 @@ spec:
   type: ClusterIP
   selector: {{ include "postgresql.selector" $ | nindent 4 }}
   ports:
-  - name: db
-    port: 5432
+  - name: postgresql
+    port: {{ .Values.global.database.port | default 5432 }}
     protocol: TCP
-    targetPort: 5432
+    targetPort: {{ .Values.global.database.port | default 5432 }}
 {{- end }}
 
