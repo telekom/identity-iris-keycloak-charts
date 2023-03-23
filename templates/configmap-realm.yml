@@ -54,7 +54,7 @@ data:
                 "disableableCredentialTypes": [],
                 "requiredActions": [],
                 "realmRoles": [
-                    "admin",
+                    "{{- $user.name }}",
                     "uma_authorization",
                     "offline_access"
                 ],
