@@ -17,7 +17,7 @@ data:
         "id": "{{ $realm.name }}",
         "realm": "{{ $realm.name }}",
         "enabled": true,
-        "accessTokenLifespan": {{ $realm.access_token_lifespan | default 300 }},
+        "accessTokenLifespan": {{ $realm.accessTokenLifespan | default 300 }},
         "eventsEnabled": true,
         "eventsListeners": [
             {{- if eq $.Values.prometheus.enabled true }}

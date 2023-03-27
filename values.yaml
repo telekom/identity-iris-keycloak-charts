@@ -93,7 +93,7 @@ roverRealmEnabled: false
 realms:
 #- name: adfs
 #  enabled: false
-#  access_token_lifespan: 300
+#  accessTokenLifespan: 300
 #  defaultProvider: adfs-idp
 #  clients:
 #  - name: chevron
@@ -232,7 +232,7 @@ postgresql:
     #fsGroup: 999
     #supplementalGroups: 999
 
-  max_prepared_transactions: "100"
+  maxPreparedTransactions: "100"
 
   # You can force using a specific image here:
   #image:
