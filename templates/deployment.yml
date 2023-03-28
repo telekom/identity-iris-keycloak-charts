@@ -26,7 +26,6 @@ spec:
       {{- include "keycloak.labels" $ | nindent 8 }}
       {{- include "common.status-monitor.labels" $ | nindent 8 }}
       {{- include "status-monitor.labels" $ | nindent 8 }}
-    securityContext: {{ .Values.podSecurityContext | toYaml | nindent 8 }}
     spec:
       {{- include "image_pull_secrets" $ | indent 6 }}
       affinity:
@@ -41,6 +40,7 @@ spec:
                   values:
                   - {{ .Release.Name }}-keycloak
               topologyKey: "kubernetes.io/hostname"
+      securityContext: {{ .Values.podSecurityContext | toYaml | nindent 8 }}
       containers:
       - name: haproxy
         image: '{{ include "haproxy.image" $ }}'
