@@ -77,7 +77,7 @@ resources:
 
 persistence:
   keepOnDelete: false
-  storageclass: gp2
+  storageClassName: gp2
   resources:
     requests:
       storage: 1Gi
