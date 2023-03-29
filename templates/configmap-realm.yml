@@ -17,7 +17,7 @@ data:
         "id": "{{ $realm.name }}",
         "realm": "{{ $realm.name }}",
         "enabled": true,
-        "accessTokenLifespan": {{ $realm.access_token_lifespan | default 300 }},
+        "accessTokenLifespan": {{ $realm.accessTokenLifespan | default 300 }},
         "eventsEnabled": true,
         "eventsListeners": [
             {{- if eq $.Values.prometheus.enabled true }}
@@ -26,14 +26,49 @@ data:
             "jboss-logging"
         ],
         "roles": {
-            "realm": [],
+            "realm": [
+                {{- range $rolesRealmIdx, $rolesRealm := $realm.realmRoles }}
+                {
+                    "name": "{{- $rolesRealm.name }}",
+                    "composite": false,
+                    "clientRole": false,
+                    "containerId": "{{ $realm.name }}",
+                    "attributes": {}
+                }{{- if not (eq $rolesRealmIdx (sub (len $realm.realmRoles) 1)) -}},{{- end }}
+                {{- end }}
+            ],
             "client": {
                 {{- range $idx, $client := $realm.clients }}
                 "{{ $client.name }}": []{{- if not (eq $idx (sub (len $realm.clients) 1)) -}},{{- end }}
                 {{- end }}
             }
         },
-        "users": [],
+        "users": [
+          {{- range $userIdx, $user := $realm.users }}
+            {
+                "username": "{{- $user.name }}",
+                "enabled": true,
+                "totp": false,
+                "emailVerified": false,
+                "credentials": [],
+                "disableableCredentialTypes": [],
+                "requiredActions": [],
+                "realmRoles": [
+                    "{{- $user.name }}",
+                    "uma_authorization",
+                    "offline_access"
+                ],
+                "clientRoles": {
+                    "account": [
+                        "view-profile",
+                        "manage-account"
+                    ]
+                },
+                "notBefore": 0,
+                "groups": []
+            }{{- if not (eq $userIdx (sub (len $realm.users) 1)) -}},{{- end }}
+              {{- end }}
+        ],
         "clients": [
             {{- range $clientIdx, $client := $realm.clients }}
             {
@@ -55,11 +90,11 @@ data:
                 "notBefore": 0,
                 "bearerOnly": false,
                 "consentRequired": false,
-                "standardFlowEnabled": {{ if eq $client.standardFlowEnabled false }}false{{ else }}true{{ end }},
+                "standardFlowEnabled": {{ if eq (toString $client.standardFlowEnabled) "false" }}false{{ else }}true{{ end }},
                 "implicitFlowEnabled": false,
-                "directAccessGrantsEnabled": {{ if eq $client.directAccessGrantsEnabled false }}false{{ else }}true{{ end }},
-                "serviceAccountsEnabled": {{ if eq $client.serviceAccountsEnabled true }}true{{ else }}false{{ end }},
-                "publicClient": {{ if eq $client.publicClient false }}false{{ else }}true{{ end }},
+                "directAccessGrantsEnabled": {{ if eq (toString $client.directAccessGrantsEnabled) "false" }}false{{ else }}true{{ end }},
+                "serviceAccountsEnabled": {{ if eq (toString $client.serviceAccountsEnabled) "true" }}true{{ else }}false{{ end }},
+                "publicClient": {{ if eq (toString $client.publicClient) "false" }}false{{ else }}true{{ end }},
                 "frontchannelLogout": false,
                 "protocol": "openid-connect",
                 "attributes": {

@@ -3,11 +3,12 @@ global:
     pipeline: {}
 
   platform: kubernetes
-  storageclass: gp2
+  storageClassName: gp2
   domain: ""
   labels:
     # fluentd label
     tif.telekom.de/group: tif
+  product: "iris"
   ingress:
     #tlsSecret: ""
     annotations:
@@ -34,31 +35,15 @@ global:
       - "[0-9]"
       - "[^a-zA-Z0-9]"
 
-  # Database and credentials that will be created for Keycloak
-  db:
+  database:
+    location: local
+    #port: 5432
     database: sso
+    #schema: keycloak 
     username: sso
     password: changeme
-    #schema: public 
 
-  externalDatabase:
-    enabled: false
-    #host: ''
-    #ssl: false
-    #sslMode: 'verify-full'
-    #sslCert: |
-    #  -----BEGIN CERTIFICATE-----
-    #  <CA certificate in PEM format here>
-    #  -----END CERTIFICATE-----
-    #sslKey: |
-    #  -----BEGIN PRIVATE KEY-----
-    #  <pk8 in PEM format here>
-    #  -----END PRIVATE KEY-----
-    #sslRootCert: |
-    #  -----BEGIN CERTIFICATE-----
-    #  <Root certificate in PEM format here>
-    #  -----END CERTIFICATE-----
-
+  failOnUnsetValues: true
 
 #imagePullPolicy: IfNotPresent
 
@@ -69,11 +54,16 @@ global:
 templateChangeTriggers: []
 #- my-custom-configmap.yaml
 
-securityContext: {}
+podSecurityContext: {}
+  #fsGroup: 999
+  #supplementalGroups: 999
+
+containerSecurityContext: {}
+
 
 # Keycloak admin role credentials
-admin_username: admin
-admin_password: changeme
+adminUsername: admin
+adminPassword: changeme
 
 # Truststore for Keycloak
 # When Keystorer project is used, just use the base64 string from the pipeline log
@@ -103,7 +93,7 @@ roverRealmEnabled: false
 realms:
 #- name: adfs
 #  enabled: false
-#  access_token_lifespan: 300
+#  accessTokenLifespan: 300
 #  defaultProvider: adfs-idp
 #  clients:
 #  - name: chevron
@@ -227,7 +217,7 @@ customConfig:
 
 haproxy:
   #imagePullPolicy: IfNotPresent
-  securityContext: {}
+  containerSecurityContext: {}
   resources:
     limits:
       memory: 1Gi
@@ -237,25 +227,19 @@ haproxy:
       cpu: 250m
 
 postgresql:
-  securityContext: {}
-    #fsGroup: 999
+  containerSecurityContext: {}
 
-  max_connections: "100"
-  shared_buffers: "32MB"
-  max_prepared_transactions: "100"
+  maxPreparedTransactions: "100"
 
   # You can force using a specific image here:
   #image:
-  #repository: mtr.devops.telekom.de
-  #organization: tardis-common
-  #name: postgres
-  #tag: 12.3-debian
+    #repository: mtr.devops.telekom.de
+    #organization: tardis-common
+    #name: postgres
+    #tag: 12.3-debian
   # Or use the flattened string form:
   #image: mtr.devops.telekom.de/tardis-common/postgres:12.3-debian
   #imagePullPolicy: IfNotPresent
-
-  # PostgreSQL admin user (postgres) password
-  admin_password: changeme
 
   resources:
     limits:
@@ -265,9 +249,20 @@ postgresql:
       cpu: 20m
       memory: 200Mi
 
-  persistence:
-    storageclass: gp2
-    resources:
-      requests:
-        storage: 1Gi
-    #mountDir: '/var/lib/postgresql/data'
+externalDatabase:
+  # Set host if you use an external database or service name is not sufficient
+  #host: ''
+  ssl: false
+  #sslMode: 'verify-full'
+  #sslCert: |
+  #  -----BEGIN CERTIFICATE-----
+  #  <CA certificate in PEM format here>
+  #  -----END CERTIFICATE-----
+  #sslKey: |
+  #  -----BEGIN PRIVATE KEY-----
+  #  <pk8 in PEM format here>
+  #  -----END PRIVATE KEY-----
+  #sslRootCert: |
+  #  -----BEGIN CERTIFICATE-----
+  #  <Root certificate in PEM format here>
+  #  -----END CERTIFICATE-----
