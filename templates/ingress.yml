@@ -1,4 +1,3 @@
-{{- if or (eq .Values.global.platform "kubernetes") (eq .Values.global.platform "tdi") -}}
 {{- if .Values.ingress.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -23,5 +22,4 @@ spec:
   - hosts:
     - {{ include "keycloak.host" . }}
 {{- include "keycloak.ingress.tlsSecret" . | nindent 4 -}}
-{{- end }}
 {{- end }}
