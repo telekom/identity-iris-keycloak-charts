@@ -3,7 +3,7 @@ global:
     pipeline: {}
 
   platform: kubernetes
-  storageClassName: gp2
+  #storageClassName: gp2
   domain: ""
   labels:
     # fluentd label

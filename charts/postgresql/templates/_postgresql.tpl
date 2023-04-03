@@ -78,3 +78,21 @@ app.kubernetes.io/instance: {{ .Release.Name }}-postgresql
 {{- define "postgresql.serviceName" -}}
 {{- printf "%s-%s" .Release.Name .Chart.Name -}}
 {{- end -}}
+
+{{- define "postgresql.storageClassName" -}}
+{{- $setStorageClassName := .Values.persistence.storageClassName | default .Values.global.storageClassName | default .Values.global.storageclass -}}
+{{- if $setStorageClassName -}}
+{{ $setStorageClassName }}
+{{- else -}}
+{{ include "postgresql.storageClassNameByPlatform" . }}
+{{- end -}}
+{{- end -}}
+
+{{- define "postgresql.storageClassNameByPlatform" -}}
+{{- if eq .Values.global.platform "caas" -}}
+nfs-storage
+{{- else -}}
+gp2
+{{- end -}}
+{{- end -}}
+

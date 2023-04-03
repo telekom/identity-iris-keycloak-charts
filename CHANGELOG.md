@@ -4,7 +4,9 @@
 
 ## 5.1.0
  - Removed platform condition from ingress
+ - Introduced caas as platform option
  - Caas platform specific topologyKey
+ - Set default storageClassName by platform (caas: nfs-storage)
 
 ## 5.0.0
  - Reworked database configuration

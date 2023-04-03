@@ -96,7 +96,7 @@ The following table lists the configurable parameters of this chart.
 | Parameter                                           | Description                                                                                      | Default                             |
 |-----------------------------------------------------|--------------------------------------------------------------------------------------------------|-------------------------------------|
 | `global.platform`                                   | Platform (openshift or kubernetes)                                                               | `stable`                            |
-| `global.storageclass`                               | Storage class for PersistenVolumeClaims                                                          | `gp2`                               |
+| `global.storageClassName`                           | Overwrites the setting determined by the platform                                                | `gp2`                               |
 | `global.domain`                                     | Base cluster URL reachable from Telekom network                                                  | `nil`                               |
 | `global.labels`                                     | Define global labels                                                                             | `tif.telekom.de/group`              |
 | `global.ingress`                                    | Set ingress parameters for all ingress, can be extended by ingress specific ones                 | `nil`                               |
