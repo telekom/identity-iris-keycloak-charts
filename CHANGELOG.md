@@ -2,6 +2,10 @@
 
 [[_TOC_]]
 
+## 5.1.0
+ - Removed platform condition from ingress
+ - Caas platform specific topologyKey
+
 ## 5.0.0
  - Reworked database configuration
  - Labels cleaned up
