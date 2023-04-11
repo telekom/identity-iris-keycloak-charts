@@ -28,7 +28,7 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 
 {{- define "keycloak.labels" -}}
-app: {{ .Release.Name }}
+app: {{ include "keycloak.fullname" . }}
 helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
 app.kubernetes.io/name: keycloak
 app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
@@ -38,7 +38,7 @@ app.kubernetes.io/part-of: tif-runtime
 {{- end -}}
 
 {{- define "keycloak.selector" -}}
-app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
+app.kubernetes.io/instance: {{ include "keycloak.fullname" . }}-keycloak
 {{- end -}}
 
 {{- define "keycloak.image" -}}
@@ -149,13 +149,13 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 - name: KC_CACHE_CONFIG_FILE  
   value: eni-infinispan.xml
 - name: jgroups.dns.query
-  value: {{ .Release.Name }}-jgroups.{{ .Release.Namespace }}
+  value: {{include "keycloak.fullname" . }}-jgroups.{{ .Release.Namespace }}
 - name: KEYCLOAK_ADMIN
   value: {{ .Values.adminUsername }}
 - name: KEYCLOAK_ADMIN_PASSWORD
   valueFrom:
     secretKeyRef:
-      name: {{ .Release.Name }}
+      name: {{ include "keycloak.fullname" . }}
       key: keycloakPassword
 - name: KEYCLOAK_LOGLEVEL
   value: {{ .Values.logLevel | default "INFO" }}
@@ -180,7 +180,7 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 - name: KC_DB_PASSWORD
   valueFrom:
     secretKeyRef:
-      name: {{ .Release.Name }}
+      name: {{ include "keycloak.fullname" . }}
       key: databasePassword
 {{- if .Values.externalDatabase.ssl }}
 - name: JDBC_PARAMS
@@ -198,7 +198,7 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 - name: PGPASSWORD
   valueFrom:
     secretKeyRef:
-      name: {{ .Release.Name }}
+      name: {{ include "keycloak.fullname" . }}
       key: databasePassword
 {{- end -}}
 
@@ -206,7 +206,7 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- if not (empty .Values.ingress.hostname) }}
 {{- .Values.ingress.hostname -}}
 {{- else }}
-{{- printf "%s-%s.%s" .Release.Name .Release.Namespace .Values.global.domain }}
+{{- printf "%s-%s.%s" (include "keycloak.fullname" .) .Release.Namespace .Values.global.domain }}
 {{- end -}}
 {{- end -}}
 
@@ -221,7 +221,7 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- if .Values.externalDatabase.ssl }}
 - name: certificates
   secret:
-    secretName: {{ .Release.Name }}-certificates
+    secretName: {{ include "keycloak.fullname" . }}-certificates
 {{- end -}}
 {{ end -}}
 
