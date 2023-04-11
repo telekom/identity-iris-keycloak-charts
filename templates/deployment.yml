@@ -112,17 +112,17 @@ spec:
         emptyDir: {}
       - name: config
         configMap:
-          name: {{ .Release.Name }}-config
+          name: {{ include "keycloak.fullname" . }}-config
       - name: ha-proxy-config
         configMap:
-          name: {{ .Release.Name }}-ha-proxy-config
+          name: {{ include "keycloak.fullname" . }}-ha-proxy-config
       - name: realms
         configMap:
-          name: {{ .Release.Name }}-realm
+          name: {{ include "keycloak.fullname" . }}-realm
       {{- if .Values.truststore }}
       - name: secrets
         secret:
-          secretName: {{ .Release.Name }}
+          secretName: {{ include "keycloak.fullname" . }}
           items:
             - key: truststore.jks
               path: truststore.jks
