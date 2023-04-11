@@ -1,7 +1,7 @@
 apiVersion : v1
 kind: ConfigMap
 metadata:
-  name: {{ .Release.Name }}-config
+  name: {{ include "keycloak.fullname" . }}-config
   labels: {{ include "keycloak.labels" $ | nindent 4 }}
 data:
   eni-infinispan.xml: |-

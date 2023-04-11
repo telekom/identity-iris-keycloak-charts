@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}
+  name: {{ include "keycloak.fullname" . }}
   annotations:
   {{- include "keycloak.annotations" $ | nindent 4 }}
   {{- include "keycloak.checksums" $ | nindent 4 }}   

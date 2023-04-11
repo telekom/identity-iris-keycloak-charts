@@ -2,13 +2,13 @@
 apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ .Release.Name }}-hpa
+  name: {{ include "keycloak.fullname" . }}-hpa
   labels: {{ include "keycloak.labels" $ | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ .Release.Name }}
+    name: {{ include "keycloak.fullname" . }}
   {{- $minReplicas := .Values.autoscaling.minReplicas }}
   {{- if lt (int $minReplicas) 2 }}
   {{- $minReplicas = 2 }}
