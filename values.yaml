@@ -45,9 +45,8 @@ global:
 
   failOnUnsetValues: true
 
-
-nameOverride: ""
-fullnameOverride: ""
+  nameOverride: ""
+  fullnameOverride: ""
 
 #imagePullPolicy: IfNotPresent
 
