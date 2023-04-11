@@ -31,14 +31,14 @@ If release name contains chart name it will be used as a full name.
 app: {{ .Release.Name }}
 helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
 app.kubernetes.io/name: keycloak
-app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
+{{ include "keycloak.selector" . }}
 app.kubernetes.io/component: idp
 app.kubernetes.io/part-of: tif-runtime
 {{ .Values.global.labels | toYaml }}
 {{- end -}}
 
 {{- define "keycloak.selector" -}}
-app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
+app.kubernetes.io/instance: {{ include "keycloak.fullname" . }}-keycloak
 {{- end -}}
 
 {{- define "keycloak.image" -}}
