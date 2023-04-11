@@ -28,7 +28,7 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 
 {{- define "keycloak.labels" -}}
-app: {{ include "keycloak.fullname" . }}
+app: {{ .Release.Name }}
 helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
 app.kubernetes.io/name: keycloak
 app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
@@ -38,7 +38,7 @@ app.kubernetes.io/part-of: tif-runtime
 {{- end -}}
 
 {{- define "keycloak.selector" -}}
-app.kubernetes.io/instance: {{ include "keycloak.fullname" . }}-keycloak
+app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
 {{- end -}}
 
 {{- define "keycloak.image" -}}
@@ -149,7 +149,7 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 - name: KC_CACHE_CONFIG_FILE  
   value: eni-infinispan.xml
 - name: jgroups.dns.query
-  value: {{include "keycloak.fullname" . }}-jgroups.{{ .Release.Namespace }}
+  value: {{ .Release.Name }}-jgroups.{{ .Release.Namespace }}
 - name: KEYCLOAK_ADMIN
   value: {{ .Values.adminUsername }}
 - name: KEYCLOAK_ADMIN_PASSWORD
