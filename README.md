@@ -55,6 +55,14 @@ After a successful installation the component can be reached at the URL: `keyclo
 
 ## Configuration
 
+### Platform
+
+You can select a platform (e.g. caas) to use predefined settings (e.g. securityContext) specifically dedicated to the platform. \
+Note that you can overwrite platform specific values in the values.yaml. \
+To add a new platform specific values.yaml, add the required values as platforName.yaml to the platforms folder.
+
+**Note:** Setting platform specific values for the sub-chart by the platform specific platformName.yaml of your main-chart will not work, as the sub-chart platforms have precedence.
+
 ### HA and multiple replicas
 
 For multiple replicas set the following ingress annotations:

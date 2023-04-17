@@ -54,11 +54,11 @@ global:
 templateChangeTriggers: []
 #- my-custom-configmap.yaml
 
-podSecurityContext: {}
+#podSecurityContext: {}
   #fsGroup: 999
   #supplementalGroups: 999
 
-containerSecurityContext: {}
+#containerSecurityContext: {}
 #topologyKey:
 
 
@@ -218,7 +218,7 @@ customConfig:
 
 haproxy:
   #imagePullPolicy: IfNotPresent
-  containerSecurityContext: {}
+  #containerSecurityContext: {}
   resources:
     limits:
       memory: 1Gi
@@ -228,7 +228,7 @@ haproxy:
       cpu: 250m
 
 postgresql:
-  containerSecurityContext: {}
+  #containerSecurityContext: {}
 
   maxPreparedTransactions: "100"
 

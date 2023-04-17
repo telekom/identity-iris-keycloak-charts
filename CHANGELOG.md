@@ -2,6 +2,11 @@
 
 [[_TOC_]]
 
+## 5.2.0-RC.1
+ - Platform dependent securityContexts
+ - Platform dependent topologyKey
+ - Introduced caas as platform
+
 ## 5.1.1
  - removed -http of the service for downwards compability
 
