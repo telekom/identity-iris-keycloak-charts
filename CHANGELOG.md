@@ -2,6 +2,9 @@
 
 [[_TOC_]]
 
+## 5.1.1
+ - removed -http of the service for downwards compability
+
 ## 5.1.0
  - Removed platform condition from ingress
  - Caas platform specific topologyKey
