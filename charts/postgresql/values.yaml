@@ -1,7 +1,7 @@
 global:
   metadata:
     pipeline: {}
-
+    
   platform: kubernetes
   #storageClassName: gp2
 
@@ -50,12 +50,11 @@ global:
 #image: mtr.devops.telekom.de/tardis-common/postgres:12.3-debian
 #imagePullPolicy: IfNotPresent
 
-
-podSecurityContext:
-  fsGroup: 999
+#podSecurityContext:
+  #fsGroup: 999
   #supplementalGroups: 999
 
-containerSecurityContext: {}
+#containerSecurityContext: {}
 
 # database admin credentials
 #adminPassword: "changeme"
