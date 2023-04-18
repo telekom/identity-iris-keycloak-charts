@@ -27,7 +27,7 @@
  - Prohibit changeme
  - Enhanced realm creation for realm roles and users
  - PodSecurityContext for Iris pod
- - StorageClasseName de-saplingized
+ - StorageClassName de-saplingized
  
 ## 4.5.0
  - securityContext divided into containerSecurityContext and podSecurityContext to satisfy CaaS cluster t21 policy
