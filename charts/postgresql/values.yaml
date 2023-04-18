@@ -40,7 +40,10 @@ global:
 
   failOnUnsetValues: true
 
-# You can force using a specific image here:
+  nameOverride: ""
+  fullnameOverride: ""
+
+  # You can force using a specific image here:
 #image:
   #repository: mtr.devops.telekom.de
   #organization: tardis-common
