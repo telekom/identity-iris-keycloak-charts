@@ -2,6 +2,9 @@
 
 [[_TOC_]]
 
+## 5.2.0-RC.2
+ - Allow overwrite of release name with fullname
+
 ## 5.2.0-RC.1
  - Platform dependent securityContexts
  - Platform dependent topologyKey
