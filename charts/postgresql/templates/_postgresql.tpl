@@ -89,7 +89,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}-postgresql
 {{- end -}}
 
 {{- define "postgresql.deploymentName" -}}
-{{- printf "%s-%s" (include "postgres.fullname" .) .Chart.Name -}}
+{{- printf "%s" (include "postgres.fullname" .) -}}
 {{- end -}}
 
 {{- define "postgresql.pvcName" -}}
@@ -97,11 +97,11 @@ app.kubernetes.io/instance: {{ .Release.Name }}-postgresql
 {{- end -}}
 
 {{- define "postgresql.secretName" -}}
-{{- printf "%s-%s" (include "postgres.fullname" .) .Chart.Name -}}
+{{- printf "%s" (include "postgres.fullname" .) -}}
 {{- end -}}
 
 {{- define "postgresql.serviceName" -}}
-{{- printf "%s-%s" (include "postgres.fullname" .) .Chart.Name -}}
+{{- printf "%s" (include "postgres.fullname" .) -}}
 {{- end -}}
 
 {{- define "postgresql.storageClassName" -}}
