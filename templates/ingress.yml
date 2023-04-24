@@ -2,7 +2,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ .Release.Name }}
+  name: {{ include "keycloak.fullname" . }}
   labels: {{ include "keycloak.labels" $ | nindent 4 }}
 {{- include "keycloak.merged.ingress.annotations" $ | nindent 2 }}
 spec:
@@ -14,7 +14,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {{ .Release.Name }}
+            name: {{ include "keycloak.fullname" . }}
             port:
               number: 80
 {{- include "keycloak.ingress.ingressClassName" . | nindent 2 }}

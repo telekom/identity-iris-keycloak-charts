@@ -3,7 +3,7 @@ global:
     pipeline: {}
 
   platform: kubernetes
-  storageClassName: gp2
+  #storageClassName: gp2
   domain: ""
   labels:
     # fluentd label
@@ -45,6 +45,9 @@ global:
 
   failOnUnsetValues: true
 
+  nameOverride: ""
+  fullnameOverride: ""
+
 #imagePullPolicy: IfNotPresent
 
 # You can list files (in /templates) here that should cause a re-deployment of your application
@@ -54,11 +57,11 @@ global:
 templateChangeTriggers: []
 #- my-custom-configmap.yaml
 
-podSecurityContext: {}
+#podSecurityContext: {}
   #fsGroup: 999
   #supplementalGroups: 999
 
-containerSecurityContext: {}
+#containerSecurityContext: {}
 #topologyKey:
 
 
@@ -218,7 +221,7 @@ customConfig:
 
 haproxy:
   #imagePullPolicy: IfNotPresent
-  containerSecurityContext: {}
+  #containerSecurityContext: {}
   resources:
     limits:
       memory: 1Gi
@@ -228,7 +231,7 @@ haproxy:
       cpu: 250m
 
 postgresql:
-  containerSecurityContext: {}
+  #containerSecurityContext: {}
 
   maxPreparedTransactions: "100"
 

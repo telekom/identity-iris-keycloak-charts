@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}
+  name: {{ include "keycloak.fullname" . }}
   annotations:
   {{- include "keycloak.annotations" $ | nindent 4 }}
   {{- include "keycloak.checksums" $ | nindent 4 }}   
@@ -39,8 +39,8 @@ spec:
                   operator: In
                   values:
                   - {{ .Release.Name }}-keycloak
-              topologyKey: {{ .Values.topologyKey | default (include "topologyKey" $) }}
-      securityContext: {{ .Values.podSecurityContext | toYaml | nindent 8 }}
+              topologyKey: {{ include "platformSpecificValue" (list $ . ".Values.topologyKey") | default "kubernetes.io/hostname" }}
+      securityContext: {{ include "platformSpecificValue" (list $ . ".Values.podSecurityContext") | default "{}" | nindent 8 }}
       containers:
       - name: haproxy
         image: '{{ include "haproxy.image" $ }}'
@@ -50,7 +50,7 @@ spec:
         {{- if eq .Values.prometheus.enabled true }}
         - { containerPort: {{ .Values.prometheus.port | default 9542 }}, protocol: TCP, name: metrics-http }
         {{- end }}
-        securityContext: {{ .Values.haproxy.containerSecurityContext | toYaml | nindent 10 }}
+        securityContext: {{ include "platformSpecificValue" (list $ . ".Values.haproxy.containerSecurityContext") | default "{}" | nindent 10 }}
         resources: {{ .Values.haproxy.resources | toYaml | nindent 10 }}
         volumeMounts:
         - name: ha-proxy-config
@@ -58,7 +58,7 @@ spec:
       - name: keycloak
         image: '{{ include "keycloak.image" $ }}'
         imagePullPolicy: {{ .Values.imagePullPolicy | default .Values.global.imagePullPolicy }}
-        securityContext: {{ .Values.containerSecurityContext | toYaml | nindent 10 }}
+        securityContext: {{ include "platformSpecificValue" (list $ . ".Values.containerSecurityContext" ) | default "{}" | nindent 10 }}
         {{- if .Values.truststore }}
         args: ['start --optimized --import-realm --spi-truststore-file-file=/truststore/truststore.jks --spi-truststore-file-password={{ .Values.truststorePassword }} --spi-truststore-file-hostname-verification-policy={{ .Values.hostnameVerificationPolicy }}']
         {{- else }}
@@ -98,7 +98,7 @@ spec:
       - name: "check-database"
         image: '{{ include "keycloak.init.image" $ }}'
         imagePullPolicy: {{ .Values.postgresql.imagePullPolicy | default .Values.global.imagePullPolicy }}
-        securityContext: {{ .Values.postgresql.containerSecurityContext | toYaml | nindent 10 }}
+        securityContext: {{ include "platformSpecificValue" (list $ . ".Values.postgresql.containerSecurityContext" ) | default "{}" | nindent 10 }}
         command: ['/bin/bash']
         args: ['-c', 'until pg_isready -U {{ .Values.global.database.username }}; do echo waiting for database; sleep 2; done;']
         env:
@@ -112,17 +112,17 @@ spec:
         emptyDir: {}
       - name: config
         configMap:
-          name: {{ .Release.Name }}-config
+          name: {{ include "keycloak.fullname" . }}-config
       - name: ha-proxy-config
         configMap:
-          name: {{ .Release.Name }}-ha-proxy-config
+          name: {{ include "keycloak.fullname" . }}-ha-proxy-config
       - name: realms
         configMap:
-          name: {{ .Release.Name }}-realm
+          name: {{ include "keycloak.fullname" . }}-realm
       {{- if .Values.truststore }}
       - name: secrets
         secret:
-          secretName: {{ .Release.Name }}
+          secretName: {{ include "keycloak.fullname" . }}
           items:
             - key: truststore.jks
               path: truststore.jks
