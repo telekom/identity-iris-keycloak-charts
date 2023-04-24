@@ -15,7 +15,7 @@ imagePullSecrets:
   {{- if and (eq .Values.global.database.location "external") .Values.externalDatabase.host  -}}
     {{- .Values.externalDatabase.host -}}
   {{- else -}}
-    {{ .Release.Name -}}-postgresql
+    {{ include "keycloak.fullname" .}}-postgresql
   {{- end -}}
 {{- end -}}
 
