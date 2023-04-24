@@ -2,6 +2,9 @@
 
 [[_TOC_]]
 
+## 5.2.0-RC.4
+ - Fixed PGHost for fullnameOverride
+
 ## 5.2.0-RC.3
  - Added sub-chart chart name to postgresql fullname
 
