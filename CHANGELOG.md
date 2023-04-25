@@ -2,6 +2,9 @@
 
 [[_TOC_]]
 
+## 5.2.0-RC.5
+ - No chart name in fullname
+
 ## 5.2.0-RC.4
  - Fixed PGHost for fullnameOverride
 
