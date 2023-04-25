@@ -53,6 +53,14 @@ Iris is a Keycloak based image that has been extended to integrate with logging 
 
 After a successful installation the component can be reached at the URL: `keycloak-internal-<namespace>.<domain.internal.url>`
 
+## Upgrade Advice
+
+### To 5.x.x
+
+As we removed the the serviceAccount from the deployment and the chart, this requires manualy interaction in the cluster. \
+Unfortunatley Helm does not remove the configured serviceAccount from the deployment resource itself. Because the serviceAccount resource is removed, an invalid reference is existing. \
+Therefore you need to remove those references on the cluster itself.
+
 ## Configuration
 
 ### Platform
