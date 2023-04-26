@@ -2,22 +2,7 @@
 
 [[_TOC_]]
 
-## 0.0.0
-- Removed fullname function
-
-## 5.2.0-RC.5
- - No chart name in fullname
-
-## 5.2.0-RC.4
- - Fixed PGHost for fullnameOverride
-
-## 5.2.0-RC.3
- - Added sub-chart chart name to postgresql fullname
-
-## 5.2.0-RC.2
- - Allow overwrite of release name with fullname
-
-## 5.2.0-RC.1
+## 5.2.0
  - Platform dependent securityContexts
  - Platform dependent topologyKey
  - Introduced caas as platform
