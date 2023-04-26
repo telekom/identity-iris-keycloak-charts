@@ -1,0 +1,36 @@
+podSecurityContext:
+  fsGroup: 1000
+  supplementalGroups:
+  - 999
+
+containerSecurityContext:
+  runAsUser: 1000
+  runAsGroup: 1000
+
+topologyKey: topology.kubernetes.io/zone
+
+haproxy:
+  containerSecurityContext:
+    runAsGroup: 99
+    runAsUser: 99
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    privileged: false
+    capabilities:
+      drop:
+      - ALL
+
+postgresql:
+
+  containerSecurityContext:
+    runAsGroup: 999
+    runAsUser: 999
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    privileged: false
+    capabilities:
+      drop:
+      - ALL
+

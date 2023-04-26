@@ -1,6 +1,9 @@
 global:
   metadata:
     pipeline: {}
+    
+  platform: kubernetes
+  #storageClassName: gp2
 
   passwordRules:
     enabled: false
@@ -37,7 +40,7 @@ global:
 
   failOnUnsetValues: true
 
-# You can force using a specific image here:
+  # You can force using a specific image here:
 #image:
   #repository: mtr.devops.telekom.de
   #organization: tardis-common
@@ -47,12 +50,11 @@ global:
 #image: mtr.devops.telekom.de/tardis-common/postgres:12.3-debian
 #imagePullPolicy: IfNotPresent
 
-
-podSecurityContext:
-  fsGroup: 999
+#podSecurityContext:
+  #fsGroup: 999
   #supplementalGroups: 999
 
-containerSecurityContext: {}
+#containerSecurityContext: {}
 
 # database admin credentials
 #adminPassword: "changeme"
@@ -77,7 +79,7 @@ resources:
 
 persistence:
   keepOnDelete: false
-  storageClassName: gp2
+  #storageClassName: gp2
   resources:
     requests:
       storage: 1Gi

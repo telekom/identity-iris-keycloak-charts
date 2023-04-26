@@ -2,12 +2,19 @@
 
 [[_TOC_]]
 
+## 5.2.0
+ - Platform dependent securityContexts
+ - Platform dependent topologyKey
+ - Introduced caas as platform
+
 ## 5.1.1
  - removed -http of the service for downwards compability
 
 ## 5.1.0
  - Removed platform condition from ingress
+ - Introduced caas as platform option
  - Caas platform specific topologyKey
+ - Set default storageClassName by platform (caas: nfs-storage)
 
 ## 5.0.0
  - Reworked database configuration
@@ -17,7 +24,7 @@
  - Prohibit changeme
  - Enhanced realm creation for realm roles and users
  - PodSecurityContext for Iris pod
- - StorageClasseName de-saplingized
+ - StorageClassName de-saplingized
  
 ## 4.5.0
  - securityContext divided into containerSecurityContext and podSecurityContext to satisfy CaaS cluster t21 policy

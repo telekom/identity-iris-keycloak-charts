@@ -6,7 +6,7 @@
 app: {{ .Release.Name }}
 helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
 app.kubernetes.io/name: keycloak
-app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
+{{ include "keycloak.selector" . }}
 app.kubernetes.io/component: idp
 app.kubernetes.io/part-of: tif-runtime
 {{ .Values.global.labels | toYaml }}

@@ -2,7 +2,7 @@
 apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ .Release.Name }}-hpa
+  name: {{.Release.Name }}-hpa
   labels: {{ include "keycloak.labels" $ | nindent 4 }}
 spec:
   scaleTargetRef:
