@@ -206,7 +206,7 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- if not (empty .Values.ingress.hostname) }}
 {{- .Values.ingress.hostname -}}
 {{- else }}
-{{- printf "%s-%s.%s" (include "keycloak.fullname" .) .Release.Namespace .Values.global.domain }}
+{{- printf "%s-%s-dev.dhei.telekom.de" (include "keycloak.fullname" .) .Release.Namespace .Values.global.domain }}
 {{- end -}}
 {{- end -}}
 
