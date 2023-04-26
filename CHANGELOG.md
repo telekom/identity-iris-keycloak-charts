@@ -2,6 +2,9 @@
 
 [[_TOC_]]
 
+## 0.0.0
+- Removed fullname function
+
 ## 5.2.0-RC.5
  - No chart name in fullname
 

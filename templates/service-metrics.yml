@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "keycloak.fullname" . }}-metrics
+  name: {{ .Release.Name }}-metrics
   labels: {{ include "keycloak.labels" $ | nindent 4 }}
           {{- include "common.status-monitor.labels" $ | nindent 4 }}
           {{- include "status-monitor.labels" $ | nindent 4 }}

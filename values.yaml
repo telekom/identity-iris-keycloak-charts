@@ -45,9 +45,6 @@ global:
 
   failOnUnsetValues: true
 
-  nameOverride: ""
-  fullnameOverride: ""
-
 #imagePullPolicy: IfNotPresent
 
 # You can list files (in /templates) here that should cause a re-deployment of your application

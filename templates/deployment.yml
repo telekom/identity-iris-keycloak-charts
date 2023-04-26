@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "keycloak.fullname" . }}
+  name: {{ .Release.Name }}
   annotations:
   {{- include "keycloak.annotations" $ | nindent 4 }}
   {{- include "keycloak.checksums" $ | nindent 4 }}   
@@ -112,17 +112,17 @@ spec:
         emptyDir: {}
       - name: config
         configMap:
-          name: {{ include "keycloak.fullname" . }}-config
+          name: {{ .Release.Name }}-config
       - name: ha-proxy-config
         configMap:
-          name: {{ include "keycloak.fullname" . }}-ha-proxy-config
+          name: {{ .Release.Name }}-ha-proxy-config
       - name: realms
         configMap:
-          name: {{ include "keycloak.fullname" . }}-realm
+          name: {{ .Release.Name }}-realm
       {{- if .Values.truststore }}
       - name: secrets
         secret:
-          secretName: {{ include "keycloak.fullname" . }}
+          secretName: {{ .Release.Name }}
           items:
             - key: truststore.jks
               path: truststore.jks

@@ -40,9 +40,6 @@ global:
 
   failOnUnsetValues: true
 
-  nameOverride: ""
-  fullnameOverride: ""
-
   # You can force using a specific image here:
 #image:
   #repository: mtr.devops.telekom.de

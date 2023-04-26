@@ -2,7 +2,7 @@
 apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:
-  name: {{ include "keycloak.fullname" . }}
+  name: {{ .Release.Name }}
   labels: {{ include "keycloak.labels" $ | nindent 4 }}
     release: {{ .Values.prometheus.podMonitor.selector | default "guardians-raccoon" }}
   namespace: {{ .Release.Namespace }}
