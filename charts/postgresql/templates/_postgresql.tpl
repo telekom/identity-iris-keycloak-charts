@@ -64,17 +64,17 @@ app.kubernetes.io/instance: {{ .Release.Name }}-postgresql
 {{- end -}}
 
 {{- define "postgresql.deploymentName" -}}
-{{- printf "%s" .Release.Name -}}
+{{- printf "%s-%s" .Release.Name .Chart.Name -}}
 {{- end -}}
 
 {{- define "postgresql.pvcName" -}}
-{{- printf "%s-data" .Release.Name -}}
+{{- printf "%s-%s-data" .Release.Name .Chart.Name -}}
 {{- end -}}
 
 {{- define "postgresql.secretName" -}}
-{{- printf "%s" .Release.Name -}}
+{{- printf "%s-%s" .Release.Name .Chart.Name -}}
 {{- end -}}
 
 {{- define "postgresql.serviceName" -}}
-{{- printf "%s" .Release.Name -}}
+{{- printf "%s-%s" .Release.Name .Chart.Name -}}
 {{- end -}}
