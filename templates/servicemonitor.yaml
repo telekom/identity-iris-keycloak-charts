@@ -2,7 +2,7 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ include "keycloak.fullname" . }}
+  name: {{ .Release.Name }}
   labels: {{ include "keycloak.labels" $ | nindent 4 }}
     release: {{ .Values.prometheus.serviceMonitor.selector | default "guardians-raccoon" }}
   namespace: {{ .Release.Namespace }}
