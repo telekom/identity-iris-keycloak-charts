@@ -131,7 +131,7 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
   valueFrom:
     secretKeyRef:
       name: {{ .Release.Name }}
-      key: keycloakPassword
+      key: adminPassword
 - name: KEYCLOAK_LOGLEVEL
   value: {{ .Values.logLevel | default "INFO" }}
 {{- if not (eq (include "keycloak.realms" $) "") }}
