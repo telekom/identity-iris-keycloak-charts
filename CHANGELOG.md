@@ -2,6 +2,9 @@
 
 [[_TOC_]]
 
+## 0.0.0
+ - Change Keycloak admin password secret key to adminPassword
+
 ## 5.2.0
  - Platform dependent securityContexts
  - Platform dependent topologyKey
