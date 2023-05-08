@@ -1,3 +1,0 @@
-customConfig:
-  frontendUrl: myhost.telekom.de
-  forceBackendUrlToFrontendUrl: true
