@@ -179,6 +179,8 @@ terminationGracePeriodSeconds: 60
 ingress:
   enabled: true
   #hostname: ""
+  # alternative second host name in ingress
+  #altHostname: ""
   #tlsSecret: ""
   annotations: {}
 
