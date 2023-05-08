@@ -41,6 +41,7 @@ spec:
                   - {{ .Release.Name }}-keycloak
               topologyKey: {{ include "platformSpecificValue" (list $ . ".Values.topologyKey") | default "kubernetes.io/hostname" }}
       securityContext: {{ include "platformSpecificValue" (list $ . ".Values.podSecurityContext") | default "{}" | nindent 8 }}
+      serviceAccountName: ""
       containers:
       - name: haproxy
         image: '{{ include "haproxy.image" $ }}'
