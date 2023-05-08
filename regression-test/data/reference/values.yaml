@@ -1,0 +1,5 @@
+adminPassword: someAdminPassword
+global:
+  database:
+    password: someDbPassword
+
