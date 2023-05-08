@@ -1,0 +1,10 @@
+adminPassword: someAdminPassword
+global:
+  database:
+    location: external
+    database: the-database
+    username: iris
+    password: someDbPassword
+externalDatabase:
+  host: database.domain.telekom.de
+

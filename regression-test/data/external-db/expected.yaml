@@ -1,55 +1,34 @@
 ---
-# Source: iris/charts/postgresql/templates/secret.yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: keycloak-postgresql
-  labels: 
-    app: keycloak
-    app.kubernetes.io/name: postgresql
-    app.kubernetes.io/instance: keycloak-postgresql
-    app.kubernetes.io/component: database
-    app.kubernetes.io/part-of: tif-runtime
-    app.kubernetes.io/managed-by: tif
-    helm.sh/chart: postgresql-1.0.0
-    tif.telekom.de/group: tif
-type: Opaque
-data:
-  adminPassword: "Y2hhbmdlbWU="
-  password: "Y2hhbmdlbWU="
----
 # Source: iris/templates/secret.yml
 apiVersion: v1
 kind: Secret
 metadata:
-  name: keycloak
+  name: iris
   labels: 
-    app: keycloak
+    app: iris
+    helm.sh/chart: iris-0.0.0
     app.kubernetes.io/name: keycloak
-    app.kubernetes.io/instance: keycloak-keycloak
+    app.kubernetes.io/instance: iris-keycloak
     app.kubernetes.io/component: idp
     app.kubernetes.io/part-of: tif-runtime
-    app.kubernetes.io/managed-by: tif
-    helm.sh/chart: iris-0.0.0
     tif.telekom.de/group: tif
 type: Opaque
 data:
-  keycloakPassword: "Y2hhbmdlbWU="
-  dbPassword: "Y2hhbmdlbWU="
+  adminPassword: "c29tZUFkbWluUGFzc3dvcmQ="
+  databasePassword: "c29tZURiUGFzc3dvcmQ="
 ---
 # Source: iris/templates/configmap-config.yml
 apiVersion : v1
 kind: ConfigMap
 metadata:
-  name: keycloak-config
+  name: iris-config
   labels: 
-    app: keycloak
+    app: iris
+    helm.sh/chart: iris-0.0.0
     app.kubernetes.io/name: keycloak
-    app.kubernetes.io/instance: keycloak-keycloak
+    app.kubernetes.io/instance: iris-keycloak
     app.kubernetes.io/component: idp
     app.kubernetes.io/part-of: tif-runtime
-    app.kubernetes.io/managed-by: tif
-    helm.sh/chart: iris-0.0.0
     tif.telekom.de/group: tif
 data:
   eni-infinispan.xml: |-
@@ -105,15 +84,14 @@ data:
 apiVersion : v1
 kind: ConfigMap
 metadata:
-  name: keycloak-ha-proxy-config
+  name: iris-ha-proxy-config
   labels: 
-    app: keycloak
+    app: iris
+    helm.sh/chart: iris-0.0.0
     app.kubernetes.io/name: keycloak
-    app.kubernetes.io/instance: keycloak-keycloak
+    app.kubernetes.io/instance: iris-keycloak
     app.kubernetes.io/component: idp
     app.kubernetes.io/part-of: tif-runtime
-    app.kubernetes.io/managed-by: tif
-    helm.sh/chart: iris-0.0.0
     tif.telekom.de/group: tif
 data:
   haproxy.cfg: |
@@ -174,15 +152,14 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: keycloak-pipeline-metadata
+  name: iris-pipeline-metadata
   labels: 
-    app: keycloak
+    app: iris
+    helm.sh/chart: iris-0.0.0
     app.kubernetes.io/name: keycloak
-    app.kubernetes.io/instance: keycloak-keycloak
+    app.kubernetes.io/instance: iris-keycloak
     app.kubernetes.io/component: idp
     app.kubernetes.io/part-of: tif-runtime
-    app.kubernetes.io/managed-by: tif
-    helm.sh/chart: iris-0.0.0
     tif.telekom.de/group: tif
 data:
   chart: iris-0.0.0
@@ -191,289 +168,139 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: keycloak-realm
+  name: iris-realm
   labels: 
-    app: keycloak
+    app: iris
+    helm.sh/chart: iris-0.0.0
     app.kubernetes.io/name: keycloak
-    app.kubernetes.io/instance: keycloak-keycloak
+    app.kubernetes.io/instance: iris-keycloak
     app.kubernetes.io/component: idp
     app.kubernetes.io/part-of: tif-runtime
-    app.kubernetes.io/managed-by: tif
-    helm.sh/chart: iris-0.0.0
     tif.telekom.de/group: tif
 data:
----
-# Source: iris/charts/postgresql/templates/pvc.yml
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: keycloak-postgresql-data
-  labels: 
-    app: keycloak
-    app.kubernetes.io/name: postgresql
-    app.kubernetes.io/instance: keycloak-postgresql
-    app.kubernetes.io/component: database
-    app.kubernetes.io/part-of: tif-runtime
-    app.kubernetes.io/managed-by: tif
-    helm.sh/chart: postgresql-1.0.0
-    tif.telekom.de/group: tif
-spec:
-  storageClassName: gp2
-  accessModes:
-    - ReadWriteOnce
-  resources: 
-    requests:
-      storage: 1Gi
----
-# Source: iris/charts/postgresql/templates/service.yml
-apiVersion: v1
-kind: Service
-metadata:
-  name: keycloak-postgresql
-  labels: 
-    app: keycloak
-    app.kubernetes.io/name: postgresql
-    app.kubernetes.io/instance: keycloak-postgresql
-    app.kubernetes.io/component: database
-    app.kubernetes.io/part-of: tif-runtime
-    app.kubernetes.io/managed-by: tif
-    helm.sh/chart: postgresql-1.0.0
-    tif.telekom.de/group: tif
-spec:
-  type: ClusterIP
-  selector: 
-    app.kubernetes.io/instance: keycloak-postgresql
-  ports:
-  - name: db
-    port: 5432
-    protocol: TCP
-    targetPort: 5432
 ---
 # Source: iris/templates/service-headless.yml
 apiVersion: v1
 kind: Service
 metadata:
-  name: keycloak-jgroups
+  name: iris-jgroups
   labels: 
-    app: keycloak
+    app: iris
+    helm.sh/chart: iris-0.0.0
     app.kubernetes.io/name: keycloak
-    app.kubernetes.io/instance: keycloak-keycloak
+    app.kubernetes.io/instance: iris-keycloak
     app.kubernetes.io/component: idp
     app.kubernetes.io/part-of: tif-runtime
-    app.kubernetes.io/managed-by: tif
-    helm.sh/chart: iris-0.0.0
     tif.telekom.de/group: tif
 spec:
   type: ClusterIP
   clusterIP: None
   selector: 
-    app.kubernetes.io/instance: keycloak-keycloak
+    app.kubernetes.io/instance: iris-keycloak
 ---
-# Source: iris/templates/service-http.yml
+# Source: iris/templates/service-metrics.yml
 apiVersion: v1
 kind: Service
 metadata:
-  name: keycloak
+  name: iris-metrics
   labels: 
-    app: keycloak
+    app: iris
+    helm.sh/chart: iris-0.0.0
     app.kubernetes.io/name: keycloak
-    app.kubernetes.io/instance: keycloak-keycloak
+    app.kubernetes.io/instance: iris-keycloak
     app.kubernetes.io/component: idp
     app.kubernetes.io/part-of: tif-runtime
-    app.kubernetes.io/managed-by: tif
-    helm.sh/chart: iris-0.0.0
     tif.telekom.de/group: tif
     tardis.telekom.de/cluster: "Default"
     tardis.telekom.de/namespace: "default"
+    tardis.telekom.de/product: "iris"
     tardis.telekom.de/team: "io"
     tardis.telekom.de/product: "iris"
-    tardis.telekom.de/subproduct: "keycloak"
+    tardis.telekom.de/subproduct: "iris"
 spec:
   type: ClusterIP
   selector: 
-    app.kubernetes.io/instance: keycloak-keycloak
+    app.kubernetes.io/instance: iris-keycloak
   ports:
-  - name: http
-    port: 80
-    protocol: TCP
-    targetPort: 9090
   - name: metrics-http
     port: 9542
     protocol: TCP
     targetPort: 9542
 ---
-# Source: iris/charts/postgresql/templates/deployment.yml
-apiVersion: apps/v1
-kind: Deployment
+# Source: iris/templates/service.yml
+apiVersion: v1
+kind: Service
 metadata:
-  name: keycloak-postgresql
+  name: iris
   labels: 
-    app: keycloak
-    app.kubernetes.io/name: postgresql
-    app.kubernetes.io/instance: keycloak-postgresql
-    app.kubernetes.io/component: database
+    app: iris
+    helm.sh/chart: iris-0.0.0
+    app.kubernetes.io/name: keycloak
+    app.kubernetes.io/instance: iris-keycloak
+    app.kubernetes.io/component: idp
     app.kubernetes.io/part-of: tif-runtime
-    app.kubernetes.io/managed-by: tif
-    helm.sh/chart: postgresql-1.0.0
     tif.telekom.de/group: tif
+    tardis.telekom.de/cluster: "Default"
+    tardis.telekom.de/namespace: "default"
+    tardis.telekom.de/product: "iris"
+    tardis.telekom.de/team: "io"
+    tardis.telekom.de/product: "iris"
+    tardis.telekom.de/subproduct: "iris"
 spec:
-  replicas: 1
-  strategy:
-    type: Recreate
-  selector:
-    matchLabels: 
-      app.kubernetes.io/instance: keycloak-postgresql
-  template:
-    metadata:
-      labels:
-        app: keycloak
-        app.kubernetes.io/name: postgresql
-        app.kubernetes.io/instance: keycloak-postgresql
-        app.kubernetes.io/component: database
-        app.kubernetes.io/part-of: tif-runtime
-        app.kubernetes.io/managed-by: tif
-        helm.sh/chart: postgresql-1.0.0
-        tif.telekom.de/group: tif
-        tardis.telekom.de/cluster: "Default"
-        tardis.telekom.de/namespace: "default"
-        tardis.telekom.de/team: "io"
-        tardis.telekom.de/product: "postgresql"
-        tardis.telekom.de/product: "iris"
-        tardis.telekom.de/subproduct: "keycloak-database"
-    spec:      
-      securityContext: 
-        fsGroup: 999
-        supplementalGroups:
-        - 999
-      containers:
-      - name: keycloak-postgresql
-        resources: 
-          limits:
-            cpu: 100m
-            memory: 500Mi
-          requests:
-            cpu: 20m
-            memory: 200Mi
-        env:        
-        - name: PGDATA
-          value: /var/lib/postgresql/data/pgdata
-        - name: POSTGRES_USER
-          value: sso
-        - name: POSTGRES_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: keycloak-postgresql
-              key: password
-        - name: POSTGRES_DATABASE
-          value: sso
-        - name: POSTGRES_ADMIN_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: keycloak-postgresql
-              key: adminPassword
-        - name: POSTGRES_MAX_CONNECTIONS
-          value: "100"
-        - name: POSTGRES_SHARED_BUFFERS
-          value: 32MB
-        - name: POSTGRES_MAX_PREPARED_TRANSACTIONS
-          value: "100"
-        image: 'mtr.devops.telekom.de/tardis-common/postgres:12.3-debian'
-        imagePullPolicy: IfNotPresent
-        securityContext: 
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
-          privileged: false
-          readOnlyRootFilesystem: true
-          runAsGroup: 999
-          runAsNonRoot: true
-          runAsUser: 999
-        ports:
-        - containerPort: 5432
-          protocol: TCP
-        volumeMounts:
-        - mountPath: /tmp
-          name: keycloak-postgresql-tmp
-        - mountPath: /var/run/postgresql
-          name: keycloak-postgresql-run
-        - mountPath: /var/lib/postgresql/data
-          name: keycloak-postgresql-data
-        livenessProbe:
-          tcpSocket:
-            port: 5432
-          initialDelaySeconds: 120
-          periodSeconds: 10
-          timeoutSeconds: 1
-          successThreshold: 1
-          failureThreshold: 3
-        readinessProbe:
-          exec:
-            command:
-            - /bin/bash
-            - -c
-            - pg_isready -U sso
-          initialDelaySeconds: 60
-          periodSeconds: 10
-          timeoutSeconds: 3
-          successThreshold: 1
-          failureThreshold: 3
-      volumes:
-      - name: keycloak-postgresql-run
-        emptyDir: {}
-      - name: keycloak-postgresql-tmp
-        emptyDir: {}
-      - name: keycloak-postgresql-data
-        persistentVolumeClaim:
-          claimName: keycloak-postgresql-data
-      restartPolicy: Always
+  type: ClusterIP
+  selector: 
+    app.kubernetes.io/instance: iris-keycloak
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 9090
 ---
 # Source: iris/templates/deployment.yml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: keycloak
+  name: iris
   annotations:
-    ops.eni.telekom.de/pipeline-meta-ref: keycloak-pipeline-metadata
-    checksum/config: 8ddd155c9fc834189658d6b8b1f0ad501bba7d3ebc5d5ef91046dfe40bc94d9c
-    checksum/realm: 0d21ef3d11e207984981fdbce8b702ba135347108076aa28a6378c3520f99a84   
+    ops.eni.telekom.de/pipeline-meta-ref: iris-pipeline-metadata
+    checksum/config: 4f8e079a9aa69148658e4e2d6bd8c828353f38428e79a4339ec55327ecf619e1
+    checksum/realm: bbcc4c49db264266ffd85e0781dccdd85d2473864baccace107d4fac42af8cf1   
   labels: 
-    app: keycloak
+    app: iris
+    helm.sh/chart: iris-0.0.0
     app.kubernetes.io/name: keycloak
-    app.kubernetes.io/instance: keycloak-keycloak
+    app.kubernetes.io/instance: iris-keycloak
     app.kubernetes.io/component: idp
     app.kubernetes.io/part-of: tif-runtime
-    app.kubernetes.io/managed-by: tif
-    helm.sh/chart: iris-0.0.0
     tif.telekom.de/group: tif
 spec:
   replicas: 1
   selector:
     matchLabels: 
-      app.kubernetes.io/instance: keycloak-keycloak
+      app.kubernetes.io/instance: iris-keycloak
   template:
     metadata:
       annotations:
-        ops.eni.telekom.de/pipeline-meta-ref: keycloak-pipeline-metadata
-        checksum/config: 8ddd155c9fc834189658d6b8b1f0ad501bba7d3ebc5d5ef91046dfe40bc94d9c
-        checksum/realm: 0d21ef3d11e207984981fdbce8b702ba135347108076aa28a6378c3520f99a84
+        ops.eni.telekom.de/pipeline-meta-ref: iris-pipeline-metadata
+        checksum/config: 4f8e079a9aa69148658e4e2d6bd8c828353f38428e79a4339ec55327ecf619e1
+        checksum/realm: bbcc4c49db264266ffd85e0781dccdd85d2473864baccace107d4fac42af8cf1
         prometheus.io/path: '/metrics'
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9542'
       labels:
-        app: keycloak
+        app: iris
+        helm.sh/chart: iris-0.0.0
         app.kubernetes.io/name: keycloak
-        app.kubernetes.io/instance: keycloak-keycloak
+        app.kubernetes.io/instance: iris-keycloak
         app.kubernetes.io/component: idp
         app.kubernetes.io/part-of: tif-runtime
-        app.kubernetes.io/managed-by: tif
-        helm.sh/chart: iris-0.0.0
         tif.telekom.de/group: tif
         tardis.telekom.de/cluster: "Default"
         tardis.telekom.de/namespace: "default"
+        tardis.telekom.de/product: "iris"
         tardis.telekom.de/team: "io"
         tardis.telekom.de/product: "iris"
-        tardis.telekom.de/subproduct: "keycloak"
+        tardis.telekom.de/subproduct: "iris"
     spec:      
       affinity:
         podAntiAffinity:
@@ -485,8 +312,10 @@ spec:
                 - key: app.kubernetes.io/instance
                   operator: In
                   values:
-                  - keycloak-keycloak
-              topologyKey: "kubernetes.io/hostname"
+                  - iris-keycloak
+              topologyKey: kubernetes.io/hostname
+      securityContext: 
+        {}
       containers:
       - name: haproxy
         image: 'mtr.devops.telekom.de/tardis-common/haproxy:2.4.0-alpine'
@@ -495,15 +324,7 @@ spec:
         - { containerPort: 9090, protocol: TCP, name: http }
         - { containerPort: 9542, protocol: TCP, name: metrics-http }
         securityContext: 
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
-          privileged: false
-          readOnlyRootFilesystem: true
-          runAsGroup: 99
-          runAsNonRoot: true
-          runAsUser: 99
+          {}
         resources: 
           limits:
             cpu: 1
@@ -518,12 +339,11 @@ spec:
         image: 'mtr.devops.telekom.de/tardis-internal/io/iris:3.1.2'
         imagePullPolicy: IfNotPresent
         securityContext: 
-          runAsGroup: 1000
-          runAsUser: 1000
+          {}
         args: ['start --optimized --import-realm']
         env:        
         - name: KC_HOSTNAME
-          value: keycloak-default.lab.tif.telekom.de
+          value: iris-default.lab.tardis.telekom.de
         - name: KC_PROXY
           value: edge
         - name: KC_HTTP_ENABLED
@@ -531,14 +351,14 @@ spec:
         - name: KC_CACHE_CONFIG_FILE  
           value: eni-infinispan.xml
         - name: jgroups.dns.query
-          value: keycloak-jgroups.default
+          value: iris-jgroups.default
         - name: KEYCLOAK_ADMIN
           value: admin
         - name: KEYCLOAK_ADMIN_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: keycloak
-              key: keycloakPassword
+              name: iris
+              key: adminPassword
         - name: KEYCLOAK_LOGLEVEL
           value: INFO
         - name: PROXY_ADDRESS_FORWARDING
@@ -546,16 +366,16 @@ spec:
         - name: KC_DB_URL_PORT
           value: "5432"
         - name: KC_DB_URL_HOST
-          value: keycloak-postgresql
+          value: database.domain.telekom.de
         - name: KC_DB_URL_DATABASE
-          value: sso
+          value: the-database
         - name: KC_DB_USERNAME
-          value: sso
+          value: iris
         - name: KC_DB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: keycloak
-              key: dbPassword
+              name: iris
+              key: databasePassword
         livenessProbe:
           httpGet:
             path: '/auth/'
@@ -597,29 +417,21 @@ spec:
         image: 'mtr.devops.telekom.de/tardis-common/postgres:12.3-debian'
         imagePullPolicy: IfNotPresent
         securityContext: 
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
-          privileged: false
-          readOnlyRootFilesystem: true
-          runAsGroup: 999
-          runAsNonRoot: true
-          runAsUser: 999
+          {}
         command: ['/bin/bash']
-        args: ['-c', 'until pg_isready -U sso; do echo waiting for database; sleep 2; done;']
+        args: ['-c', 'until pg_isready -U iris; do echo waiting for database; sleep 2; done;']
         env:        
         - name: PGHOST
-          value: keycloak-postgresql
+          value: database.domain.telekom.de
         - name: PGDATABASE
-          value: sso
+          value: the-database
         - name: PGUSER
-          value: sso
+          value: iris
         - name: PGPASSWORD
           valueFrom:
             secretKeyRef:
-              name: keycloak
-              key: dbPassword
+              name: iris
+              key: databasePassword
         resources: 
           limits:
             cpu: 100m
@@ -635,66 +447,64 @@ spec:
         emptyDir: {}
       - name: config
         configMap:
-          name: keycloak-config
+          name: iris-config
       - name: ha-proxy-config
         configMap:
-          name: keycloak-ha-proxy-config
+          name: iris-ha-proxy-config
       - name: realms
         configMap:
-          name: keycloak-realm
+          name: iris-realm
 ---
 # Source: iris/templates/ingress.yml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: keycloak
+  name: iris
   labels: 
-    app: keycloak
+    app: iris
+    helm.sh/chart: iris-0.0.0
     app.kubernetes.io/name: keycloak
-    app.kubernetes.io/instance: keycloak-keycloak
+    app.kubernetes.io/instance: iris-keycloak
     app.kubernetes.io/component: idp
     app.kubernetes.io/part-of: tif-runtime
-    app.kubernetes.io/managed-by: tif
-    helm.sh/chart: iris-0.0.0
     tif.telekom.de/group: tif
   annotations: {}
 spec:
   rules:
-  - host: keycloak-default.lab.tif.telekom.de
+  - host: iris-default.lab.tardis.telekom.de
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: keycloak
+            name: iris
             port:
               number: 80
   
   tls:
   - hosts:
-    - keycloak-default.lab.tif.telekom.de
+    - iris-default.lab.tardis.telekom.de
 ---
 # Source: iris/templates/servicemonitor.yaml
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: keycloak
+  name: iris
   labels: 
-    app: keycloak
+    app: iris
+    helm.sh/chart: iris-0.0.0
     app.kubernetes.io/name: keycloak
-    app.kubernetes.io/instance: keycloak-keycloak
+    app.kubernetes.io/instance: iris-keycloak
     app.kubernetes.io/component: idp
     app.kubernetes.io/part-of: tif-runtime
-    app.kubernetes.io/managed-by: tif
-    helm.sh/chart: iris-0.0.0
     tif.telekom.de/group: tif
     release: guardians-raccoon
   namespace: default
 spec:
   selector:
     matchLabels: 
-      app.kubernetes.io/instance: keycloak-keycloak
+      app.kubernetes.io/instance: iris-keycloak
   namespaceSelector:
     matchNames:
       - default
