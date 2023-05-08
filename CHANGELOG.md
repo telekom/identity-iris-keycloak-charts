@@ -2,6 +2,11 @@
 
 [[_TOC_]]
 
+## 5.2.1
+ - Change Keycloak admin password secret key to adminPassword
+ - Readded empty serviceAccountName for upgrade compatiblity
+ - Set proper chart version in Chart.yaml
+
 ## 5.2.0
  - Platform dependent securityContexts
  - Platform dependent topologyKey
