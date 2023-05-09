@@ -179,6 +179,10 @@ terminationGracePeriodSeconds: 60
 ingress:
   enabled: true
   #hostname: ""
+  # alternative second host name in ingress
+  #altHostname: ""
+  # overwrite host used in KC_HOSTNAME
+  #adminHostname: ""
   #tlsSecret: ""
   annotations: {}
 
