@@ -2,6 +2,10 @@
 
 [[_TOC_]]
 
+## 5.2.2
+`global.ingress.adminHostname` settings added to overwrite KC_HOSTNAME
+`global.ingress.altHostname` settings added for second host name
+
 ## 5.2.1
  - Change Keycloak admin password secret key to adminPassword
  - Readded empty serviceAccountName for upgrade compatiblity
