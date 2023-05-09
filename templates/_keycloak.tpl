@@ -116,7 +116,7 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 
 {{- define "keycloak.env" }}
 - name: KC_HOSTNAME
-  value: {{ include "keycloak.host" $ }}
+  value: {{ include "keycloak.adminHost" $ }}
 - name: KC_PROXY
   value: edge
 - name: KC_HTTP_ENABLED
@@ -175,6 +175,14 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
     secretKeyRef:
       name: {{ .Release.Name }}
       key: databasePassword
+{{- end -}}
+
+{{- define "keycloak.adminHost" }}
+{{- if not (empty .Values.ingress.adminHostname) -}}
+{{- .Values.ingress.adminHostname -}}
+{{- else -}}
+{{ include "keycloak.host" $ }}
+{{- end -}}
 {{- end -}}
 
 {{- define "keycloak.host" -}}

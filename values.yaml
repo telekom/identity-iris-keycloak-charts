@@ -181,6 +181,8 @@ ingress:
   #hostname: ""
   # alternative second host name in ingress
   #altHostname: ""
+  # overwrite host used in KC_HOSTNAME
+  #adminHostname: ""
   #tlsSecret: ""
   annotations: {}
 
