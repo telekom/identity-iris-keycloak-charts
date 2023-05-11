@@ -1,6 +1,6 @@
 apiVersion: v2
 name: iris
-version: 5.2.1
+version: 5.2.2
 appVersion: 16.1.1
 description: Iris provided by ENI-Hub
 keywords:
