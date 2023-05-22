@@ -40,6 +40,8 @@ spec:
                   values:
                   - {{ .Release.Name }}-keycloak
               topologyKey: "kubernetes.io/hostname"
+      serviceAccount: ""
+      serviceAccountName: ""
       containers:
       - name: haproxy
         image: '{{ include "haproxy.image" $ }}'

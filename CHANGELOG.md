@@ -2,6 +2,9 @@
 
 [[_TOC_]]
 
+## 4.5.1
+ - Readded empty serviceAccountName for upgrade compatiblity
+
 ## 4.5.0
  - securityContext divided into containerSecurityContext and podSecurityContext to satisfy CaaS cluster t21 policy
  - alternate spelling "admin_password" and "adminPassword" allowed
