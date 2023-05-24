@@ -59,7 +59,7 @@ templateChangeTriggers: []
   #supplementalGroups: 999
 
 #containerSecurityContext: {}
-#topologyKey:
+#topologyKey: kubernetes.io/hostname
 
 
 # Keycloak admin role credentials
