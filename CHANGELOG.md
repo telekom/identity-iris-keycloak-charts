@@ -2,6 +2,9 @@
 
 [[_TOC_]]
 
+## 4.5.2
+ - Allow topologyKey setting
+
 ## 4.5.1
  - Readded empty serviceAccountName for upgrade compatiblity
 
