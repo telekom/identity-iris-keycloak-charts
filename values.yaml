@@ -75,6 +75,7 @@ podSecurityContext: {}
 
 containerSecurityContext: {}
 
+#topologyKey: kubernetes.io/hostname
 
 # Keycloak admin role credentials
 admin_username: admin

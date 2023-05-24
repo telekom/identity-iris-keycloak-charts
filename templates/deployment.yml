@@ -39,7 +39,7 @@ spec:
                   operator: In
                   values:
                   - {{ .Release.Name }}-keycloak
-              topologyKey: "kubernetes.io/hostname"
+              topologyKey: {{ .Values.topologyKey | default "kubernetes.io/hostname" }}
       serviceAccount: ""
       serviceAccountName: ""
       containers:
