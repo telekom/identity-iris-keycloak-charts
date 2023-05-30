@@ -2,6 +2,9 @@
 
 [[_TOC_]]
 
+## 5.2.3
+- Fixed CaaS security context
+
 ## 5.2.2
 - `global.ingress.adminHostname` settings added to overwrite KC_HOSTNAME
 - `global.ingress.altHostname` settings added for second host name
