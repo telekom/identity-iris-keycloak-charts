@@ -222,7 +222,7 @@ secretName: {{ .Values.ingress.tlsSecret | default .Values.global.ingress.tlsSec
 {{- end -}}
 
 {{- define "keycloak.ingress.ingressClassName" -}}
-{{- if eq .Values.global.platform "tdi" -}}
-ingressClassName: {{ .Values.ingress.ingressClassName | default "triton-ingress" -}}
+{{- if or (include "platformSpecificValue" (list $ . ".Values.ingress.ingressClassName")) (include "platformSpecificValue" (list $ . ".Values.global.ingress.ingressClassName")) -}}
+ingressClassName: {{ include "platformSpecificValue" (list $ . ".Values.ingress.ingressClassName") | default (include "platformSpecificValue" (list $ . ".Values.global.ingress.ingressClassName")) }}
 {{- end -}}
 {{- end -}}
