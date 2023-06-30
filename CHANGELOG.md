@@ -2,6 +2,9 @@
 
 [[_TOC_]]
 
+## 5.4.0
+ - Update default image to iris:3.2.0 (keycloak 20.1.1) 
+
 ## 5.3.0
  - Allow ingressClassName setting
  - Introduced tdi as platform
