@@ -25,8 +25,8 @@ Issues and questions can be reported to the [issues list](../issues)
 
 ## License
 
-Neither Iris nor Postgres requires a license. All used images are copies of public images from docker-hub.  
-Iris is a Keycloak based image that has been extended to integrate with logging solutions like Prometheus.  
+Neither Iris nor Postgres require a license. All images uses are copies of public images from docker-hub.  
+Iris is a Keycloak-based image that has been extended to integrate with logging solutions such as Prometheus.  
 
 ## Version
 
@@ -57,9 +57,9 @@ After a successful installation the component can be reached at the URL: `keyclo
 
 ### To 5.x.x
 
-As we removed the the serviceAccount from the deployment and the chart, this requires manualy interaction in the cluster. \
-Unfortunatley Helm does not remove the configured serviceAccount from the deployment resource itself. Because the serviceAccount resource is removed, an invalid reference is existing. \
-Therefore you need to remove those references on the cluster itself.
+Since we have removed the serviceAccount from the deployment and the chart, this requires manual interaction in the cluster. \
+Unfortunately Helm does not remove the configured serviceAccount from the deployment resource itself. Because the serviceAccount resource is removed, there is an remaining invalid reference. \
+Therefore, you must remove these references on the cluster itself.
 
 ## Configuration
 
