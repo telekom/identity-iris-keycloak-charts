@@ -64,8 +64,18 @@ ops.eni.telekom.de/pipeline-force-redeploy: '{{ now | date "2006-01-02T15:04:05Z
 {{- end -}}
 
 {{- define "keycloak.checksums" -}}
+checksum/secret: {{ include (print $.Template.BasePath "/secret.yml") . | sha256sum }}
+{{ include "argo.checksum" (list $ . ".Values.adminPassword") }}
+{{ include "argo.checksum" (list $ . ".Values.global.database.password") }}
+{{ include "argo.checksum" (list $ . ".Values.truststore") }}
 checksum/config: {{ include (print $.Template.BasePath "/configmap-config.yml") . | sha256sum }}
 checksum/realm: {{ include (print $.Template.BasePath "/configmap-realm.yml") . | sha256sum }}
+{{- if and (eq .Values.global.database.location "external") .Values.externalDatabase.ssl (or .Values.externalDatabase.sslCert .Values.externalDatabase.sslKey .Values.externalDatabase.sslRootCert) }}
+checksum/secret-certificates: {{ include (print $.Template.BasePath "/secret-certificates.yaml") . | sha256sum }}
+{{ include "argo.checksum" (list $ . ".Values.externalDatabase.sslCert") }} 
+{{ include "argo.checksum" (list $ . ".Values.externalDatabase.sslKey") }}
+{{ include "argo.checksum" (list $ . ".Values.externalDatabase.sslRootCert") }}
+{{- end -}}
 {{- range .Values.templateChangeTriggers }}
 checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- end -}}

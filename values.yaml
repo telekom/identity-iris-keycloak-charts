@@ -3,6 +3,7 @@ global:
     pipeline: {}
 
   platform: kubernetes
+  #pathToSecret: "path/to/secret"
   #storageClassName: gp2
   domain: ""
   labels:
