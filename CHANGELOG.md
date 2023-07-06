@@ -2,6 +2,9 @@
 
 [[_TOC_]]
 
+## 5.3.1
+ - Added Argo CD secret redeploy trigger
+
 ## 5.3.0
  - Allow ingressClassName setting
  - Introduced tdi as platform
