@@ -2,9 +2,12 @@
 
 [[_TOC_]]
 
+## 0.0.0
+ - HPA kind autoscaling/v2
+
 ## 5.4.0
-- Added Argo CD secret redeploy trigger
-- Update default image to iris:3.2.0 (keycloak 21.1.2)
+ - Added Argo CD secret redeploy trigger
+ - Update default image to iris:3.2.0 (keycloak 21.1.2)
 
 ## 5.4.0-RC.2
  - Added Argo CD secret redeploy trigger
