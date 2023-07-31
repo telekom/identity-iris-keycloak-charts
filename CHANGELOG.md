@@ -4,6 +4,7 @@
 
 ## 5.3.2
  - HPA kind autoscaling/v2
+ - Fix: Truststore dependency check for checksum creation
 
 ## 5.3.1
  - Added Argo CD secret redeploy trigger
