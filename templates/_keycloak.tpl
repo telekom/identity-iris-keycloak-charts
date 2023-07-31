@@ -69,7 +69,7 @@ checksum/secret: {{ include (print $.Template.BasePath "/secret.yml") . | sha256
 {{ include "argo.checksum" (list $ . ".Values.global.database.password") }}
 {{- if .Values.truststore }}
 {{ include "argo.checksum" (list $ . ".Values.truststore") }}
-{{- end -}}
+{{- end }}
 checksum/config: {{ include (print $.Template.BasePath "/configmap-config.yml") . | sha256sum }}
 checksum/realm: {{ include (print $.Template.BasePath "/configmap-realm.yml") . | sha256sum }}
 {{- if and (eq .Values.global.database.location "external") .Values.externalDatabase.ssl (or .Values.externalDatabase.sslCert .Values.externalDatabase.sslKey .Values.externalDatabase.sslRootCert) }}
