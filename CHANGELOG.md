@@ -2,6 +2,9 @@
 
 [[_TOC_]]
 
+## 5.3.2
+ - HPA kind autoscaling/v2
+
 ## 5.3.1
  - Added Argo CD secret redeploy trigger
 
