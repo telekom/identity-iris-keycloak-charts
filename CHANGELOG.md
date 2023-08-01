@@ -2,6 +2,9 @@
 
 [[_TOC_]]
 
+## 5.3.3
+ - Fix: truststore password referencing for Argo CD
+
 ## 5.3.2
  - HPA kind autoscaling/v2
  - Fix: Truststore dependency check for checksum creation
