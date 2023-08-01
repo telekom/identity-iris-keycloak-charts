@@ -2,7 +2,7 @@
 
 [[_TOC_]]
 
-## 0.0.0
+## 5.5.0
  - HPA kind autoscaling/v2
  - Fix: Truststore dependency check for checksum creation
 
