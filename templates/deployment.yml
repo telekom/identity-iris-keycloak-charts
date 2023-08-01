@@ -5,6 +5,7 @@ metadata:
   annotations:
   {{ include "keycloak.annotations" $ | nindent 4 }}
   {{ include "keycloak.checksums" $ | nindent 4 }}   
+  {{ include "argo.pathToSecret" $ | nindent 4 }}
   labels: {{ include "keycloak.labels" $ | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
