@@ -1,5 +1,0 @@
-global:
-  ingress:
-    ingressClassName: triton-ingress
-
-topologyKey: kubernetes.io/hostname

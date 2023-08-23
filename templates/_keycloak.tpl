@@ -8,7 +8,7 @@ helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
 app.kubernetes.io/name: keycloak
 {{ include "keycloak.selector" . }}
 app.kubernetes.io/component: idp
-app.kubernetes.io/part-of: tif-runtime
+app.kubernetes.io/part-of: eni-runtime
 {{ .Values.global.labels | toYaml }}
 {{- end -}}
 

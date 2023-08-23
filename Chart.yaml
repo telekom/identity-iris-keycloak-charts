@@ -2,9 +2,9 @@ apiVersion: v2
 name: iris
 version: 5.5.1
 appVersion: 16.1.1
-description: Iris provided by ENI-Hub
+description: Iris provided by ENI
 keywords:
-- enihub
+- eni
 - tardis
 - iris
 - keycloak
@@ -12,7 +12,5 @@ dependencies:
 - name: postgresql
   version: 1.0.0
 maintainers:
-- name: Christian Stein
-  email: steinc@external.telekom.de
-- name: Georg Teichert-Matuschek
-  email: Georg.Teichert-Matuschek@external.telekom.de
+- name: Tardis
+  email: tardis@telekom.de

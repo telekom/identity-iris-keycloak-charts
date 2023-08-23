@@ -17,7 +17,7 @@ global:
 
   labels:
     # fluentd label
-    tif.telekom.de/group: tif
+    tardis.telekom.de/group: eni
 
   imagePullSecrets: []
   #- name: mtr-tif-public

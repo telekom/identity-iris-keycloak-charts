@@ -8,7 +8,7 @@ global:
   domain: ""
   labels:
     # fluentd label
-    tif.telekom.de/group: tif
+    tardis.telekom.de/group: eni
   product: "iris"
   ingress:
     #tlsSecret: ""
@@ -22,8 +22,8 @@ global:
   # no pull secret will be deployed
   # If you use Sapling for deployment this will be set automatically
   imagePullSecrets: []
-  #- name: mtr-tif-public
-  #  registry: https://mtr.external.otc.telekomcloud.com
+  #- name: secret
+  #  registry: https://<your-registry>
   #  username: changeme
   #  password: changeme
   imagePullPolicy: IfNotPresent
@@ -51,8 +51,8 @@ global:
 
 # You can list files (in /templates) here that should cause a re-deployment of your application
 # when their contents change
-# This makes sense if you change configMaps or secrets and you
-# want your deplment to use the latest configuration
+# This makes sense if you change configMaps or secrets, and you
+# want your deployment to use the latest configuration
 templateChangeTriggers: []
 #- my-custom-configmap.yaml
 
@@ -69,13 +69,12 @@ adminUsername: admin
 adminPassword: changeme
 
 # Truststore for Keycloak
-# When Keystorer project is used, just use the base64 string from the pipeline log
+# When Keytool is used, make sure to print out the store in base64 value
 # If not used, watch out for the secret, as it will be printed in there as a raw string
 # Example:
 #  truststore: |
 #    MIIVaAIBAzCCFRIGCSqGSIb3DQEHAaCCFQMEghT/MIIU+zCCBbIGCSqGSIb3DQEHAaCCBaMEggWf
 #    ... data as created from JKS keystore by "cat ./keystore.jks | base64"
-#    ... details see Gitlab ".../io/products/keystorer"
 #    yMsfLrPfvuYCAicQ 
 truststore: {}
 # Needed to access the Truststore
@@ -114,8 +113,8 @@ realms:
 #    - name: adfs-idp
 #      displayName: ADFS
 #      signingCertificate: MIIC2DCCr...
-#      singleLogoutServiceUrl: https://fed.telekom.de/adfs/ls/
-#      singleSignOnServiceUrl: https://fed.telekom.de/adfs/ls/
+#      singleLogoutServiceUrl: https://<server-uri>/adfs/ls/
+#      singleSignOnServiceUrl: https://<server-uri>/adfs/ls/
 #      encryptionPublicKey: MIIC3jCC...
 #      mappers:
 #      - type: adfs-email
@@ -240,12 +239,6 @@ postgresql:
   maxPreparedTransactions: "100"
 
   # You can force using a specific image here:
-  #image:
-    #repository: mtr.devops.telekom.de
-    #organization: tardis-common
-    #name: postgres
-    #tag: 12.3-debian
-  # Or use the flattened string form:
   #image: mtr.devops.telekom.de/tardis-common/postgres:12.3-debian
   #imagePullPolicy: IfNotPresent
 
