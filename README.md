@@ -18,22 +18,22 @@ Iris is a Keycloak-based image that has been extended to integrate with logging 
 
 ## Version
 
-| Installed software versions | Version Info |    
-|-----------------------------|--------------|
-| Keycloak                    | 20.0.2       |
-| - java                      | 11.0.14      |
-| PostgreSQL                  | 12.3         |
+| Installed software versions | Version Info            |    
+|-----------------------------|-------------------------|
+| Keycloak                    | 21.1.2                  |
+| Java                        | 11 (deprecated with 21) |
+| PostgreSQL                  | 12.3                    |
 
 ## Description
 
 **Important links:**
 
 - Keycloak
-    - [version 9.0 documentation](https://www.keycloak.org/docs/9.0/getting_started/index.html)
-    - [docker image documentation](https://hub.docker.com/r/jboss/keycloak/)
-    - [github repository](https://github.com/keycloak/)
+    - [Keycloak documentation](https://www.keycloak.org/docs/latest/release_notes/index.html#keycloak-21-1-2)
+    - [Docker image documentation](https://hub.docker.com/r/jboss/keycloak/)
+    - [Github repository](https://github.com/keycloak/keycloak)
 - PostgreSQL
-    - [docker image documentation](https://hub.docker.com/_/postgres)
+    - [Docker image documentation](https://hub.docker.com/_/postgres)
 
 After a successful installation the component can be reached at the
 URL: `keycloak-internal-<namespace>.<domain.internal.url>`
@@ -60,7 +60,7 @@ To add a new platform specific values.yaml, add the required values as `platforN
 **Note:** Assigning platform-specific values to the sub-chart through the platform-specific `platformName.yaml` of your
 main chart will not be effective, as the sub-chart's platform settings take precedence.
 
-### HA and multiple replicas
+### HAProxy and Multiple Replicas
 
 For multiple replicas set the following ingress annotations:
 
@@ -102,7 +102,7 @@ We made the metrics accessible under the container's `:9542/metrics` endpoint wh
 */auth/realms/master/metrics* and will do the token-authentication automatically. The pods will be annotated with
 Prometheus metadata information so that Prometheus knows where to scrape the metrics.
 
-**configurable chart options**
+**Configurable Chart Options**
 
 > **Tip**: You can use the default [values.yaml](values.yaml)
 
@@ -211,7 +211,7 @@ must be adequate encrypted and certificates should be properly verified.
 
 # Changes from Wildfly based Keycloak to Quarkus based
 
-## Build time configuration with Quarkus
+## Build time Configuration with Quarkus
 
 Keycloak on Quarkus is using a two staged approach where the command `kc.sh build` creates the specific configuration
 and `kc.sh start` runs the preconfigured Keycloak.
@@ -241,15 +241,10 @@ authentication.
 
 For detecting instances that should build a cache-cluster (formerly known as ha-mode) Quarkus uses the DNS_PING
 functionality of JGroups. By providing a headless service (a service without ports) for the
-Keycloak pods there is an kubernetes internal dns address that allows JGroups to find all pod that shall form a cluster.
-The DNS address which should be used is set with the environment variable jgroups.dns.query on the keycloak container.
+Keycloak pods there is a Kubernetes internal dns address that allows JGroups to find all pod that shall form a cluster.
+The DNS address which should be used is set with the environment variable `jgroups.dns.query` on the Keycloak container.
 
 ## Infinispan clustering
 
-To configure the infinispan caches (mainly number of owners per cache) the file eni-infinispan.xml is mounted to the
+To configure the infinispan caches (mainly number of owners per cache) the file `eni-infinispan.xml` is mounted to the
 Keycloak pod.
-
-## Open Questions
-
-- prometheus.authtoken seams to be intended to secure /metrics but was never set to something else than "change" not
-  sure if it ever worked
