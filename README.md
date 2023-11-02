@@ -1,20 +1,14 @@
-# Iris Helm Chart
-
-**Table of contents**
-
-[[_TOC_]]
-
 # Overview
 
 This chart installs [Keycloak](https://www.keycloak.org/documentation.html). \
-It is suitable for installations on OTC and AWS EKS.
+It is suitable for installations on OTC and AWS EKS. Recommended to use with customized keycloak docker image.
 
 # Details
 
 ## License
 
-Neither Iris nor Postgres require a license. All images uses are copies of public images from docker-hub.  
-Iris is a Keycloak-based image that has been extended to integrate with logging solutions such as Prometheus.
+Neither Keycloak nor Postgres require a license. All images uses are copies of public images from docker-hub.  
+Custom Keycloak image has been extended to integrate with logging solutions such as Prometheus.
 
 ## Version
 
@@ -38,16 +32,6 @@ Iris is a Keycloak-based image that has been extended to integrate with logging 
 After a successful installation the component can be reached at the
 URL: `keycloak-internal-<namespace>.<domain.internal.url>`
 
-## Upgrade Advice
-
-### To 5.x.x
-
-Since we have removed the serviceAccount from the deployment and the chart, this requires manual interaction in the
-cluster. \
-Unfortunately Helm does not remove the configured serviceAccount from the deployment resource itself. Because the
-serviceAccount resource is removed, there is a remaining invalid reference. \
-Therefore, you must remove these references on the cluster itself.
-
 ## Configuration
 
 ### Platform
@@ -55,7 +39,7 @@ Therefore, you must remove these references on the cluster itself.
 You can select a platform to use predefined settings (e.g. securityContext) specifically dedicated to the
 platform. \
 Note that you can overwrite platform specific values in the values.yaml. \
-To add a new platform specific values.yaml, add the required values as `platforName.yaml` to the `platforms` folder.
+To add a new platform specific values.yaml, add the required values as `platformName.yaml` to the `platforms` folder.
 
 **Note:** Assigning platform-specific values to the sub-chart through the platform-specific `platformName.yaml` of your
 main chart will not be effective, as the sub-chart's platform settings take precedence.
@@ -102,93 +86,6 @@ We made the metrics accessible under the container's `:9542/metrics` endpoint wh
 */auth/realms/master/metrics* and will do the token-authentication automatically. The pods will be annotated with
 Prometheus metadata information so that Prometheus knows where to scrape the metrics.
 
-**Configurable Chart Options**
-
-> **Tip**: You can use the default [values.yaml](values.yaml)
-
-The following table lists the configurable parameters of this chart.
-
-| Parameter                                         | Description                                                                                      | Default                             |
-|---------------------------------------------------|--------------------------------------------------------------------------------------------------|-------------------------------------|
-| `global.platform`                                 | Platform                                                                                         | `stable`                            |
-| `global.storageClassName`                         | Overwrites the setting determined by the platform                                                | `gp2`                               |
-| `global.domain`                                   | Base cluster URL reachable from Telekom network                                                  | `nil`                               |
-| `global.labels`                                   | Define global labels                                                                             | `tardis.telekom.de/group`           |
-| `global.ingress`                                  | Set ingress parameters for all ingress, can be extended by ingress specific ones                 | `nil`                               |
-| `global.database.location`                        | Specify if you want to deploy a PostgreSQL or use an external database                           | `local`                             |
-| `global.database.port`                            | Port of the database                                                                             | `5432`                              |
-| `global.database.database`                        | Name of the database                                                                             | `kong`                              |
-| `global.database.schema`                          | Name of the schema                                                                               | `public`                            |
-| `global.database.user`                            | Username for accessing the database                                                              | `kong`                              |
-| `global.database.password`                        | The users password                                                                               | `changeme`                          |
-| `truststore`                                      | Truststore in Base64                                                                             | `nil`                               |
-| `truststorePassword`                              | Password to access the truststore                                                                | `password`                          |
-| `global.hostnameVerificationPolicy`               | Choose a hostname verification policy                                                            | `WILDCARD`                          |
-| `image.repository`                                | MTR repository                                                                                   | `http://<your-server/`              |
-| `image.organization`                              | MTR organization                                                                                 | `tardis-common`                     |
-| `image.name`                                      | Docker image name in MTR                                                                         | `iris`                              |
-| `image.tag`                                       | Selected image tag                                                                               | `1.0.0`                             |
-| `tls.secret`                                      | TLS secret name                                                                                  |                                     |
-| `admin_username`                                  | Name of the Keycloak admin user                                                                  | `admin`                             |
-| `admin_password`                                  | Password of the Keycloak admin user                                                              |                                     |
-| `replicas`                                        | Number of replicas                                                                               | `1`                                 |
-| `autoscaling.enabled`                             | Enables Pod Autoscaling with Target CPU usage                                                    | `false`                             |
-| `autoscaling.minReplicas`                         | Minimum number of replicas if autoscaling is enabled                                             | `3`                                 |
-| `autoscaling.maxReplicas`                         | Maximum number of replicas if autoscaling is enabled                                             | `6`                                 |
-| `autoscaling.cpuUtilizationPercentage`            | Number of target CPU Utilization                                                                 | `80`                                |
-| `resources.requests.memory`                       | Memory request for Keycloak pod                                                                  | `2Gi`                               |
-| `resources.requests.cpu`                          | CPU request for Keycloak pod                                                                     | `200m`                              |
-| `resources.limit.memory`                          | Memory limit for Keycloak pod                                                                    | `2Gi`                               |
-| `resources.limit.cpu`                             | CPU limit for Keycloak pod                                                                       | `2000m`                             |
-| `ingress.enabled`                                 | Create ingress for external access                                                               | `true`                              |
-| `ingress.hostname`                                | Set dedicated hostname for ingress/route, overwrites global URL                                  | `nil`                               |
-| `ingress.tlsSecret`                               | Set secret name                                                                                  | `nil`                               |
-| `ingress.annotations`                             | Merges specific into global ingress annotations                                                  | `nil`                               |
-| `customConfig.frontendUrl`                        | Allows to configure another frontend URL                                                         | `${keycloak.frontendUrl:}`          |
-| `customConfig.spi.hostname`                       | Allows to overwrite the complete <spi name="hostname"> config incl. frontendUrl                  | s. configmap-config.yml for details |
-| `prometheus.enabled`                              | Controls whether to annotate pods with prometheus scraping information or not                    | `true`                              |
-| `prometheus.authToken`                            | Authentication token that is used in order to secure the exposed metrics endpoint                | `changeme`                          |
-| `prometheus.port`                                 | Sets the port at which metrics can be accessed                                                   | `9542`                              |
-| `prometheus.path`                                 | Sets the endpoint at which at which metrics can be accessed                                      | `/metrics`                          |
-| `prometheus.podMonitor.enabled`                   | Enables a pod-monitor which can be used by the prometheus operator to collect metrics            | `false`                             |
-| `prometheus.podMonitor.scheme`                    | HTTP scheme to use for scraping                                                                  | `http`                              |
-| `prometheus.podMonitor.interval`                  | Interval at which metrics should be scraped                                                      | `15s`                               |
-| `prometheus.podMonitor.scrapeTimeout`             | Timeout after which the scrape of prometheus is ended                                            | `3s`                                |
-| `prometheus.podMonitor.honorLabels`               | HonorLabels chooses the metric’s labels on collisions with target labels                         | `true`                              |
-| `prometheus.serviceMonitor.enabled`               | Enables a service-monitor which can be used by the prometheus operator to collect metrics        | `true`                              |
-| `prometheus.serviceMonitor.scheme`                | HTTP scheme to use for scraping                                                                  | `http`                              |
-| `prometheus.serviceMonitor.interval`              | Interval at which metrics should be scraped                                                      | `15s`                               |
-| `prometheus.serviceMonitor.scrapeTimeout`         | Timeout after which the scrape of prometheus is ended                                            | `3s`                                |
-| `prometheus.serviceMonitor.honorLabels`           | HonorLabels chooses the metric’s labels on collisions with target labels                         | `true`                              |
-| `realms`                                          | Configure realms                                                                                 |                                     |
-| `realms.name`                                     | Realm name                                                                                       | `nil`                               |
-| `realms.access_token_lifespan`                    | Lifespan of a token                                                                              | `nil`                               |
-| `realms.defaultProvider`                          | The alias of the default IDP to redirect to when logging in                                      | `nil`                               |
-| `realms.clients`                                  | An array of configured clients                                                                   | `nil`                               |
-| `realms.clients.name`                             | Client name                                                                                      | `nil`                               |
-| `realms.clients.redirectUris`                     | Allowed redirect URIs for the client (after authorization)                                       | `nil`                               |
-| `realms.clients.webOrigins`                       | Web origins accepted for authorization requests                                                  | `nil`                               |
-| `realms.identityProviders`                        | An array of identity providers for this realm                                                    | `nil`                               |
-| `realms.identityProviders.name`                   | An alias name of the IDP                                                                         | `nil`                               |
-| `realms.identityProviders.displayName`            | The name shown when logging in via this IDP                                                      | `nil`                               |
-| `realms.identityProviders.signingCertificate`     | The signing certificate of the IDP                                                               | `nil`                               |
-| `realms.identityProviders.singleLogoutServiceUrl` | The single logout service URL of the IDP                                                         | `nil`                               |
-| `realms.identityProviders.singleSignOnServiceUrl` | The single sign on service URL of the IDP                                                        | `nil`                               |
-| `realms.identityProviders.encryptionPublicKey`    | The encryption public key of the IDP                                                             | `nil`                               |
-| `realms.identityProviders.mappers`                | An array of mappers for the SAML data received from the IDP after a login                        | `nil`                               |
-| `realms.identityProviders.mappers.type`           | Choose between predefined mappers (`adfs-email` and `adfs-group`) or `custom` to define your own | `nil`                               |
-| `realms.identityProviders.mappers.name`           | The name of the mapper (only type `custom`)                                                      | `nil`                               |
-| `realms.identityProviders.mappers.attributeName`  | The attribute name in the IDP response (only type `custom`)                                      | `nil`                               |
-| `realms.identityProviders.mappers.category`       | The category of the mapper (only type `custom`)                                                  | `nil`                               |
-| `realms.identityProviders.mappers.userAttribute`  | The Keycloak user attribute to map the value to (only type `custom`)                             | `nil`                               |
-| `postgresql.image`                                | Specify the PostgreSQL image                                                                     | `postgres-12.3-debian`              |
-| `postgresql.securityContext`                      | Specify the security context                                                                     | `nil`                               |
-| `postgresql.resources`                            | Assign resources, e.g. limits, for Postgres                                                      | `Memory limits`                     |
-| `externalDatabase.host`                           | If an external database is used, this is the url of the database instance                        | `nil`                               |
-| `externalDatabase.ssl`                            | Use ssl for connection                                                                           | `false`                             |
-| `externalDatabase.sslVerify`                      | Use the provided certificate                                                                     | `false`                             |
-| `externalDatabase.luaSslTrustedCertificate`       | Provide certificate                                                                              | `nil`                               |
-
 # Deployment to Production
 
 Default settings in this template are prepared for dev and test environments.
@@ -215,12 +112,13 @@ must be adequate encrypted and certificates should be properly verified.
 
 Keycloak on Quarkus is using a two staged approach where the command `kc.sh build` creates the specific configuration
 and `kc.sh start` runs the preconfigured Keycloak.
-Because of this following settings are already set in Docker image of iris:
+Because of this following settings are already set in Docker image of custom_keycloak:
 
+[//]: # (TODO PROVIDE LINK TO GITHUB REPO)
 - Metrics enabled
 - Health enabled
 - Caching mode: Infinispan
-- clustering detection kubernetes
+- clustering detection: kubernetes
 
 These configurations can't be overridden in the chart.
 
@@ -246,5 +144,5 @@ The DNS address which should be used is set with the environment variable `jgrou
 
 ## Infinispan clustering
 
-To configure the infinispan caches (mainly number of owners per cache) the file `eni-infinispan.xml` is mounted to the
+To configure the infinispan caches (mainly number of owners per cache) the file `infinispan.xml` is mounted to the
 Keycloak pod.

@@ -4,7 +4,7 @@ metadata:
   name: {{ .Release.Name }}-config
   labels: {{ include "keycloak.labels" $ | nindent 4 }}
 data:
-  eni-infinispan.xml: |-
+  infinispan.xml: |-
     <?xml version="1.0" encoding="UTF-8"?>
     <infinispan
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"

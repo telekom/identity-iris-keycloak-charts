@@ -1,16 +1,9 @@
 apiVersion: v2
-name: iris
-version: 5.5.1
-appVersion: 16.1.1
-description: Iris provided by ENI
+name: custom_keycloak
+version: 1.0.0
+appVersion: 1.0.0
 keywords:
-- eni
-- tardis
-- iris
-- keycloak
+- custom_keycloak
 dependencies:
 - name: postgresql
   version: 1.0.0
-maintainers:
-- name: Tardis
-  email: tardis@telekom.de

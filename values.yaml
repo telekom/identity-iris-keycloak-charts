@@ -8,8 +8,7 @@ global:
   domain: ""
   labels:
     # fluentd label
-    tardis.telekom.de/group: eni
-  product: "iris"
+  product: "custom_keycloak"
   ingress:
     #tlsSecret: ""
     #ingressClassName: ""
@@ -40,10 +39,9 @@ global:
   database:
     location: local
     #port: 5432
-    database: sso
-    #schema: keycloak 
-    username: sso
-    password: changeme
+    database: pgdb
+    username: pgusr
+    password: not_secure_pwd
 
   failOnUnsetValues: true
 
@@ -124,22 +122,13 @@ realms:
 #        attributeName: http://attrurl.me/
 #        category: saml-user-attribute-idp-mapper
 #        userAttribute: firstName
-- name: rover
-  enabled: false
-  clients:
-  - name: rover
-    standardFlowEnabled: false
-    directAccessGrantsEnabled: false
-    serviceAccountsEnabled: true
-    publicClient: false
 
 replicas: 1
 
 autoscaling:
   enabled: false
-  #minReplicas needs to be set to >= 2
-  #minReplicas: 3
-  #maxReplicas: 6
+  #minReplicas: 2
+  #maxReplicas: 4
   #targetCPUUtilizationPercentage: 80
 
 resources:
@@ -239,7 +228,7 @@ postgresql:
   maxPreparedTransactions: "100"
 
   # You can force using a specific image here:
-  #image: mtr.devops.telekom.de/tardis-common/postgres:12.3-debian
+  #image: <your-image>
   #imagePullPolicy: IfNotPresent
 
   resources:

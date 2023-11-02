@@ -6,9 +6,6 @@ metadata:
 data:
   haproxy.cfg: |
     # Workaround for temporary fixing CVE-2020-10770
-    # 2021-06-18
-    # Oleg.Fiksel@telekom.de
-    # modified by mario.eckstein@external.telekom.de
     # Use case: Deploy a haproxy in front of KeyCloak/RHSSO
 
     global
@@ -51,7 +48,7 @@ data:
         acl protect_metrics path -m sub metrics
         # block http requests if rule applies
         http-request deny if block_url_param || protect_metrics
-        # route to iris
+        # route to keycloak
         server s1 127.0.0.1:8080
     
     backend be_metrics_default

@@ -1,15 +1,15 @@
 {{- define "common.status-monitor.labels" -}}
-tardis.telekom.de/cluster: {{ .Values.global.cluster | default "Default" | quote }}
-tardis.telekom.de/namespace: {{ .Release.Namespace | default "Undefined" | quote }}
-tardis.telekom.de/product: {{ .Values.global.product | default .Chart.Name | quote }}
-tardis.telekom.de/team: {{ .Values.global.team | default "io" | quote }}
-tardis.telekom.de/product: {{ .Values.global.product | default .Chart.Name | quote }}
+cluster: {{ .Values.global.cluster | default "Default" | quote }}
+namespace: {{ .Release.Namespace | default "Undefined" | quote }}
+product: {{ .Values.global.product | default .Chart.Name | quote }}
+team: {{ .Values.global.team | default "my_team" | quote }}
+product: {{ .Values.global.product | default .Chart.Name | quote }}
 {{- end -}}
 
 {{- define "status-monitor.labels" -}}
-tardis.telekom.de/subproduct: {{ .Release.Name | quote }}
+subproduct: {{ .Release.Name | quote }}
 {{- end -}}
 
 {{- define "database.status-monitor.labels" -}}
-tardis.telekom.de/subproduct: {{ printf "%s-%s" .Release.Name "database" | quote }}
+subproduct: {{ printf "%s-%s" .Release.Name "database" | quote }}
 {{- end -}}

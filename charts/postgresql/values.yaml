@@ -1,9 +1,9 @@
+# To override values - uncomment below:
 global:
   metadata:
     pipeline: {}
     
   platform: kubernetes
-  #pathToSecret: "path/to/secret"
   #storageClassName: gp2
 
   passwordRules:
@@ -17,17 +17,12 @@ global:
 
   labels:
     # fluentd label
-    tardis.telekom.de/group: eni
 
   imagePullSecrets: []
-  #- name: mtr-tif-public
-  #  registry: https://mtr.external.otc.telekomcloud.com
+  #- name: secret
+  #  registry: https://<your-registry>
   #  username: changeme
   #  password: changeme
-
-  #image:
-    #force: false
-
   imagePullPolicy: IfNotPresent
 
   database:
@@ -35,20 +30,17 @@ global:
     # Set host if you use an external database or service name is not sufficient
     #host: ''
     #port: 5432
-    database: sso
-    username: sso
-    password: changeme
+    database: pgdb
+    username: pgusr
+    password: not_secure_pwd
 
   failOnUnsetValues: true
 
-  # You can force using a specific image here:
 #image:
-  #repository: mtr.devops.telekom.de
-  #organization: tardis-common
-  #name: postgres
-  #tag: 12.3-debian
-# Or use the flattened string form:
-#image: mtr.devops.telekom.de/tardis-common/postgres:12.3-debian
+  #repository:
+  #organization:
+  #name:
+  #tag:
 #imagePullPolicy: IfNotPresent
 
 #podSecurityContext:
@@ -57,8 +49,7 @@ global:
 
 #containerSecurityContext: {}
 
-# database admin credentials
-#adminPassword: "changeme"
+#adminPassword: "not_secure_pwd"
 
 # maximum number of client connections
 maxConnections: "100"

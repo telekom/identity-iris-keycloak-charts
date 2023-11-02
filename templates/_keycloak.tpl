@@ -1,5 +1,5 @@
 {{- define "haproxy.image" -}}
-   {{- printf "mtr.devops.telekom.de/tardis-common/haproxy:2.4.0-alpine" -}}
+   {{- printf "haproxy:2.4.0-alpine" -}}
 {{- end -}}
 
 {{- define "keycloak.labels" -}}
@@ -8,7 +8,6 @@ helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
 app.kubernetes.io/name: keycloak
 {{ include "keycloak.selector" . }}
 app.kubernetes.io/component: idp
-app.kubernetes.io/part-of: eni-runtime
 {{ .Values.global.labels | toYaml }}
 {{- end -}}
 
@@ -16,11 +15,15 @@ app.kubernetes.io/part-of: eni-runtime
 app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
 {{- end -}}
 
+{{- /*
+Provide custom_keycloak image details below
+*/}}
+
 {{- define "keycloak.image" -}}
-{{- $imageName := "iris" -}}
-{{- $imageTag := "3.2.0" -}}
-{{- $imageRepository := "mtr.devops.telekom.de" -}}
-{{- $imageOrganization := "tardis-internal/io" -}}
+{{- $imageName := "" -}}
+{{- $imageTag := "" -}}
+{{- $imageRepository := "" -}}
+{{- $imageOrganization := "" -}}
 {{- if .Values.image -}}
   {{- if not (kindIs "string" .Values.image) -}}
     {{ $imageRepository = .Values.image.repository | default $imageRepository -}}
@@ -37,10 +40,10 @@ app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
 {{- end -}}
 
 {{- define "keycloak.init.image" -}}
-{{- $imageName := "postgres" -}}
-{{- $imageTag := "12.3-debian" -}}
-{{- $imageRepository := "mtr.devops.telekom.de" -}}
-{{- $imageOrganization := "tardis-common" -}}
+{{- $imageName := "postgresql" -}}
+{{- $imageTag := "12.3.0-debian-10-r70" -}}
+{{- $imageRepository := "bitnami/" -}}
+{{- $imageOrganization := "" -}}
 {{- if .Values.postgresql.image -}}
   {{- if not (kindIs "string" .Values.postgresql.image) -}}
     {{ $imageRepository = .Values.postgresql.image.repository | default $imageRepository -}}
@@ -56,28 +59,9 @@ app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
 {{- end -}}
 {{- end -}}
 
-{{- define "keycloak.annotations" -}}
-ops.eni.telekom.de/pipeline-meta-ref: {{ .Release.Name }}-pipeline-metadata
-{{- if eq (toString .Values.global.metadata.pipeline.forceRedeploy) "true" }}
-ops.eni.telekom.de/pipeline-force-redeploy: '{{ now | date "2006-01-02T15:04:05Z07:00" }}'
-{{- end -}}
-{{- end -}}
-
 {{- define "keycloak.checksums" -}}
-checksum/secret: {{ include (print $.Template.BasePath "/secret.yml") . | sha256sum }}
-{{ include "argo.checksum" (list $ . ".Values.adminPassword") }}
-{{ include "argo.checksum" (list $ . ".Values.global.database.password") }}
-{{- if .Values.truststore }}
-{{ include "argo.checksum" (list $ . ".Values.truststore") }}
-{{- end }}
 checksum/config: {{ include (print $.Template.BasePath "/configmap-config.yml") . | sha256sum }}
 checksum/realm: {{ include (print $.Template.BasePath "/configmap-realm.yml") . | sha256sum }}
-{{- if and (eq .Values.global.database.location "external") .Values.externalDatabase.ssl (or .Values.externalDatabase.sslCert .Values.externalDatabase.sslKey .Values.externalDatabase.sslRootCert) }}
-checksum/secret-certificates: {{ include (print $.Template.BasePath "/secret-certificates.yaml") . | sha256sum }}
-{{ include "argo.checksum" (list $ . ".Values.externalDatabase.sslCert") }} 
-{{ include "argo.checksum" (list $ . ".Values.externalDatabase.sslKey") }}
-{{ include "argo.checksum" (list $ . ".Values.externalDatabase.sslRootCert") }}
-{{- end -}}
 {{- range .Values.templateChangeTriggers }}
 checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- end -}}
@@ -134,7 +118,7 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 - name: KC_HTTP_ENABLED
   value: "true"
 - name: KC_CACHE_CONFIG_FILE  
-  value: eni-infinispan.xml
+  value: infinispan.xml
 - name: jgroups.dns.query
   value: {{ .Release.Name }}-jgroups.{{ .Release.Namespace }}
 - name: KEYCLOAK_ADMIN
