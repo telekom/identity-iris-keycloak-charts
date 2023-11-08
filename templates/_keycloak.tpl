@@ -1,67 +1,17 @@
-{{- define "haproxy.image" -}}
-   {{- printf "haproxy:2.4.0-alpine" -}}
-{{- end -}}
-
 {{- define "keycloak.labels" -}}
 app: {{ .Release.Name }}
 helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
 app.kubernetes.io/name: keycloak
 {{ include "keycloak.selector" . }}
 app.kubernetes.io/component: idp
-{{ .Values.global.labels | toYaml }}
 {{- end -}}
 
 {{- define "keycloak.selector" -}}
 app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
 {{- end -}}
 
-{{- /*
-Provide custom_keycloak image details below
-*/}}
-
-{{- define "keycloak.image" -}}
-{{- $imageName := "" -}}
-{{- $imageTag := "" -}}
-{{- $imageRepository := "" -}}
-{{- $imageOrganization := "" -}}
-{{- if .Values.image -}}
-  {{- if not (kindIs "string" .Values.image) -}}
-    {{ $imageRepository = .Values.image.repository | default $imageRepository -}}
-    {{ $imageOrganization = .Values.image.organization | default $imageOrganization -}}
-    {{ $imageName = .Values.image.name | default $imageName -}}
-    {{ $imageTag = .Values.image.tag | default $imageTag -}}
-    {{- printf "%s/%s/%s:%s" $imageRepository $imageOrganization $imageName $imageTag -}}
-  {{- else -}}
-    {{- .Values.image -}}
-  {{- end -}}
-{{- else -}}
- {{- printf "%s/%s/%s:%s" $imageRepository $imageOrganization $imageName $imageTag -}}
-{{- end -}}
-{{- end -}}
-
-{{- define "keycloak.init.image" -}}
-{{- $imageName := "postgresql" -}}
-{{- $imageTag := "12.3.0-debian-10-r70" -}}
-{{- $imageRepository := "bitnami/" -}}
-{{- $imageOrganization := "" -}}
-{{- if .Values.postgresql.image -}}
-  {{- if not (kindIs "string" .Values.postgresql.image) -}}
-    {{ $imageRepository = .Values.postgresql.image.repository | default $imageRepository -}}
-    {{ $imageOrganization = .Values.postgresql.image.organization | default $imageOrganization -}}
-    {{ $imageName = .Values.postgresql.image.name | default $imageName -}}
-    {{ $imageTag = .Values.postgresql.image.tag | default $imageTag -}}
-    {{- printf "%s/%s/%s:%s" $imageRepository $imageOrganization $imageName $imageTag -}}
-  {{- else -}}
-    {{- .Values.postgresql.image -}}
-  {{- end -}}
-{{- else -}}
- {{- printf "%s/%s/%s:%s" $imageRepository $imageOrganization $imageName $imageTag -}}
-{{- end -}}
-{{- end -}}
-
 {{- define "keycloak.checksums" -}}
 checksum/config: {{ include (print $.Template.BasePath "/configmap-config.yml") . | sha256sum }}
-checksum/realm: {{ include (print $.Template.BasePath "/configmap-realm.yml") . | sha256sum }}
 {{- range .Values.templateChangeTriggers }}
 checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- end -}}
@@ -87,25 +37,6 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- printf "ssl=%s&sslmode=%s%s%s%s" $ssl $sslMode $sslCert $sslKey $sslRootCert -}}
 {{ end -}}
 
-{{- define "keycloak.realms" }}
-{{- $realmsPath := "/opt/jboss/keycloak/standalone/configuration/realms" -}}
-{{- $realms := "" -}}
-{{- range $path, $_ := .Files.Glob "realms/*.json" -}}
-  {{- $jsonFilename := base $path -}}
-  {{- $r := printf "%s/%s" $realmsPath $jsonFilename -}}
-  {{- $realms = printf "%s,%s" $realms $r -}}
-{{- end }}
-{{-  if eq $realms "" -}}
-  {{- range .Values.realms -}}
-  {{- if or (eq .enabled true) (and (eq .name "rover") (eq $.Values.roverRealmEnabled true)) -}}
-  {{- $r := printf "%s/_generated_%s.json" $realmsPath .name -}}
-  {{- $realms = printf "%s,%s" $realms $r -}}
-  {{- end -}}
-  {{- end -}}
-{{- end -}}
-{{- $realms -}}
-{{ end }}
-
 {{- define "keycloak.url" }}
 {{- printf "https://%s:%s" (include "keycloak.host" $) "80" }}
 {{- end }}
@@ -130,10 +61,6 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
       key: adminPassword
 - name: KEYCLOAK_LOGLEVEL
   value: {{ .Values.logLevel | default "INFO" }}
-{{- if not (eq (include "keycloak.realms" $) "") }}
-- name: KEYCLOAK_IMPORT
-  value: {{ trimPrefix "," (include "keycloak.realms" $)  | quote }}
-{{- end }}
 - name: PROXY_ADDRESS_FORWARDING
   value: "true"
 - name: KC_DB_URL_PORT
@@ -188,13 +115,6 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- printf "%s-%s.%s" .Release.Name .Release.Namespace .Values.global.domain }}
 {{- end -}}
 {{- end -}}
-
-{{- define "keycloak.merged.ingress.annotations" }}
-{{- $globalAnnotations := dict "annotations" .Values.global.ingress.annotations | deepCopy -}}
-{{- $localAnnotations := dict "annotations" .Values.ingress.annotations -}}
-{{- $mergedAnnotations := mergeOverwrite $globalAnnotations $localAnnotations }}
-{{- $mergedAnnotations | toYaml -}}
-{{ end -}}
 
 {{- define "keycloak.db.certificates.volume" }}
 {{- if .Values.externalDatabase.ssl }}

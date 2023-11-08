@@ -5,8 +5,6 @@ metadata:
   labels: {{ include "keycloak.labels" $ | nindent 4 }}
 data:
   haproxy.cfg: |
-    # Workaround for temporary fixing CVE-2020-10770
-    # Use case: Deploy a haproxy in front of KeyCloak/RHSSO
 
     global
       log stdout format raw local0 err

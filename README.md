@@ -1,7 +1,8 @@
 # Overview
 
 This chart installs [Keycloak](https://www.keycloak.org/documentation.html). \
-It is suitable for installations on OTC and AWS EKS. Recommended to use with customized keycloak docker image.
+It is suitable for installations on AWS EKS. Recommended to use with customized keycloak docker image (see the links section).
+Default settings in this template are prepared for non-prod environments.
 
 # Details
 
@@ -15,7 +16,6 @@ Custom Keycloak image has been extended to integrate with logging solutions such
 | Installed software versions | Version Info            |    
 |-----------------------------|-------------------------|
 | Keycloak                    | 21.1.2                  |
-| Java                        | 11 (deprecated with 21) |
 | PostgreSQL                  | 12.3                    |
 
 ## Description
@@ -26,85 +26,34 @@ Custom Keycloak image has been extended to integrate with logging solutions such
     - [Keycloak documentation](https://www.keycloak.org/docs/latest/release_notes/index.html#keycloak-21-1-2)
     - [Docker image documentation](https://hub.docker.com/r/jboss/keycloak/)
     - [Github repository](https://github.com/keycloak/keycloak)
+    - [Custom keycloak image](https://github.com/.....TBP)
 - PostgreSQL
     - [Docker image documentation](https://hub.docker.com/_/postgres)
-
-After a successful installation the component can be reached at the
-URL: `keycloak-internal-<namespace>.<domain.internal.url>`
 
 ## Configuration
 
 ### Platform
 
-You can select a platform to use predefined settings (e.g. securityContext) specifically dedicated to the
-platform. \
+You can select a platform to use predefined settings specifically dedicated to the platform. \
 Note that you can overwrite platform specific values in the values.yaml. \
 To add a new platform specific values.yaml, add the required values as `platformName.yaml` to the `platforms` folder.
 
-**Note:** Assigning platform-specific values to the sub-chart through the platform-specific `platformName.yaml` of your
-main chart will not be effective, as the sub-chart's platform settings take precedence.
+**Note:** Assigning platform-specific values to the sub-chart through the platform-specific `platformName.yaml` \ 
+of your main chart will not be effective, as the sub-chart's platform settings take precedence.
 
-### HAProxy and Multiple Replicas
+### Configuration Files
 
-For multiple replicas set the following ingress annotations:
+Keycloak infinispan caches (mainly number of owners per cache) is configured in the `infinispan.xml` file. \
+At start, this file is copied to the proper location and used as a configuration file. \
+To configure the is mounted to the Keycloak pod.
 
-```yaml
-nginx.ingress.kubernetes.io/affinity: "cookie"
-nginx.ingress.kubernetes.io/session-cookie-change-on-failure: "true"
-```
-
-**Configuration Files**
-
-Keycloak is configured by a xml file. The default installation contains some typical configuration files.
-This chart contains a copy of the standalone-haproxy.xml stored in a config map. At start, this file is copied to the
-proper location and used as a configuration file.
-
-**Realm**
-
-According to the documentation, the master realm should be used only for administrative purposes. Therefore, this chart
-allows for the configuration of additional realms and using the `realms.*` parameters. If no realms are configured only
-the master realm will be created.
-
-It is also possible to configure more identity providers to Keycloak.
-An [Active Directory](https://seal-oidc.docs.sealsystems.de/windows/ad_integration/connect_ad.html) is here the prime
-example.
-
-**Database**
+### Database
 
 To modify the behavior of database deployment, you can adjust the value of `database.location` to switch between "local"
 and "external". When set to "local", the deployment will utilize the PostgreSQL chart located within the charts
 directory to store Keycloak data. Conversely, if set to "external", you must include the `externalDatabase.host`
 parameter, directing it towards the designated database. Additionally, you need to provide the essential user data and
 database schema within the database field in the values.yaml file, enabling Keycloak to establish a connection.
-
-**Prometheus Integration**
-
-Due to internal circumstances the metrics can be accessed under Keycloak REST endpoint */auth/realms/master/metrics*.
-Since this endpoint is exposed due to the nature of the Keycloak API, we made this endpoint require an authentication
-token which must be set via header `X-Metrics-Auth-Token`.  
-We made the metrics accessible under the container's `:9542/metrics` endpoint which will redirects the traffic to
-*/auth/realms/master/metrics* and will do the token-authentication automatically. The pods will be annotated with
-Prometheus metadata information so that Prometheus knows where to scrape the metrics.
-
-# Deployment to Production
-
-Default settings in this template are prepared for dev and test environments.
-
-The database is used for storing ephemeral data (usually tokens with a lifespan of a few minutes). For production
-environment however it should be considered whether the container based solution or rather a dedicated database should
-be used.
-
-Please note also, that the IDP is an important component of the security concept. For this reason, all communication
-must be adequate encrypted and certificates should be properly verified.
-
-[External-DNS]: https://github.com/kubernetes-sigs/external-dns
-
-## Compatibility
-
-| Environment | Compatible |
-|-------------|------------|
-| OTC         | Yes        |
-| AWS EKS     | Yes        |
 
 # Changes from Wildfly based Keycloak to Quarkus based
 
@@ -135,14 +84,14 @@ All other requests to this port are blocked and result in an 503 http error.
 The path /auth/realms/master/metrics is also blocked for port 8080 on Keycloak because it's not secured by any
 authentication.
 
-## JGroups
+## Local launch with Kind, Docker and Helm
 
-For detecting instances that should build a cache-cluster (formerly known as ha-mode) Quarkus uses the DNS_PING
-functionality of JGroups. By providing a headless service (a service without ports) for the
-Keycloak pods there is a Kubernetes internal dns address that allows JGroups to find all pod that shall form a cluster.
-The DNS address which should be used is set with the environment variable `jgroups.dns.query` on the Keycloak container.
+1. Setup all the required tools: Docker, Kind and Helm \
+2. Use Custom Keycloak [github repo link](https://) image and pull it to your machine
 
-## Infinispan clustering
-
-To configure the infinispan caches (mainly number of owners per cache) the file `infinispan.xml` is mounted to the
-Keycloak pod.
+[//]: # (TODO provide link to CuKe image)
+ 
+3. Add to the Kind images using `kind load docker-image` command  to add also ha-proxy and postgres images 
+4. Archive the chart using command `tar cfvz <archive-name>.tgz <chart-folder>`
+5. use helm install with providing values.yaml files for postgres and custom keycloak charts \ 
+ e.g. `helm install <chart-name> <archive-name.tgz> --values .\<custom_keycloak_chart_folder>\values.yaml --values .\<custom_keycloak_chart_folder>\charts\postgresql\values.yaml`

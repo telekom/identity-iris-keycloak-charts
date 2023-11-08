@@ -1,55 +1,23 @@
-# To override values - uncomment below:
 global:
   metadata:
     pipeline: {}
     
   platform: kubernetes
   #storageClassName: gp2
-
-  passwordRules:
-    enabled: false
-    length: 12
-    mustMatch:
-    - '[a-z]'
-    - '[A-Z]'
-    - '[0-9]'
-    - '[^a-zA-Z0-9]' 
-
-  labels:
-    # fluentd label
-
   imagePullSecrets: []
-  #- name: secret
-  #  registry: https://<your-registry>
-  #  username: changeme
-  #  password: changeme
+
   imagePullPolicy: IfNotPresent
 
   database:
     location: local
     # Set host if you use an external database or service name is not sufficient
-    #host: ''
-    #port: 5432
+    host: localhost
+    port: 5432
     database: pgdb
     username: pgusr
     password: not_secure_pwd
 
   failOnUnsetValues: true
-
-#image:
-  #repository:
-  #organization:
-  #name:
-  #tag:
-#imagePullPolicy: IfNotPresent
-
-#podSecurityContext:
-  #fsGroup: 999
-  #supplementalGroups: 999
-
-#containerSecurityContext: {}
-
-#adminPassword: "not_secure_pwd"
 
 # maximum number of client connections
 maxConnections: "100"
@@ -61,6 +29,8 @@ sharedBuffers: "32MB"
 # setting this parameter to zero (default) disables the prepared-transaction feature
 maxPreparedTransactions: "0"
 
+image: bitnami/postgresql:12.3.0-debian-10-r70
+
 resources:
   limits:
     cpu: 100m
@@ -71,7 +41,7 @@ resources:
 
 persistence:
   keepOnDelete: false
-  #storageClassName: gp2
+  storageClassName: standard
   resources:
     requests:
       storage: 1Gi

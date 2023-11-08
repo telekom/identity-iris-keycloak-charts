@@ -3,8 +3,7 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}
   annotations:
-  {{ include "keycloak.annotations" $ | nindent 4 }}
-  {{ include "keycloak.checksums" $ | nindent 4 }}   
+  {{ include "keycloak.checksums" $ | nindent 4 }}
   labels: {{ include "keycloak.labels" $ | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
@@ -15,8 +14,7 @@ spec:
   template:
     metadata:
       annotations:
-      {{- include "keycloak.annotations" $ | nindent 8 }}
-      {{- include "keycloak.checksums" $ | nindent 8 }}  
+      {{- include "keycloak.checksums" $ | nindent 8 }}
 {{- if eq .Values.prometheus.enabled true }}
         prometheus.io/path: '{{ .Values.prometheus.path | default "/metrics" }}'
         prometheus.io/scrape: 'true'
@@ -24,8 +22,6 @@ spec:
 {{- end }}
       labels: 
       {{- include "keycloak.labels" $ | nindent 8 }}
-      {{- include "common.status-monitor.labels" $ | nindent 8 }}
-      {{- include "status-monitor.labels" $ | nindent 8 }}
     spec:
       {{- include "image_pull_secrets" $ | indent 6 }}
       affinity:
@@ -40,27 +36,24 @@ spec:
                   values:
                   - {{ .Release.Name }}-keycloak
               topologyKey: {{ include "platformSpecificValue" (list $ . ".Values.topologyKey") | default "kubernetes.io/hostname" }}
-      securityContext: {{ include "platformSpecificValue" (list $ . ".Values.podSecurityContext") | default "{}" | nindent 8 }}
       serviceAccount: ""
       serviceAccountName: ""
       containers:
       - name: haproxy
-        image: '{{ include "haproxy.image" $ }}'
+        image: {{ .Values.haproxy.image }}
         imagePullPolicy: {{ .Values.haproxy.imagePullPolicy | default .Values.global.imagePullPolicy }}
         ports:
         - { containerPort: 9090, protocol: TCP, name: http }
         {{- if eq .Values.prometheus.enabled true }}
         - { containerPort: {{ .Values.prometheus.port | default 9542 }}, protocol: TCP, name: metrics-http }
         {{- end }}
-        securityContext: {{ include "platformSpecificValue" (list $ . ".Values.haproxy.containerSecurityContext") | default "{}" | nindent 10 }}
         resources: {{ .Values.haproxy.resources | toYaml | nindent 10 }}
         volumeMounts:
         - name: ha-proxy-config
           mountPath: /usr/local/etc/haproxy
       - name: keycloak
-        image: '{{ include "keycloak.image" $ }}'
+        image: {{ .Values.keycloak.image }}
         imagePullPolicy: {{ .Values.imagePullPolicy | default .Values.global.imagePullPolicy }}
-        securityContext: {{ include "platformSpecificValue" (list $ . ".Values.containerSecurityContext" ) | default "{}" | nindent 10 }}
         {{- if .Values.truststore }}
         args: ['start --optimized --import-realm --spi-truststore-file-file=/truststore/truststore.jks --spi-truststore-file-password={{ .Values.truststorePassword }} --spi-truststore-file-hostname-verification-policy={{ .Values.hostnameVerificationPolicy }}']
         {{- else }}
@@ -84,8 +77,6 @@ spec:
         volumeMounts:
         - name: config
           mountPath: /opt/keycloak/conf/
-        - name: realms
-          mountPath: /opt/keycloak/data/import/ 
         - name: tmp
           mountPath: /tmp
         - name: tmp
@@ -98,9 +89,8 @@ spec:
         {{- include "keycloak.db.certificates.volumeMount" $ | indent 8 }}
       initContainers:
       - name: "check-database"
-        image: '{{ include "keycloak.init.image" $ }}'
+        image: {{ .Values.image }}
         imagePullPolicy: {{ .Values.postgresql.imagePullPolicy | default .Values.global.imagePullPolicy }}
-        securityContext: {{ include "platformSpecificValue" (list $ . ".Values.postgresql.containerSecurityContext" ) | default "{}" | nindent 10 }}
         command: ['/bin/bash']
         args: ['-c', 'until pg_isready -U {{ .Values.global.database.username }}; do echo waiting for database; sleep 2; done;']
         env:
@@ -114,7 +104,7 @@ spec:
         emptyDir: {}
       - name: config
         configMap:
-          name: {{ .Release.Name }}-config
+          name: {{ .Release.Name }}-cache-config
       - name: ha-proxy-config
         configMap:
           name: {{ .Release.Name }}-ha-proxy-config

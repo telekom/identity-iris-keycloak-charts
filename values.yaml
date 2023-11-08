@@ -168,7 +168,7 @@ terminationGracePeriodSeconds: 60
 
 ingress:
   enabled: true
-  #hostname: ""
+  hostname: localhost
   # alternative second host name in ingress
   #altHostname: ""
   # overwrite host used in KC_HOSTNAME
@@ -210,10 +210,11 @@ customConfig:
   #   <spi name="hostname">
   #     <!-- some xml config -->
   #   </spi>
+keycloak:
+  image: custom_keycloak:latest
 
 haproxy:
-  #imagePullPolicy: IfNotPresent
-  #containerSecurityContext: {}
+  image: haproxy:2.4.0-alpine
   resources:
     limits:
       memory: 1Gi

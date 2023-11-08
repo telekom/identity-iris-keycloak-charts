@@ -1,28 +1,7 @@
 {{- define "postgresql.labels" -}}
-app: {{ .Release.Name }}
-helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+app.kubernetes.io/instance: {{ .Release.Name }}-postgresql
 app.kubernetes.io/name: postgresql
-app.kubernetes.io/instance: {{ .Release.Name }}-postgresql
 app.kubernetes.io/component: database
-{{ .Values.global.labels | toYaml }}
-{{- end -}}
-
-{{- define "postgresql.selector" -}}
-app.kubernetes.io/instance: {{ .Release.Name }}-postgresql
-{{- end -}}
-
-{{- define "postgresql.image" -}}
-{{- $imageName := "postgresql" -}}
-{{- $imageTag := "12.3.0-debian-10-r70" -}}
-{{- $imageRepository := "bitnami/" -}}
-{{- $imageOrganization := "" -}}
-{{- if .Values.image -}}
-  {{ $imageRepository = .Values.image.repository | default $imageRepository -}}
-  {{ $imageOrganization = .Values.image.organization | default $imageOrganization -}}
-  {{ $imageName = .Values.image.name | default $imageName -}}
-  {{ $imageTag = .Values.image.tag | default $imageTag -}}
-  {{- printf "%s/%s/%s:%s" $imageRepository $imageOrganization $imageName $imageTag -}}
-{{- end -}}
 {{- end -}}
 
 {{- define "postgresql.env" }}
@@ -50,6 +29,10 @@ app.kubernetes.io/instance: {{ .Release.Name }}-postgresql
   value: {{ .Values.sharedBuffers }}
 - name: POSTGRES_MAX_PREPARED_TRANSACTIONS
   value: "{{ .Values.maxPreparedTransactions }}"
+{{- end -}}
+
+{{- define "postgresql.selector" -}}
+app.kubernetes.io/instance: {{ .Release.Name }}-postgresql
 {{- end -}}
 
 {{- define "postgresql.deploymentName" -}}

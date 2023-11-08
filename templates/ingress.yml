@@ -4,7 +4,6 @@ kind: Ingress
 metadata:
   name: {{ .Release.Name }}
   labels: {{ include "keycloak.labels" $ | nindent 4 }}
-{{- include "keycloak.merged.ingress.annotations" $ | nindent 2 }}
 spec:
   rules:
   - host: {{ include "keycloak.host" . }}
