@@ -1,0 +1,126 @@
+# SPDX-FileCopyrightText: 2023 Deutsche Telekom AG
+#
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  annotations:
+  {{ include "keycloak.checksums" $ | nindent 4 }}
+  labels: {{ include "keycloak.labels" $ | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicas }}
+  {{- end }}
+  selector:
+    matchLabels: {{ include "keycloak.selector" $ | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+      {{- include "keycloak.checksums" $ | nindent 8 }}
+{{- if eq .Values.prometheus.enabled true }}
+        prometheus.io/path: '{{ .Values.prometheus.path | default "/metrics" }}'
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '{{ .Values.prometheus.port | default 9542 }}'
+{{- end }}
+      labels: 
+      {{- include "keycloak.labels" $ | nindent 8 }}
+    spec:
+      {{- include "image_pull_secrets" $ | indent 6 }}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/instance
+                  operator: In
+                  values:
+                  - {{ .Release.Name }}-keycloak
+              topologyKey: {{ include "platformSpecificValue" (list $ . ".Values.topologyKey") | default "kubernetes.io/hostname" }}
+      serviceAccount: ""
+      serviceAccountName: ""
+      containers:
+      - name: haproxy
+        image: {{ .Values.haproxy.image }}
+        imagePullPolicy: {{ .Values.haproxy.imagePullPolicy | default .Values.global.imagePullPolicy }}
+        ports:
+        - { containerPort: 9090, protocol: TCP, name: http }
+        {{- if eq .Values.prometheus.enabled true }}
+        - { containerPort: {{ .Values.prometheus.port | default 9542 }}, protocol: TCP, name: metrics-http }
+        {{- end }}
+        resources: {{ .Values.haproxy.resources | toYaml | nindent 10 }}
+        volumeMounts:
+        - name: ha-proxy-config
+          mountPath: /usr/local/etc/haproxy
+      - name: keycloak
+        image: {{ .Values.keycloak.image }}
+        imagePullPolicy: {{ .Values.imagePullPolicy | default .Values.global.imagePullPolicy }}
+        {{- if .Values.truststore }}
+        args: ['start --optimized --import-realm --spi-truststore-file-file=/truststore/truststore.jks --spi-truststore-file-password={{ .Values.truststorePassword }} --spi-truststore-file-hostname-verification-policy={{ .Values.hostnameVerificationPolicy }}']
+        {{- else }}
+        args: ['start --optimized --import-realm']
+        {{- end }}
+        env:
+        {{- include "keycloak.env" $ | indent 8 }}
+        {{- with .Values.livenessProbe }}
+        livenessProbe:
+          {{- tpl . $ | nindent 10 }}
+        {{- end }}
+        {{- with .Values.readinessProbe }}
+        readinessProbe:
+          {{- tpl . $ | nindent 10 }}
+        {{- end }}
+        {{- with .Values.startupProbe }}
+        startupProbe:
+          {{- tpl . $ | nindent 10 }}
+        {{- end }}
+        resources: {{ .Values.resources | toYaml | nindent 10 }}
+        volumeMounts:
+        - name: config
+          mountPath: /opt/keycloak/conf/
+        - name: tmp
+          mountPath: /tmp
+        - name: tmp
+          mountPath: /opt/keycloak/data/tmp
+        {{- if .Values.truststore }}
+        - name: secrets
+          mountPath: /truststore
+          readOnly: true
+        {{- end }}
+        {{- include "keycloak.db.certificates.volumeMount" $ | indent 8 }}
+      initContainers:
+      - name: "check-database"
+        image: {{ .Values.image }}
+        imagePullPolicy: {{ .Values.postgresql.imagePullPolicy | default .Values.global.imagePullPolicy }}
+        command: ['/bin/bash']
+        args: ['-c', 'until pg_isready -U {{ .Values.global.database.username }}; do echo waiting for database; sleep 2; done;']
+        env:
+        {{- include "keycloak.checkdatabase.env" $ | indent 8 }}
+        resources: {{ .Values.postgresql.resources | toYaml | nindent 10 }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds | default 60 }}
+      volumes:
+      - name: tmp
+        emptyDir: {}
+      - name: jboss
+        emptyDir: {}
+      - name: config
+        configMap:
+          name: {{ .Release.Name }}-cache-config
+      - name: ha-proxy-config
+        configMap:
+          name: {{ .Release.Name }}-ha-proxy-config
+      - name: realms
+        configMap:
+          name: {{ .Release.Name }}-realm
+      {{- if .Values.truststore }}
+      - name: secrets
+        secret:
+          secretName: {{ .Release.Name }}
+          items:
+            - key: truststore.jks
+              path: truststore.jks
+      {{- end }}
+      {{- include "keycloak.db.certificates.volume" $ | indent 6 }}

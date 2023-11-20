@@ -1,0 +1,43 @@
+# SPDX-FileCopyrightText: 2023 Deutsche Telekom AG
+#
+# SPDX-License-Identifier: Apache-2.0
+
+{{- if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}
+  labels: {{ include "keycloak.labels" $ | nindent 4 }}
+spec:
+  rules:
+  - host: {{ include "keycloak.host" . }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .Release.Name }}
+            port:
+              number: 80
+{{- if not (empty .Values.ingress.altHostname) }}
+  - host: {{ .Values.ingress.altHostname  }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .Release.Name }}
+            port:
+              number: 80
+{{- end }}
+{{- include "keycloak.ingress.ingressClassName" . | nindent 2 }}
+  tls:
+  - hosts:
+    - {{ include "keycloak.host" . }}
+{{- if not (empty .Values.ingress.altHostname) }}
+    secretName: {{ .Release.Namespace }}-wildcard
+{{- end }}
+{{- include "keycloak.ingress.tlsSecret" . | nindent 4 -}}
+{{- end }}

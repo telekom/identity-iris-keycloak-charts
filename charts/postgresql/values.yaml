@@ -1,0 +1,55 @@
+# SPDX-FileCopyrightText: 2023 Deutsche Telekom AG
+#
+# SPDX-License-Identifier: Apache-2.0
+
+global:
+  metadata:
+    pipeline: {}
+    
+  platform: kubernetes
+  #storageClassName: gp2
+  imagePullSecrets: []
+
+  imagePullPolicy: IfNotPresent
+
+  database:
+    location: local
+    # Set host if you use an external database or service name is not sufficient
+    host: localhost
+    port: 5432
+    database: pgdb
+    username: pgusr
+    password: not_secure_pwd
+
+  failOnUnsetValues: true
+
+# maximum number of client connections
+maxConnections: "100"
+
+# memory dedicated to PostgreSQL for caching data
+sharedBuffers: "32MB"
+
+# maximum number of transactions that can be in the "prepared" state simultaneously
+# setting this parameter to zero (default) disables the prepared-transaction feature
+maxPreparedTransactions: "0"
+
+image: bitnami/postgresql:12.3.0-debian-10-r70
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 500Mi
+  requests:
+    cpu: 20m
+    memory: 200Mi
+
+persistence:
+  keepOnDelete: false
+  storageClassName: standard
+  resources:
+    requests:
+      storage: 1Gi
+  #mountDir: '/var/lib/postgresql/data'
+
+deployment:
+  annotations: {}
