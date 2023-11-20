@@ -1,6 +1,3 @@
-{* SPDX-FileCopyrightText: 2023 Deutsche Telekom AG *}
-{* SPDX-License-Identifier: Apache-2.0 *}
-
 {{- define "postgresql.labels" -}}
 app.kubernetes.io/instance: {{ .Release.Name }}-postgresql
 app.kubernetes.io/name: postgresql

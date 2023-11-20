@@ -1,7 +1,3 @@
-{* SPDX-FileCopyrightText: 2023 Deutsche Telekom AG *}
-{* SPDX-License-Identifier: Apache-2.0 *}
-
-
 {{- define "keycloak.labels" -}}
 app: {{ .Release.Name }}
 helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
