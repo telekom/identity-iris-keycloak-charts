@@ -1,0 +1,263 @@
+# SPDX-FileCopyrightText: 2023 Deutsche Telekom AG
+#
+# SPDX-License-Identifier: Apache-2.0
+
+global:
+  metadata:
+    pipeline: {}
+
+  platform: kubernetes
+  #pathToSecret: "path/to/secret"
+  #storageClassName: gp2
+  domain: ""
+  labels:
+    # fluentd label
+  product: "iris_keycloak"
+  ingress:
+    #tlsSecret: ""
+    #ingressClassName: ""
+    annotations:
+      {}
+      #external-dns.alpha.kubernetes.io/target: ""
+      #kubernetes.io/ingress.class: ""
+
+  # If imagePullSecrets is not empty, a pull secret will be deployed for each entry otherwise
+  # no pull secret will be deployed
+  # If you use Sapling for deployment this will be set automatically
+  imagePullSecrets: []
+  #- name: secret
+  #  registry: https://<your-registry>
+  #  username: changeme
+  #  password: changeme
+  imagePullPolicy: IfNotPresent
+
+  passwordRules:
+    enabled: false
+    length: 12
+    mustMatch:
+      - "[a-z]"
+      - "[A-Z]"
+      - "[0-9]"
+      - "[^a-zA-Z0-9]"
+
+  database:
+    location: local
+    #port: 5432
+    database: pgdb
+    username: pgusr
+    password: not_secure_pwd
+
+  failOnUnsetValues: true
+
+#imagePullPolicy: IfNotPresent
+
+# You can list files (in /templates) here that should cause a re-deployment of your application
+# when their contents change
+# This makes sense if you change configMaps or secrets, and you
+# want your deployment to use the latest configuration
+templateChangeTriggers: []
+#- my-custom-configmap.yaml
+
+#podSecurityContext: {}
+  #fsGroup: 999
+  #supplementalGroups: 999
+
+#containerSecurityContext: {}
+#topologyKey: kubernetes.io/hostname
+
+
+# Keycloak admin role credentials
+adminUsername: admin
+adminPassword: changeme
+
+# Truststore for Keycloak
+# When Keytool is used, make sure to print out the store in base64 value
+# If not used, watch out for the secret, as it will be printed in there as a raw string
+# Example:
+#  truststore: |
+#    MIIVaAIBAzCCFRIGCSqGSIb3DQEHAaCCFQMEghT/MIIU+zCCBbIGCSqGSIb3DQEHAaCCBaMEggWf
+#    ... data as created from JKS keystore by "cat ./keystore.jks | base64"
+#    yMsfLrPfvuYCAicQ 
+truststore: {}
+# Needed to access the Truststore
+truststorePassword: password
+# Set the hostname verification policy
+# ANY: do no verification
+# WILDCARD: *.hostname
+# STRICT: host.hostname
+hostnameVerificationPolicy: WILDCARD
+# Enable the preconfigured rover realm for rover client access. If you overwrite the realms config, this will be invalidated.
+roverRealmEnabled: false
+# Use this configuration
+# to create realms with public clients
+# This will create a _generated.json in /realms/
+# Note:
+# If you copy your own json files into /realms (via Sapling for example)
+# no _generated.json will be created!
+realms:
+#- name: adfs
+#  enabled: false
+#  accessTokenLifespan: 300
+#  defaultProvider: adfs-idp
+#  clients:
+#  - name: chevron
+#    redirectUris:
+#    - 'http://change.me/*'
+#    webOrigins:
+#    - 'http://change.me'
+#  - name: chevron-ui
+#    rootUrl: 'http://change.me'
+#    redirectUris:
+#    - 'http://change.me/*'
+#    webOrigins:
+#    - 'http://change.me'
+#  identityProviders:
+#    - name: adfs-idp
+#      displayName: ADFS
+#      signingCertificate: MIIC2DCCr...
+#      singleLogoutServiceUrl: https://<server-uri>/adfs/ls/
+#      singleSignOnServiceUrl: https://<server-uri>/adfs/ls/
+#      encryptionPublicKey: MIIC3jCC...
+#      mappers:
+#      - type: adfs-email
+#      - type: adfs-group
+#      - type: custom
+#        name: firstname
+#        attributeName: http://attrurl.me/
+#        category: saml-user-attribute-idp-mapper
+#        userAttribute: firstName
+
+replicas: 1
+
+autoscaling:
+  enabled: false
+  #minReplicas: 2
+  #maxReplicas: 4
+  #targetCPUUtilizationPercentage: 80
+
+resources:
+  limits:
+    cpu: 1
+    memory: 1Gi
+  requests:
+    cpu: 100m
+    memory: 600Mi
+
+livenessProbe: |-
+  httpGet:
+    path: '/auth/'
+    port: 8080
+  initialDelaySeconds: 300
+  timeoutSeconds: 5
+
+readinessProbe: |-
+  httpGet:
+    path: '/auth/realms/master'
+    port: 8080
+  initialDelaySeconds: 30
+  timeoutSeconds: 1
+
+startupProbe: |-
+  httpGet:
+    path: '/auth/'
+    port: 8080
+  initialDelaySeconds: 30
+  timeoutSeconds: 1
+  failureThreshold: 60
+  periodSeconds: 5
+
+terminationGracePeriodSeconds: 60
+
+#logLevel: INFO
+
+ingress:
+  enabled: true
+  hostname: localhost
+  # alternative second host name in ingress
+  #altHostname: ""
+  # overwrite host used in KC_HOSTNAME
+  #adminHostname: ""
+  #tlsSecret: ""
+  #ingressClassName: ""
+  annotations: {}
+
+prometheus:
+  enabled: true
+  authToken: changeme
+  #port: 9542
+  #path: /metrics
+  # podMonitor is used to provide a PodMonitor CRD to integrate with prometheus operator
+  # prometheus has to be enabled to use this
+  serviceMonitor:
+    enabled: true
+    #selector: "guardians-raccoon"
+    #scheme: http
+    #interval: "15s"
+    #scrapeTimeout: "3s"
+    #honorLabels: ""
+  podMonitor:
+    enabled: false
+    #selector: "guardians-raccoon"
+    #scheme: http
+    #interval: "15s"
+    #scrapeTimeout: "3s"
+    #honorLabels: ""
+
+customConfig:
+  # With the following setting one can set the frontendUrl configuration for hostname SPI
+  #frontendUrl: '${keycloak.frontendUrl:}'
+
+  spi: {}
+  # As an alternative, one can replace the whole SPI "hostname" configuration block, however this overrides the frontendUrl variable
+  #spi:
+  #  hostname: |-
+  #   <spi name="hostname">
+  #     <!-- some xml config -->
+  #   </spi>
+keycloak:
+  image: iris_keycloak:latest
+
+haproxy:
+  image: haproxy:2.4.0-alpine
+  resources:
+    limits:
+      memory: 1Gi
+      cpu: 1
+    requests:
+      memory: 250Mi
+      cpu: 250m
+
+postgresql:
+  #containerSecurityContext: {}
+
+  maxPreparedTransactions: "100"
+
+  # You can force using a specific image here:
+  #image: <your-image>
+  #imagePullPolicy: IfNotPresent
+
+  resources:
+    limits:
+      cpu: 100m
+      memory: 500Mi
+    requests:
+      cpu: 20m
+      memory: 200Mi
+
+externalDatabase:
+  # Set host if you use an external database or service name is not sufficient
+  #host: ''
+  ssl: false
+  #sslMode: 'verify-full'
+  #sslCert: |
+  #  -----BEGIN CERTIFICATE-----
+  #  <CA certificate in PEM format here>
+  #  -----END CERTIFICATE-----
+  #sslKey: |
+  #  -----BEGIN PRIVATE KEY-----
+  #  <pk8 in PEM format here>
+  #  -----END PRIVATE KEY-----
+  #sslRootCert: |
+  #  -----BEGIN CERTIFICATE-----
+  #  <Root certificate in PEM format here>
+  #  -----END CERTIFICATE-----

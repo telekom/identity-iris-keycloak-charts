@@ -1,0 +1,58 @@
+# SPDX-FileCopyrightText: 2023 Deutsche Telekom AG
+#
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion : v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-cache-config
+  labels: {{ include "keycloak.labels" $ | nindent 4 }}
+data:
+  infinispan.xml: |-
+    <?xml version="1.0" encoding="UTF-8"?>
+    <infinispan
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="urn:infinispan:config:13.0 http://www.infinispan.org/schemas/infinispan-config-13.0.xsd"
+            xmlns="urn:infinispan:config:13.0">
+      <cache-container name="keycloak">
+        <transport stack="kubernetes" lock-timeout="60000"/>
+            <local-cache name="realms">
+              <memory storage="HEAP" max-size="10000"/>            
+            </local-cache>
+            <local-cache name="users">
+              <memory storage="HEAP" max-size="10000"/>   
+            </local-cache>
+            <local-cache name="authorization">
+                <memory storage="HEAP" max-size="10000"/>   
+            </local-cache>
+            <local-cache name="keys">
+                <memory storage="HEAP" max-size="1000"/>   
+                <expiration max-idle="3600000"/>
+            </local-cache>
+            <replicated-cache name="work">
+                <expiration lifespan="900000000000000000"/>
+            </replicated-cache>
+            <distributed-cache name="sessions" owners="2">
+                <expiration lifespan="900000000000000000"/>
+            </distributed-cache>
+            <distributed-cache name="authenticationSessions" owners="2">
+                <expiration lifespan="900000000000000000"/>
+            </distributed-cache>
+            <distributed-cache name="offlineSessions" owners="2">
+                <expiration lifespan="900000000000000000"/>
+            </distributed-cache>
+            <distributed-cache name="clientSessions" owners="2">
+                <expiration lifespan="900000000000000000"/>
+            </distributed-cache>
+            <distributed-cache name="offlineClientSessions" owners="2">
+                <expiration lifespan="900000000000000000"/>
+            </distributed-cache>
+            <distributed-cache name="loginFailures" owners="2">
+                <expiration lifespan="900000000000000000"/>
+            </distributed-cache>
+            <distributed-cache name="actionTokens" owners="2">
+                <memory storage="HEAP" max-size="-1"/>
+                <expiration interval="300000" lifespan="900000000000000000" max-idle="-1"/>
+            </distributed-cache>
+        </cache-container>
+    </infinispan>

@@ -1,0 +1,60 @@
+# SPDX-FileCopyrightText: 2023 Deutsche Telekom AG
+#
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion : v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-ha-proxy-config
+  labels: {{ include "keycloak.labels" $ | nindent 4 }}
+data:
+  haproxy.cfg: |
+
+    global
+      log stdout format raw local0 err
+
+    defaults
+      log global
+        timeout connect 5000
+        timeout check 5000
+        timeout client 30000
+        timeout server 30000
+        timeout queue   100s
+
+    # listening ports
+    frontend ft_http
+        bind :9090
+        mode http
+        option httplog
+        # Deny requests containing request_uri as a URL parameter
+        # acl block_url_param urlp(request_uri) -m found
+        # http-request deny if block_url_param
+        default_backend be_http_default
+{{ if eq .Values.prometheus.enabled true }}    
+    frontend metrics_http
+        bind :{{ .Values.prometheus.port | default 9542 }}
+        mode http
+        option httplog
+        # use metrics backend if the path is {{ .Values.prometheus.path | default "/metrics" }}
+        use_backend be_metrics_default if { path {{ .Values.prometheus.path | default "/metrics" }} } 
+{{- end }}
+    # traffic routing
+    backend be_http_default
+        mode http
+        # access control list (rule) 
+        # name of the rule
+        # urlp($param_name) extract parameter
+        # -m string match
+        # found pattern matching method which means "only check if the requested sample could be found in the stream" 
+        acl block_url_param urlp(request_uri) -m found
+        acl protect_metrics path -m sub metrics
+        # block http requests if rule applies
+        http-request deny if block_url_param || protect_metrics
+        # route to keycloak
+        server s1 127.0.0.1:8080
+    
+    backend be_metrics_default
+        mode http
+        http-request set-path /auth/realms/master/metrics
+        server s1 127.0.0.1:8080
+
