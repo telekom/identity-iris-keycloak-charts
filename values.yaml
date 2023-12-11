@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2023 Deutsche Telekom AG
+#
+# SPDX-License-Identifier: Apache-2.0
+
 global:
   metadata:
     pipeline: {}
@@ -8,7 +12,7 @@ global:
   domain: ""
   labels:
     # fluentd label
-  product: "custom_keycloak"
+  product: "iris_keycloak"
   ingress:
     #tlsSecret: ""
     #ingressClassName: ""
@@ -211,7 +215,7 @@ customConfig:
   #     <!-- some xml config -->
   #   </spi>
 keycloak:
-  image: custom_keycloak:latest
+  image: iris_keycloak:latest
 
 haproxy:
   image: haproxy:2.4.0-alpine
