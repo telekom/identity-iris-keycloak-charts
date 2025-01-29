@@ -3,7 +3,7 @@
 imagePullSecrets:
 {{- range .Values.global.imagePullSecrets }}
 {{- if not (kindIs "string" .) }}
-  - name: {{ $.Release.Name }}-{{ .name }}
+  - name: {{ .name }}
 {{- else }}
   - name: {{ . }}
 {{- end -}}
