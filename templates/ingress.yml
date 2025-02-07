@@ -41,6 +41,7 @@ spec:
   - hosts:
     - {{ include "keycloak.host" . }}
 {{- if not (empty .Values.ingress.altHostname) }}
+    - {{ .Values.ingress.altHostname }}
     secretName: {{ .Release.Namespace }}-wildcard
 {{- end }}
 {{- include "keycloak.ingress.tlsSecret" . | nindent 4 -}}
