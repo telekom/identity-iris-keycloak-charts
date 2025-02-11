@@ -13,6 +13,12 @@ global:
   labels:
     # fluentd label
   product: "iris_keycloak"
+  ingress:
+    # tlsSecret: ""
+    # ingressClassName: ""
+    annotations: {}
+      # external-dns.alpha.kubernetes.io/target: ""
+      # kubernetes.io/ingress.class: ""
 
 
   # If imagePullSecrets is not empty, a pull secret will be deployed for each entry otherwise
@@ -172,7 +178,7 @@ ingress:
   #altHostname: ""
   # overwrite host used in KC_HOSTNAME
   #adminHostname: ""
-  tlsSecret: ""
+  # tlsSecret: ""
   ingressClassName: "nginx"
   annotations: {}
     # external-dns.alpha.kubernetes.io/target: ""

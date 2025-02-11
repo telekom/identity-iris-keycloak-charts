@@ -131,14 +131,21 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- end -}}
 {{ end -}}
 
+{{- define "keycloak.ingress.annotations" }}
+{{- $globalAnnotations := dict "annotations" .Values.global.ingress.annotations | deepCopy -}}
+{{- $localAnnotations := dict "annotations" .Values.ingress.annotations -}}
+{{- $mergedAnnotations := mergeOverwrite $globalAnnotations $localAnnotations }}
+{{- $mergedAnnotations | toYaml -}}
+{{ end -}}
+
 {{- define "keycloak.ingress.tlsSecret" -}}
-{{- if not (and (empty .Values.ingress.tlsSecret) (empty .Values.ingress.tlsSecret)) -}}
-secretName: {{ .Values.ingress.tlsSecret | default .Values.ingress.tlsSecret -}}
+{{- if not (and (empty .Values.ingress.tlsSecret) (empty .Values.global.ingress.tlsSecret)) -}}
+secretName: {{ .Values.ingress.tlsSecret | default .Values.global.ingress.tlsSecret -}}
 {{- end -}}
 {{- end -}}
 
 {{- define "keycloak.ingress.ingressClassName" -}}
-{{- if or (include "platformSpecificValue" (list $ . ".Values.ingress.ingressClassName")) (include "platformSpecificValue" (list $ . ".Values.ingress.ingressClassName")) -}}
-ingressClassName: {{ include "platformSpecificValue" (list $ . ".Values.ingress.ingressClassName") | default (include "platformSpecificValue" (list $ . ".Values.ingress.ingressClassName")) }}
+{{- if or (include "platformSpecificValue" (list $ . ".Values.ingress.ingressClassName")) (include "platformSpecificValue" (list $ . ".Values.global.ingress.ingressClassName")) -}}
+ingressClassName: {{ include "platformSpecificValue" (list $ . ".Values.ingress.ingressClassName") | default (include "platformSpecificValue" (list $ . ".Values.global.ingress.ingressClassName")) }}
 {{- end -}}
 {{- end -}}
