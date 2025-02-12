@@ -131,6 +131,13 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- end -}}
 {{ end -}}
 
+{{- define "keycloak.ingress.annotations" }}
+{{- $globalAnnotations := dict "annotations" .Values.global.ingress.annotations | deepCopy -}}
+{{- $localAnnotations := dict "annotations" .Values.ingress.annotations -}}
+{{- $mergedAnnotations := mergeOverwrite $globalAnnotations $localAnnotations }}
+{{- $mergedAnnotations | toYaml -}}
+{{ end -}}
+
 {{- define "keycloak.ingress.tlsSecret" -}}
 {{- if not (and (empty .Values.ingress.tlsSecret) (empty .Values.global.ingress.tlsSecret)) -}}
 secretName: {{ .Values.ingress.tlsSecret | default .Values.global.ingress.tlsSecret -}}
