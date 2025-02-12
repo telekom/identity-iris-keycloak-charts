@@ -228,9 +228,7 @@ keycloak:
 
 haproxy:
   image: haproxy:2.4.0-alpine
-
   containerSecurityContext: {}
-
   resources:
     limits:
       memory: 1Gi
