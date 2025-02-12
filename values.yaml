@@ -46,7 +46,6 @@ global:
     database: pgdb
     username: pgusr
     password: not_secure_pwd
-    adminPassword: changeme
 
   failOnUnsetValues: true
 
