@@ -14,12 +14,12 @@ global:
     # fluentd label
   product: "iris_keycloak"
   ingress:
-    #tlsSecret: ""
-    #ingressClassName: ""
-    annotations:
-      {}
-      #external-dns.alpha.kubernetes.io/target: ""
-      #kubernetes.io/ingress.class: ""
+    # tlsSecret: ""
+    # ingressClassName: ""
+    annotations: {}
+      # external-dns.alpha.kubernetes.io/target: ""
+      # kubernetes.io/ingress.class: ""
+
 
   # If imagePullSecrets is not empty, a pull secret will be deployed for each entry otherwise
   # no pull secret will be deployed
@@ -180,9 +180,15 @@ ingress:
   #altHostname: ""
   # overwrite host used in KC_HOSTNAME
   #adminHostname: ""
-  #tlsSecret: ""
-  #ingressClassName: ""
+  # tlsSecret: ""
+  ingressClassName: "nginx"
   annotations: {}
+    # external-dns.alpha.kubernetes.io/target: ""
+    # kubernetes.io/ingress.class: ""
+
+    ## With multiple replicas it might be necessary to add below cookie options to the ingress.
+    # nginx.ingress.kubernetes.io/affinity: 'cookie'
+    # nginx.ingress.kubernetes.io/session-cookie-path: '/'
 
 prometheus:
   enabled: true
