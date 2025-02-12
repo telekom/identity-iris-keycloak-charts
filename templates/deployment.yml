@@ -24,7 +24,7 @@ spec:
         prometheus.io/scrape: 'true'
         prometheus.io/port: '{{ .Values.prometheus.port | default 9542 }}'
 {{- end }}
-      labels: 
+      labels:
       {{- include "keycloak.labels" $ | nindent 8 }}
     spec:
       {{- include "image_pull_secrets" $ | indent 6 }}
@@ -42,10 +42,12 @@ spec:
               topologyKey: {{ include "platformSpecificValue" (list $ . ".Values.topologyKey") | default "kubernetes.io/hostname" }}
       serviceAccount: ""
       serviceAccountName: ""
+      securityContext: {{ include "platformSpecificValue" (list $ . ".Values.podSecurityContext") | default "{}" | nindent 8 }}
       containers:
       - name: haproxy
         image: {{ .Values.haproxy.image }}
         imagePullPolicy: {{ .Values.haproxy.imagePullPolicy | default .Values.global.imagePullPolicy }}
+        securityContext: {{ include "platformSpecificValue" (list $ . ".Values.haproxy.containerSecurityContext") | default "{}" | nindent 10 }}
         ports:
         - { containerPort: 9090, protocol: TCP, name: http }
         {{- if eq .Values.prometheus.enabled true }}
@@ -58,6 +60,7 @@ spec:
       - name: keycloak
         image: {{ .Values.keycloak.image }}
         imagePullPolicy: {{ .Values.imagePullPolicy | default .Values.global.imagePullPolicy }}
+        securityContext: {{ include "platformSpecificValue" (list $ . ".Values.containerSecurityContext") | default "{}" | nindent 10 }}
         {{- if .Values.truststore }}
         args: ['start --optimized --import-realm --spi-truststore-file-file=/truststore/truststore.jks --spi-truststore-file-password={{ .Values.truststorePassword }} --spi-truststore-file-hostname-verification-policy={{ .Values.hostnameVerificationPolicy }}']
         {{- else }}
@@ -95,6 +98,7 @@ spec:
       - name: "check-database"
         image: {{ .Values.postgresql.image }}
         imagePullPolicy: {{ .Values.postgresql.imagePullPolicy | default .Values.global.imagePullPolicy }}
+        securityContext: {{ include "platformSpecificValue" (list $ . ".Values.postgresql.containerSecurityContext") | default "{}" | nindent 10 }}
         command: ['/bin/bash']
         args: ['-c', 'until pg_isready -U {{ .Values.global.database.username }}; do echo waiting for database; sleep 2; done;']
         env:

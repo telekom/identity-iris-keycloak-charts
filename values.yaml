@@ -62,7 +62,10 @@ templateChangeTriggers: []
   #fsGroup: 999
   #supplementalGroups: 999
 
-#containerSecurityContext: {}
+containerSecurityContext: {}
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+
 #topologyKey: kubernetes.io/hostname
 
 
@@ -225,6 +228,7 @@ keycloak:
 
 haproxy:
   image: haproxy:2.4.0-alpine
+  containerSecurityContext: {}
   resources:
     limits:
       memory: 1Gi
@@ -234,7 +238,7 @@ haproxy:
       cpu: 250m
 
 postgresql:
-  #containerSecurityContext: {}
+  containerSecurityContext: {}
 
   maxPreparedTransactions: "100"
 
