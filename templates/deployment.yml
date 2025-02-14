@@ -62,9 +62,9 @@ spec:
         imagePullPolicy: {{ .Values.imagePullPolicy | default .Values.global.imagePullPolicy }}
         securityContext: {{ include "platformSpecificValue" (list $ . ".Values.containerSecurityContext") | default "{}" | nindent 10 }}
         {{- if .Values.truststore }}
-        args: ['start --optimized --import-realm --spi-truststore-file-file=/truststore/truststore.jks --spi-truststore-file-password={{ .Values.truststorePassword }} --spi-truststore-file-hostname-verification-policy={{ .Values.hostnameVerificationPolicy }}']
+        args: ['start','--optimized','--import-realm','--spi-truststore-file-file=/truststore/truststore.jks','--spi-truststore-file-password={{ .Values.truststorePassword }}','--spi-truststore-file-hostname-verification-policy={{ .Values.hostnameVerificationPolicy }}']
         {{- else }}
-        args: ['start --optimized --import-realm']
+        args: ['start','--optimized','--import-realm']
         {{- end }}
         env:
         {{- include "keycloak.env" $ | indent 8 }}

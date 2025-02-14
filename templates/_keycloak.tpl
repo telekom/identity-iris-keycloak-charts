@@ -4,6 +4,9 @@ helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
 app.kubernetes.io/name: keycloak
 {{ include "keycloak.selector" . }}
 app.kubernetes.io/component: idp
+{{- if .Values.global.labels }}
+{{ .Values.global.labels | toYaml }}
+{{- end }}
 {{- end -}}
 
 {{- define "keycloak.selector" -}}
@@ -44,14 +47,22 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- define "keycloak.env" }}
 - name: KC_HOSTNAME
   value: {{ include "keycloak.adminHost" $ }}
-- name: KC_PROXY
-  value: edge
+- name: KC_PROXY_HEADERS
+  value: "xforwarded"
 - name: KC_HTTP_ENABLED
   value: "true"
-- name: KC_CACHE_CONFIG_FILE  
+- name: KC_CACHE
+  value: "ispn"
+- name: KC_CACHE_STACK
+  value: "kubernetes"
+- name: KC_CACHE_CONFIG_FILE
   value: infinispan.xml
-- name: jgroups.dns.query
-  value: {{ .Release.Name }}-jgroups.{{ .Release.Namespace }}
+- name: QUARKUS_TRANSACTION_MANAGER_ENABLE_RECOVERY
+  value: "false"
+- name: JAVA_OPTS_APPEND
+  value: -Djgroups.dns.query={{ .Release.Name }}-jgroups.{{ .Release.Namespace }}
+- name: URI_METRICS_ENABLED
+  value: "true"
 - name: KEYCLOAK_ADMIN
   value: {{ .Values.adminUsername }}
 - name: KEYCLOAK_ADMIN_PASSWORD
@@ -68,7 +79,7 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 - name: KC_DB_URL_HOST
   value: {{ include "database.host" $ }}
 - name: KC_DB_URL_DATABASE
-  value: {{ .Values.global.database.database }} 
+  value: {{ .Values.global.database.database }}
 {{- if .Values.global.database.schema }}
 - name: KC_DB_SCHEMA
   value: {{ .Values.global.database.schema }}
@@ -115,6 +126,13 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- printf "%s-%s.%s" .Release.Name .Release.Namespace .Values.global.domain }}
 {{- end -}}
 {{- end -}}
+
+{{- define "keycloak.merged.ingress.annotations" }}
+{{- $globalAnnotations := dict "annotations" .Values.global.ingress.annotations | deepCopy -}}
+{{- $localAnnotations := dict "annotations" .Values.ingress.annotations -}}
+{{- $mergedAnnotations := mergeOverwrite $globalAnnotations $localAnnotations }}
+{{- $mergedAnnotations | toYaml -}}
+{{ end -}}
 
 {{- define "keycloak.db.certificates.volume" }}
 {{- if .Values.externalDatabase.ssl }}

@@ -7,7 +7,8 @@ global:
     pipeline: {}
     
   platform: kubernetes
-  #storageClassName: gp2
+  #storageClassName: gp-3
+
   imagePullSecrets: []
 
   imagePullPolicy: IfNotPresent

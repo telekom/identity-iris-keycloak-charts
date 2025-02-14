@@ -12,26 +12,24 @@ data:
     <?xml version="1.0" encoding="UTF-8"?>
     <infinispan
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="urn:infinispan:config:13.0 http://www.infinispan.org/schemas/infinispan-config-13.0.xsd"
-            xmlns="urn:infinispan:config:13.0">
-      <cache-container name="keycloak">
-        <transport stack="kubernetes" lock-timeout="60000"/>
-            <local-cache name="realms">
-              <memory storage="HEAP" max-size="10000"/>            
+            xsi:schemaLocation="urn:infinispan:config:15.0 http://www.infinispan.org/schemas/infinispan-config-15.0.xsd"
+            xmlns="urn:infinispan:config:15.0">
+        <cache-container name="keycloak">
+            <transport stack="kubernetes" lock-timeout="60000"/>
+            <local-cache name="realms" simple-cache="true">
+                <encoding>
+                    <key media-type="application/x-java-object"/>
+                    <value media-type="application/x-java-object"/>
+                </encoding>
+                <memory max-count="100"/>
             </local-cache>
-            <local-cache name="users">
-              <memory storage="HEAP" max-size="10000"/>   
+            <local-cache name="users" simple-cache="true">
+                <encoding>
+                    <key media-type="application/x-java-object"/>
+                    <value media-type="application/x-java-object"/>
+                </encoding>
+                <memory max-count="1000"/>
             </local-cache>
-            <local-cache name="authorization">
-                <memory storage="HEAP" max-size="10000"/>   
-            </local-cache>
-            <local-cache name="keys">
-                <memory storage="HEAP" max-size="1000"/>   
-                <expiration max-idle="3600000"/>
-            </local-cache>
-            <replicated-cache name="work">
-                <expiration lifespan="900000000000000000"/>
-            </replicated-cache>
             <distributed-cache name="sessions" owners="2">
                 <expiration lifespan="900000000000000000"/>
             </distributed-cache>
@@ -50,9 +48,31 @@ data:
             <distributed-cache name="loginFailures" owners="2">
                 <expiration lifespan="900000000000000000"/>
             </distributed-cache>
+            <local-cache name="authorization" simple-cache="true">
+                <encoding>
+                    <key media-type="application/x-java-object"/>
+                    <value media-type="application/x-java-object"/>
+                </encoding>
+                <memory max-count="1000"/>
+            </local-cache>
+            <replicated-cache name="work">
+                <expiration lifespan="900000000000000000"/>
+            </replicated-cache>
+            <local-cache name="keys" simple-cache="true">
+                <encoding>
+                    <key media-type="application/x-java-object"/>
+                    <value media-type="application/x-java-object"/>
+                </encoding>
+                <expiration max-idle="3600000"/>
+                <memory max-count="100"/>
+            </local-cache>
             <distributed-cache name="actionTokens" owners="2">
-                <memory storage="HEAP" max-size="-1"/>
-                <expiration interval="300000" lifespan="900000000000000000" max-idle="-1"/>
+                <encoding>
+                    <key media-type="application/x-java-object"/>
+                    <value media-type="application/x-java-object"/>
+                </encoding>
+                <expiration max-idle="-1" lifespan="900000000000000000" interval="300000"/>
+                <memory max-count="-1"/>
             </distributed-cache>
         </cache-container>
     </infinispan>
