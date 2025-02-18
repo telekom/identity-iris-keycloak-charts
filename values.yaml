@@ -8,7 +8,7 @@ global:
 
   platform: kubernetes
   #pathToSecret: "path/to/secret"
-  #storageClassName: gp-3
+  #storageClassName: ""
   #volumeName: "pvcNameToOverride"
   domain: ""
   labels:

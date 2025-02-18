@@ -7,7 +7,7 @@ global:
     pipeline: {}
     
   platform: kubernetes
-  #storageClassName: gp-3
+  #storageClassName: ""
 
   imagePullSecrets: []
 
