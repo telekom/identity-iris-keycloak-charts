@@ -127,13 +127,6 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- end -}}
 {{- end -}}
 
-{{- define "keycloak.merged.ingress.annotations" }}
-{{- $globalAnnotations := dict "annotations" .Values.global.ingress.annotations | deepCopy -}}
-{{- $localAnnotations := dict "annotations" .Values.ingress.annotations -}}
-{{- $mergedAnnotations := mergeOverwrite $globalAnnotations $localAnnotations }}
-{{- $mergedAnnotations | toYaml -}}
-{{ end -}}
-
 {{- define "keycloak.db.certificates.volume" }}
 {{- if .Values.externalDatabase.ssl }}
 - name: certificates
