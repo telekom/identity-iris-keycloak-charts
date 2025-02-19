@@ -80,46 +80,6 @@ truststorePassword: password
 # WILDCARD: *.hostname
 # STRICT: host.hostname
 hostnameVerificationPolicy: WILDCARD
-# Enable the preconfigured rover realm for rover client access. If you overwrite the realms config, this will be invalidated.
-roverRealmEnabled: false
-# Use this configuration
-# to create realms with public clients
-# This will create a _generated.json in /realms/
-# Note:
-# If you copy your own json files into /realms (via Sapling for example)
-# no _generated.json will be created!
-realms:
-#- name: adfs
-#  enabled: false
-#  accessTokenLifespan: 300
-#  defaultProvider: adfs-idp
-#  clients:
-#  - name: chevron
-#    redirectUris:
-#    - 'http://change.me/*'
-#    webOrigins:
-#    - 'http://change.me'
-#  - name: chevron-ui
-#    rootUrl: 'http://change.me'
-#    redirectUris:
-#    - 'http://change.me/*'
-#    webOrigins:
-#    - 'http://change.me'
-#  identityProviders:
-#    - name: adfs-idp
-#      displayName: ADFS
-#      signingCertificate: MIIC2DCCr...
-#      singleLogoutServiceUrl: https://<server-uri>/adfs/ls/
-#      singleSignOnServiceUrl: https://<server-uri>/adfs/ls/
-#      encryptionPublicKey: MIIC3jCC...
-#      mappers:
-#      - type: adfs-email
-#      - type: adfs-group
-#      - type: custom
-#        name: firstname
-#        attributeName: http://attrurl.me/
-#        category: saml-user-attribute-idp-mapper
-#        userAttribute: firstName
 
 replicas: 1
 
