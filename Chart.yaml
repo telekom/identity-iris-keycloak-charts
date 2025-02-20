@@ -1,11 +1,11 @@
-# SPDX-FileCopyrightText: 2023 Deutsche Telekom AG
+# SPDX-FileCopyrightText: 2025 Deutsche Telekom AG
 #
 # SPDX-License-Identifier: Apache-2.0
 
 apiVersion: v2
 name: iris_keycloak
-version: 1.0.0
-appVersion: 1.0.0
+version: 1.1.0
+appVersion: 1.1.0
 keywords:
 - iris_keycloak
 dependencies:

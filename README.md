@@ -1,5 +1,5 @@
 <!--
-SPDX-FileCopyrightText: 2023 Deutsche Telekom AG
+SPDX-FileCopyrightText: 2025 Deutsche Telekom AG
 
 SPDX-License-Identifier: CC0-1.0    
 -->
@@ -15,17 +15,18 @@ Default settings in this template are prepared for non-prod environments.
 
 ## Version
 
-| Installed software versions | Version Info            |    
-|-----------------------------|-------------------------|
-| Keycloak                    | 21.1.2                  |
-| PostgreSQL                  | 12.3                    |
+| Installed software versions | Version Info |    
+|-----------------------------|--------------|
+| Keycloak                    | 26.0.8       |
+| java                        | 17.0.9       |
+| PostgreSQL                  | 12.3         |
 
 ## Description
 
 **Important links:**
 
 - Keycloak
-    - [Keycloak documentation](https://www.keycloak.org/docs/latest/release_notes/index.html#keycloak-21-1-2)
+  - [Keycloak documentation](https://www.keycloak.org/docs/latest/release_notes/index.html#keycloak-26-0-0)
     - [Docker image documentation](https://hub.docker.com/r/jboss/keycloak/)
     - [GitHub repository](https://github.com/keycloak/keycloak)
     - [Iris keycloak image (IKI)](https://github.com/telekom/iris-image)

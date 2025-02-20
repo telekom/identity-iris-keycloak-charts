@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2023 Deutsche Telekom AG
+# SPDX-FileCopyrightText: 2025 Deutsche Telekom AG
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -7,6 +7,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: {{ include "postgresql.pvcName" . }}
+  finalizers: [ kubernetes.io/pvc-protection ]
   labels: {{ include "postgresql.labels" $ | nindent 4 }}
 {{- if .Values.persistence }}
   {{- if .Values.persistence.keepOnDelete }}
@@ -15,8 +16,11 @@ metadata:
   {{- end -}}
 {{- end }}
 spec:
-  storageClassName: {{ include "platformSpecificValue" (list $ . ".Values.global.storageClassName") | default .Values.persistence.storageClassName | default "gp2" }}
+  storageClassName: {{ include "platformSpecificValue" (list $ . ".Values.global.storageClassName") | default .Values.persistence.storageClassName | default "" }}
   accessModes:
     - ReadWriteOnce
   resources: {{ .Values.persistence.resources | toYaml | nindent 4 }}
+{{- if .Values.global.volumeName }}
+  volumeName: {{ .Values.global.volumeName }}
+{{- end }}
 {{- end }}

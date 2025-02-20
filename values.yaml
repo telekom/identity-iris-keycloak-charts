@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2023 Deutsche Telekom AG
+# SPDX-FileCopyrightText: 2025 Deutsche Telekom AG
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -8,7 +8,8 @@ global:
 
   platform: kubernetes
   #pathToSecret: "path/to/secret"
-  #storageClassName: gp2
+  #storageClassName: ""
+  #volumeName: "pvcNameToOverride"
   domain: ""
   labels:
     # fluentd label
@@ -20,25 +21,14 @@ global:
       # external-dns.alpha.kubernetes.io/target: ""
       # kubernetes.io/ingress.class: ""
 
-
   # If imagePullSecrets is not empty, a pull secret will be deployed for each entry otherwise
   # no pull secret will be deployed
-  # If you use Sapling for deployment this will be set automatically
   imagePullSecrets: []
   #- name: secret
   #  registry: https://<your-registry>
   #  username: changeme
   #  password: changeme
   imagePullPolicy: IfNotPresent
-
-  passwordRules:
-    enabled: false
-    length: 12
-    mustMatch:
-      - "[a-z]"
-      - "[A-Z]"
-      - "[0-9]"
-      - "[^a-zA-Z0-9]"
 
   database:
     location: local
@@ -89,46 +79,6 @@ truststorePassword: password
 # WILDCARD: *.hostname
 # STRICT: host.hostname
 hostnameVerificationPolicy: WILDCARD
-# Enable the preconfigured rover realm for rover client access. If you overwrite the realms config, this will be invalidated.
-roverRealmEnabled: false
-# Use this configuration
-# to create realms with public clients
-# This will create a _generated.json in /realms/
-# Note:
-# If you copy your own json files into /realms (via Sapling for example)
-# no _generated.json will be created!
-realms:
-#- name: adfs
-#  enabled: false
-#  accessTokenLifespan: 300
-#  defaultProvider: adfs-idp
-#  clients:
-#  - name: chevron
-#    redirectUris:
-#    - 'http://change.me/*'
-#    webOrigins:
-#    - 'http://change.me'
-#  - name: chevron-ui
-#    rootUrl: 'http://change.me'
-#    redirectUris:
-#    - 'http://change.me/*'
-#    webOrigins:
-#    - 'http://change.me'
-#  identityProviders:
-#    - name: adfs-idp
-#      displayName: ADFS
-#      signingCertificate: MIIC2DCCr...
-#      singleLogoutServiceUrl: https://<server-uri>/adfs/ls/
-#      singleSignOnServiceUrl: https://<server-uri>/adfs/ls/
-#      encryptionPublicKey: MIIC3jCC...
-#      mappers:
-#      - type: adfs-email
-#      - type: adfs-group
-#      - type: custom
-#        name: firstname
-#        attributeName: http://attrurl.me/
-#        category: saml-user-attribute-idp-mapper
-#        userAttribute: firstName
 
 replicas: 1
 
