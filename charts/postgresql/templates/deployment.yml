@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2023 Deutsche Telekom AG
+# SPDX-FileCopyrightText: 2025 Deutsche Telekom AG
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -24,6 +24,7 @@ spec:
       {{- include "postgresql.labels" $ | nindent 8 }}
     spec:
       {{- include "image_pull_secrets" $ | indent 6 }}
+      securityContext: {{ include "platformSpecificValue" (list $ . ".Values.podSecurityContext") | default "fsGroup: 999" | nindent 8 }}
       containers:
       - name: postgresql
         resources: {{ .Values.resources | toYaml | nindent 10 }}
@@ -31,6 +32,7 @@ spec:
         {{- include "postgresql.env" $ | indent 8 }}
         image: {{ .Values.image }}
         imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+        securityContext: {{ include "platformSpecificValue" (list $ . ".Values.containerSecurityContext") | default "{}" | nindent 10 }}
         ports:
         - containerPort: {{ .Values.global.database.port | default 5432 }}
           protocol: TCP
@@ -72,4 +74,3 @@ spec:
       dnsPolicy: ClusterFirst
       terminationGracePeriodSeconds: 30
 {{- end }}
-

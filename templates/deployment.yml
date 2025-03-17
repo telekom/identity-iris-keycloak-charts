@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2023 Deutsche Telekom AG
+# SPDX-FileCopyrightText: 2025 Deutsche Telekom AG
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -62,9 +62,9 @@ spec:
         imagePullPolicy: {{ .Values.imagePullPolicy | default .Values.global.imagePullPolicy }}
         securityContext: {{ include "platformSpecificValue" (list $ . ".Values.containerSecurityContext") | default "{}" | nindent 10 }}
         {{- if .Values.truststore }}
-        args: ['start --optimized --import-realm --spi-truststore-file-file=/truststore/truststore.jks --spi-truststore-file-password={{ .Values.truststorePassword }} --spi-truststore-file-hostname-verification-policy={{ .Values.hostnameVerificationPolicy }}']
+        args: ['start','--optimized','--spi-truststore-file-file=/truststore/truststore.jks','--spi-truststore-file-password={{ .Values.truststorePassword }}','--spi-truststore-file-hostname-verification-policy={{ .Values.hostnameVerificationPolicy }}']
         {{- else }}
-        args: ['start --optimized --import-realm']
+        args: ['start','--optimized']
         {{- end }}
         env:
         {{- include "keycloak.env" $ | indent 8 }}
@@ -116,9 +116,6 @@ spec:
       - name: ha-proxy-config
         configMap:
           name: {{ .Release.Name }}-ha-proxy-config
-      - name: realms
-        configMap:
-          name: {{ .Release.Name }}-realm
       {{- if .Values.truststore }}
       - name: secrets
         secret:

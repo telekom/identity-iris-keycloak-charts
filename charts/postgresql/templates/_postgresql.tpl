@@ -1,4 +1,6 @@
 {{- define "postgresql.labels" -}}
+app: {{ .Release.Name }}
+helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
 app.kubernetes.io/instance: {{ .Release.Name }}-postgresql
 app.kubernetes.io/name: postgresql
 app.kubernetes.io/component: database

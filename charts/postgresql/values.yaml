@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2023 Deutsche Telekom AG
+# SPDX-FileCopyrightText: 2025 Deutsche Telekom AG
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -7,7 +7,8 @@ global:
     pipeline: {}
     
   platform: kubernetes
-  #storageClassName: gp2
+  #storageClassName: ""
+
   imagePullSecrets: []
 
   imagePullPolicy: IfNotPresent
