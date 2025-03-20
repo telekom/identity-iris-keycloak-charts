@@ -34,7 +34,10 @@ sharedBuffers: "32MB"
 # setting this parameter to zero (default) disables the prepared-transaction feature
 maxPreparedTransactions: "0"
 
-image: bitnami/postgresql:12.3.0-debian-10-r70
+image:
+  repository: bitnami/postgresql
+  tag: 12.3.0-debian-10-r70
+  pullPolicy: IfNotPresent
 
 resources:
   limits:

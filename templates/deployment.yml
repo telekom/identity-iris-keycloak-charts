@@ -45,8 +45,8 @@ spec:
       securityContext: {{ include "platformSpecificValue" (list $ . ".Values.podSecurityContext") | default "{}" | nindent 8 }}
       containers:
       - name: haproxy
-        image: {{ .Values.haproxy.image }}
-        imagePullPolicy: {{ .Values.haproxy.imagePullPolicy | default .Values.global.imagePullPolicy }}
+        image: {{ .Values.haproxy.image.repository }}:{{ .Values.haproxy.image.tag }}
+        imagePullPolicy: {{ .Values.haproxy.image.pullPolicy | default .Values.global.imagePullPolicy }}
         securityContext: {{ include "platformSpecificValue" (list $ . ".Values.haproxy.containerSecurityContext") | default "{}" | nindent 10 }}
         ports:
         - { containerPort: 9090, protocol: TCP, name: http }
@@ -58,8 +58,8 @@ spec:
         - name: ha-proxy-config
           mountPath: /usr/local/etc/haproxy
       - name: keycloak
-        image: {{ .Values.keycloak.image }}
-        imagePullPolicy: {{ .Values.imagePullPolicy | default .Values.global.imagePullPolicy }}
+        image: {{ .Values.global.image.repository }}:{{ .Values.global.image.tag }}
+        imagePullPolicy: {{ .Values.global.image.pullPolicy | default .Values.global.imagePullPolicy }}
         securityContext: {{ include "platformSpecificValue" (list $ . ".Values.containerSecurityContext") | default "{}" | nindent 10 }}
         {{- if .Values.truststore }}
         args: ['start','--optimized','--spi-truststore-file-file=/truststore/truststore.jks','--spi-truststore-file-password={{ .Values.truststorePassword }}','--spi-truststore-file-hostname-verification-policy={{ .Values.hostnameVerificationPolicy }}']
@@ -96,8 +96,8 @@ spec:
         {{- include "keycloak.db.certificates.volumeMount" $ | indent 8 }}
       initContainers:
       - name: "check-database"
-        image: {{ .Values.postgresql.image }}
-        imagePullPolicy: {{ .Values.postgresql.imagePullPolicy | default .Values.global.imagePullPolicy }}
+        image: {{ .Values.postgresql.image.repository }}:{{ .Values.postgresql.image.tag }}
+        imagePullPolicy: {{ .Values.postgresql.image.pullPolicy | default .Values.global.imagePullPolicy }}
         securityContext: {{ include "platformSpecificValue" (list $ . ".Values.postgresql.containerSecurityContext") | default "{}" | nindent 10 }}
         command: ['/bin/bash']
         args: ['-c', 'until pg_isready -U {{ .Values.global.database.username }}; do echo waiting for database; sleep 2; done;']

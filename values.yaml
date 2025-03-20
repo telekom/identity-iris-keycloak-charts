@@ -20,7 +20,10 @@ global:
     annotations: {}
       # external-dns.alpha.kubernetes.io/target: ""
       # kubernetes.io/ingress.class: ""
-
+  image:
+    repository: iris_keycloak
+    tag: latest
+    pullPolicy: IfNotPresent
   # If imagePullSecrets is not empty, a pull secret will be deployed for each entry otherwise
   # no pull secret will be deployed
   imagePullSecrets: []
@@ -173,11 +176,12 @@ customConfig:
   #   <spi name="hostname">
   #     <!-- some xml config -->
   #   </spi>
-keycloak:
-  image: iris_keycloak:latest
 
 haproxy:
-  image: haproxy:2.4.0-alpine
+  image:
+    repository: haproxy
+    tag: 2.4.0-alpine
+    pullPolicy: IfNotPresent
   containerSecurityContext: {}
   resources:
     limits:
@@ -188,13 +192,13 @@ haproxy:
       cpu: 250m
 
 postgresql:
+  image:
+    repository: bitnami/postgresql
+    tag: 12.3.0-debian-10-r70
+    pullPolicy: IfNotPresent
   containerSecurityContext: {}
 
   maxPreparedTransactions: "100"
-
-  # You can force using a specific image here:
-  #image: <your-image>
-  #imagePullPolicy: IfNotPresent
 
   resources:
     limits:
