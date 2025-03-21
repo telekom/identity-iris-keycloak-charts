@@ -7,7 +7,6 @@ global:
     pipeline: {}
 
   platform: kubernetes
-  #pathToSecret: "path/to/secret"
   #storageClassName: ""
   #volumeName: "pvcNameToOverride"
   domain: ""
@@ -32,6 +31,11 @@ global:
   #  username: changeme
   #  password: changeme
   imagePullPolicy: IfNotPresent
+
+  # Configuration for external secrets integration (e.g., HashiCorp Vault, AWS Secrets Manager, etc.)
+  externalSecrets:
+    enabled: false
+    path: "secret/data/my-app"
 
   database:
     location: local

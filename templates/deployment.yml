@@ -8,6 +8,9 @@ metadata:
   name: {{ .Release.Name }}
   annotations:
   {{ include "keycloak.checksums" $ | nindent 4 }}
+  {{- if .Values.global.externalSecrets.enabled }}
+    avp.kubernetes.io/path: {{ .Values.global.externalSecrets.path | quote }}
+  {{- end }}
   labels: {{ include "keycloak.labels" $ | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
