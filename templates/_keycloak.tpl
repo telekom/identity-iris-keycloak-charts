@@ -59,9 +59,9 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
   value: "true"
 - name: CLIENT_AUTH_METHOD_METRICS_ENABLED
   value: {{ .Values.clientAuthMethodMetricsEnabled | quote }}
-- name: KEYCLOAK_ADMIN
+- name: KC_BOOTSTRAP_ADMIN_USERNAME
   value: {{ .Values.adminUsername }}
-- name: KEYCLOAK_ADMIN_PASSWORD
+- name: KC_BOOTSTRAP_ADMIN_PASSWORD
   valueFrom:
     secretKeyRef:
       name: {{ .Release.Name }}
