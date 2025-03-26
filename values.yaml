@@ -10,8 +10,8 @@ global:
   #storageClassName: ""
   #volumeName: "pvcNameToOverride"
   domain: ""
-  labels:
-    # fluentd label
+#  labels:
+#  Allows adding custom labels to resources
   product: "iris_keycloak"
   ingress:
     # tlsSecret: ""
