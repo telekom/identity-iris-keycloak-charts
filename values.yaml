@@ -79,23 +79,6 @@ containerSecurityContext: {}
 adminUsername: admin
 adminPassword: changeme
 
-# Truststore for Keycloak
-# When Keytool is used, make sure to print out the store in base64 value
-# If not used, watch out for the secret, as it will be printed in there as a raw string
-# Example:
-#  truststore: |
-#    MIIVaAIBAzCCFRIGCSqGSIb3DQEHAaCCFQMEghT/MIIU+zCCBbIGCSqGSIb3DQEHAaCCBaMEggWf
-#    ... data as created from JKS keystore by "cat ./keystore.jks | base64"
-#    yMsfLrPfvuYCAicQ 
-truststore: {}
-# Needed to access the Truststore
-truststorePassword: password
-# Set the hostname verification policy
-# ANY: do no verification
-# WILDCARD: *.hostname
-# STRICT: host.hostname
-hostnameVerificationPolicy: WILDCARD
-
 replicas: 1
 
 autoscaling:

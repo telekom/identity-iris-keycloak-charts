@@ -69,11 +69,7 @@ spec:
         image: {{ .Values.global.image.repository }}:{{ .Values.global.image.tag }}
         imagePullPolicy: {{ .Values.global.image.pullPolicy | default .Values.global.imagePullPolicy }}
         securityContext: {{ include "platformSpecificValue" (list $ . ".Values.containerSecurityContext") | default "{}" | nindent 10 }}
-        {{- if .Values.truststore }}
-        args: ['start','--optimized','--spi-truststore-file-file=/truststore/truststore.jks','--spi-truststore-file-password={{ .Values.truststorePassword }}','--spi-truststore-file-hostname-verification-policy={{ .Values.hostnameVerificationPolicy }}']
-        {{- else }}
         args: ['start','--optimized']
-        {{- end }}
         env:
         {{- include "keycloak.env" $ | indent 8 }}
         {{- with .Values.livenessProbe }}
@@ -96,11 +92,6 @@ spec:
           mountPath: /tmp
         - name: tmp
           mountPath: /opt/keycloak/data/tmp
-        {{- if .Values.truststore }}
-        - name: secrets
-          mountPath: /truststore
-          readOnly: true
-        {{- end }}
         {{- include "keycloak.db.certificates.volumeMount" $ | indent 8 }}
       initContainers:
       - name: "check-database"
@@ -124,12 +115,4 @@ spec:
       - name: ha-proxy-config
         configMap:
           name: {{ .Release.Name }}-ha-proxy-config
-      {{- if .Values.truststore }}
-      - name: secrets
-        secret:
-          secretName: {{ .Release.Name }}
-          items:
-            - key: truststore.jks
-              path: truststore.jks
-      {{- end }}
       {{- include "keycloak.db.certificates.volume" $ | indent 6 }}
