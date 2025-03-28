@@ -4,8 +4,8 @@ helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
 app.kubernetes.io/name: keycloak
 {{ include "keycloak.selector" . }}
 app.kubernetes.io/component: idp
-{{- if .Values.global.labels }}
-{{ .Values.global.labels | toYaml }}
+{{- if .Values.global.labels.common }}
+{{ .Values.global.labels.common | toYaml }}
 {{- end }}
 {{- end -}}
 

@@ -8,6 +8,17 @@ global:
     
   platform: kubernetes
   #storageClassName: ""
+  labels:
+    # Common labels for all resources
+    common: []
+    # Monitoring related Labels
+    monitoring:
+      # General monitoring labels
+      general: []
+      # Labels for monitoring specific to Keycloak service
+      keycloak: []
+      # Labels for monitoring database services
+      database: []
 
   imagePullSecrets: []
 

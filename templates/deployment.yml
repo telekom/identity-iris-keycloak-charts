@@ -11,7 +11,10 @@ metadata:
   {{- if .Values.global.externalSecrets.enabled }}
     avp.kubernetes.io/path: {{ .Values.global.externalSecrets.path | quote }}
   {{- end }}
-  labels: {{ include "keycloak.labels" $ | nindent 4 }}
+  labels:
+  {{- include "keycloak.labels" $ | nindent 8 }}
+  {{- include "common.status-monitor.labels" $ | nindent 8 }}
+  {{- include "keycloak.status-monitor.labels" $ | nindent 8 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicas }}
@@ -29,6 +32,8 @@ spec:
 {{- end }}
       labels:
       {{- include "keycloak.labels" $ | nindent 8 }}
+      {{- include "common.status-monitor.labels" $ | nindent 8 }}
+      {{- include "keycloak.status-monitor.labels" $ | nindent 8 }}
     spec:
       {{- include "image_pull_secrets" $ | indent 6 }}
       affinity:

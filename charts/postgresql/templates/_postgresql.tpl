@@ -4,8 +4,8 @@ helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
 app.kubernetes.io/instance: {{ .Release.Name }}-postgresql
 app.kubernetes.io/name: postgresql
 app.kubernetes.io/component: database
-{{- if .Values.global.labels }}
-{{ .Values.global.labels | toYaml }}
+{{- if .Values.global.labels.common }}
+{{ .Values.global.labels.common | toYaml }}
 {{- end }}
 {{- end -}}
 

@@ -2,10 +2,11 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
+{{- if eq .Values.prometheus.serviceMonitor.enabled true }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}
+  name: {{ .Release.Name }}-metrics
   labels: {{ include "keycloak.labels" $ | nindent 4 }}
           {{- include "common.status-monitor.labels" $ | nindent 4 }}
           {{- include "keycloak.status-monitor.labels" $ | nindent 4 }}
@@ -13,8 +14,8 @@ spec:
   type: ClusterIP
   selector: {{ include "keycloak.selector" $ | nindent 4 }}
   ports:
-  - name: http
-    port: 80
+  - name: metrics-http
+    port: 9542
     protocol: TCP
-    targetPort: 9090
-    
+    targetPort: {{ .Values.prometheus.port | default 9542 }}
+{{- end -}}

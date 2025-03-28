@@ -10,8 +10,17 @@ global:
   #storageClassName: ""
   #volumeName: "pvcNameToOverride"
   domain: ""
-#  labels:
-#  Allows adding custom labels to resources
+  labels:
+    # Common labels for all resources
+    common: []
+    # Monitoring related Labels
+    monitoring:
+      # General monitoring labels
+      general: []
+      # Labels for monitoring specific to Keycloak service
+      keycloak: []
+      # Labels for monitoring database services
+      database: []
   product: "iris_keycloak"
   ingress:
     # tlsSecret: ""
@@ -156,6 +165,7 @@ prometheus:
   # prometheus has to be enabled to use this
   serviceMonitor:
     enabled: true
+    targetLabels: []
     #selector: "guardians-raccoon"
     #scheme: http
     #interval: "15s"

@@ -7,7 +7,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "postgresql.deploymentName" . }}
-  labels: {{ include "postgresql.labels" $ | nindent 4 }}
+  labels:
+    {{- include "postgresql.labels" $ | nindent 8 }}
+    {{- include "common.status-monitor.labels" $ | nindent 8 }}
+    {{- include "database.status-monitor.labels" $ | nindent 8 }}
   {{- with .Values.deployment.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -22,6 +25,8 @@ spec:
     metadata:
       labels:
       {{- include "postgresql.labels" $ | nindent 8 }}
+      {{- include "common.status-monitor.labels" $ | nindent 8 }}
+      {{- include "database.status-monitor.labels" $ | nindent 8 }}
     spec:
       {{- include "image_pull_secrets" $ | indent 6 }}
       securityContext: {{ include "platformSpecificValue" (list $ . ".Values.podSecurityContext") | default "fsGroup: 999" | nindent 8 }}
