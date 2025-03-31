@@ -69,7 +69,12 @@ spec:
         image: {{ .Values.global.image.repository }}:{{ .Values.global.image.tag }}
         imagePullPolicy: {{ .Values.global.image.pullPolicy | default .Values.global.imagePullPolicy }}
         securityContext: {{ include "platformSpecificValue" (list $ . ".Values.containerSecurityContext") | default "{}" | nindent 10 }}
-        args: ['start','--optimized']
+        args:
+          - "start"
+          - "--optimized"
+          {{- if .Values.infinispan.enabled }}
+          - "--cache=ispn"
+          {{- end }}
         env:
         {{- include "keycloak.env" $ | indent 8 }}
         {{- with .Values.livenessProbe }}
@@ -86,8 +91,12 @@ spec:
         {{- end }}
         resources: {{ .Values.resources | toYaml | nindent 10 }}
         volumeMounts:
-        - name: config
+        {{- if .Values.infinispan.enabled }}
+        - name: cache-config
           mountPath: /opt/keycloak/conf/
+        {{ end }}
+        - name: realms
+          mountPath: /opt/keycloak/data/import/
         - name: tmp
           mountPath: /tmp
         - name: tmp
@@ -109,9 +118,11 @@ spec:
         emptyDir: {}
       - name: jboss
         emptyDir: {}
-      - name: config
+      {{- if .Values.infinispan.enabled }}
+      - name: cache-config
         configMap:
           name: {{ .Release.Name }}-cache-config
+      {{ end }}
       - name: ha-proxy-config
         configMap:
           name: {{ .Release.Name }}-ha-proxy-config
