@@ -152,6 +152,19 @@ infinispan:
         </cache-container>
     </infinispan>
 
+# The "realms" section is a pure representation of the Keycloak realm and clients.
+# Any necessary fields can be added as needed.
+# Important: The "rover" realm and client are required for integration with the Control Plane.
+realms:
+  - realm: "rover"
+    enabled: true
+    clients:
+      - clientId: "rover"
+        standardFlowEnabled: false
+        directAccessGrantsEnabled: false
+        serviceAccountsEnabled: true
+        publicClient: false
+
 replicas: 1
 
 autoscaling:
