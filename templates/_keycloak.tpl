@@ -57,6 +57,8 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
   value: -Djgroups.dns.query={{ .Release.Name }}-jgroups.{{ .Release.Namespace }}
 - name: URI_METRICS_ENABLED
   value: "true"
+- name: CLIENT_AUTH_METHOD_METRICS_ENABLED
+  value: {{ .Values.clientAuthMethodMetricsEnabled | quote }}
 - name: KEYCLOAK_ADMIN
   value: {{ .Values.adminUsername }}
 - name: KEYCLOAK_ADMIN_PASSWORD

@@ -3,8 +3,6 @@
 # SPDX-License-Identifier: Apache-2.0
 
 global:
-  metadata:
-    pipeline: {}
 
   platform: kubernetes
   #storageClassName: ""
@@ -48,21 +46,18 @@ global:
 
   database:
     location: local
-    #port: 5432
+    port: 5432
     database: pgdb
     username: pgusr
     password: not_secure_pwd
 
   failOnUnsetValues: true
 
-#imagePullPolicy: IfNotPresent
-
 # You can list files (in /templates) here that should cause a re-deployment of your application
 # when their contents change
 # This makes sense if you change configMaps or secrets, and you
 # want your deployment to use the latest configuration
 templateChangeTriggers: []
-#- my-custom-configmap.yaml
 
 #podSecurityContext: {}
   #fsGroup: 999
@@ -74,10 +69,11 @@ containerSecurityContext: {}
 
 #topologyKey: kubernetes.io/hostname
 
-
 # Keycloak admin role credentials
 adminUsername: admin
 adminPassword: changeme
+
+clientAuthMethodMetricsEnabled: "false"
 
 # Infinispan cache configuration for Keycloak
 # This configuration defines cache containers, transport settings, and cache-specific configurations
@@ -169,9 +165,9 @@ replicas: 1
 
 autoscaling:
   enabled: false
-  #minReplicas: 2
-  #maxReplicas: 4
-  #targetCPUUtilizationPercentage: 80
+  minReplicas: 2
+  maxReplicas: 4
+  targetCPUUtilizationPercentage: 80
 
 resources:
   limits:
@@ -193,37 +189,43 @@ readinessProbe: |-
     path: '/auth/realms/master'
     port: 8080
   initialDelaySeconds: 30
-  timeoutSeconds: 1
+  timeoutSeconds: 2
 
 startupProbe: |-
   httpGet:
     path: '/auth/'
     port: 8080
   initialDelaySeconds: 30
-  timeoutSeconds: 1
+  timeoutSeconds: 2
   failureThreshold: 60
   periodSeconds: 5
 
 terminationGracePeriodSeconds: 60
 
-#logLevel: INFO
+logLevel: INFO
 
 ingress:
   enabled: true
   hostname: localhost
-  # alternative second host name in ingress
-  #altHostname: ""
-  # overwrite host used in KC_HOSTNAME
-  #adminHostname: ""
-  # tlsSecret: ""
-  ingressClassName: "nginx"
+#  altHostname: ""   # alternative second host name in ingress
+#  adminHostname: ""   # overwrite host used in KC_HOSTNAME
+#  tlsSecret: ""
+#  ingressClassName: "nginx"
   annotations: {}
-    # external-dns.alpha.kubernetes.io/target: ""
-    # kubernetes.io/ingress.class: ""
+#    # With multiple replicas it might be necessary to add below cookie options to the ingress.
+#    nginx.ingress.kubernetes.io/affinity: 'cookie'
+#    nginx.ingress.kubernetes.io/session-cookie-path: '/'
 
-    ## With multiple replicas it might be necessary to add below cookie options to the ingress.
-    # nginx.ingress.kubernetes.io/affinity: 'cookie'
-    # nginx.ingress.kubernetes.io/session-cookie-path: '/'
+#   # Enable CORS (Cross-Origin Resource Sharing)
+#   nginx.ingress.kubernetes.io/enable-cors: "true"
+#   nginx.ingress.kubernetes.io/cors-allow-methods: GET, POST, HEAD, PUT, PATCH, DELETE, OPTIONS
+#   nginx.ingress.kubernetes.io/cors-allow-origin: https://allow-origin.com
+
+#   # NGINX ingress controller annotations including SSL redirection, backend protocol specification,
+#   # and retry attempts for failed requests to upstream servers.
+#   nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+#   nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+#   nginx.ingress.kubernetes.io/proxy-next-upstream-tries: "1"
 
 prometheus:
   enabled: true
@@ -242,23 +244,11 @@ prometheus:
     #honorLabels: ""
   podMonitor:
     enabled: false
-    #selector: "guardians-raccoon"
+    #selector: ""
     #scheme: http
     #interval: "15s"
     #scrapeTimeout: "3s"
     #honorLabels: ""
-
-customConfig:
-  # With the following setting one can set the frontendUrl configuration for hostname SPI
-  #frontendUrl: '${keycloak.frontendUrl:}'
-
-  spi: {}
-  # As an alternative, one can replace the whole SPI "hostname" configuration block, however this overrides the frontendUrl variable
-  #spi:
-  #  hostname: |-
-  #   <spi name="hostname">
-  #     <!-- some xml config -->
-  #   </spi>
 
 haproxy:
   image:
@@ -292,19 +282,19 @@ postgresql:
       memory: 200Mi
 
 externalDatabase:
-  # Set host if you use an external database or service name is not sufficient
-  #host: ''
+#  # Set host if you use an external database or service name is not sufficient
+#  host: ''
   ssl: false
-  #sslMode: 'verify-full'
-  #sslCert: |
-  #  -----BEGIN CERTIFICATE-----
-  #  <CA certificate in PEM format here>
-  #  -----END CERTIFICATE-----
-  #sslKey: |
-  #  -----BEGIN PRIVATE KEY-----
-  #  <pk8 in PEM format here>
-  #  -----END PRIVATE KEY-----
-  #sslRootCert: |
-  #  -----BEGIN CERTIFICATE-----
-  #  <Root certificate in PEM format here>
-  #  -----END CERTIFICATE-----
+#  sslMode: 'verify-full'
+#  sslCert: |
+#    -----BEGIN CERTIFICATE-----
+#    <CA certificate in PEM format here>
+#    -----END CERTIFICATE-----
+#  sslKey: |
+#    -----BEGIN PRIVATE KEY-----
+#    <pk8 in PEM format here>
+#    -----END PRIVATE KEY-----
+#  sslRootCert: |
+#    -----BEGIN CERTIFICATE-----
+#    <Root certificate in PEM format here>
+#    -----END CERTIFICATE-----

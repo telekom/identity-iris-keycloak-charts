@@ -3,8 +3,6 @@
 # SPDX-License-Identifier: Apache-2.0
 
 global:
-  metadata:
-    pipeline: {}
     
   platform: kubernetes
   #storageClassName: ""
@@ -59,7 +57,7 @@ resources:
     memory: 200Mi
 
 persistence:
-  keepOnDelete: false
+  keepOnDelete: true
   storageClassName: standard
   resources:
     requests:
