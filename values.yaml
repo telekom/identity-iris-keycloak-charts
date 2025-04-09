@@ -253,7 +253,7 @@ prometheus:
 haproxy:
   image:
     repository: haproxy
-    tag: 2.4.0-alpine
+    tag: 3.1.6-alpine
     pullPolicy: IfNotPresent
   containerSecurityContext: {}
   resources:
