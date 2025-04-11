@@ -4,8 +4,8 @@ helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
 app.kubernetes.io/name: keycloak
 {{ include "keycloak.selector" . }}
 app.kubernetes.io/component: idp
-{{- if .Values.global.labels }}
-{{ .Values.global.labels | toYaml }}
+{{- if .Values.global.labels.common }}
+{{ .Values.global.labels.common | toYaml }}
 {{- end }}
 {{- end -}}
 
@@ -14,7 +14,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
 {{- end -}}
 
 {{- define "keycloak.checksums" -}}
-checksum/config: {{ include (print $.Template.BasePath "/configmap-config.yml") . | sha256sum }}
+checksum/config: {{ include (print $.Template.BasePath "/configmap-cache.yml") . | sha256sum }}
 {{- range .Values.templateChangeTriggers }}
 checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- end -}}
@@ -51,18 +51,14 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
   value: "xforwarded"
 - name: KC_HTTP_ENABLED
   value: "true"
-- name: KC_CACHE
-  value: "ispn"
-- name: KC_CACHE_STACK
-  value: "kubernetes"
-- name: KC_CACHE_CONFIG_FILE
-  value: infinispan.xml
 - name: QUARKUS_TRANSACTION_MANAGER_ENABLE_RECOVERY
   value: "false"
 - name: JAVA_OPTS_APPEND
   value: -Djgroups.dns.query={{ .Release.Name }}-jgroups.{{ .Release.Namespace }}
 - name: URI_METRICS_ENABLED
   value: "true"
+- name: CLIENT_AUTH_METHOD_METRICS_ENABLED
+  value: {{ .Values.clientAuthMethodMetricsEnabled | quote }}
 - name: KEYCLOAK_ADMIN
   value: {{ .Values.adminUsername }}
 - name: KEYCLOAK_ADMIN_PASSWORD

@@ -1,0 +1,8 @@
+# SPDX-FileCopyrightText: 2025 Deutsche Telekom AG
+#
+# SPDX-License-Identifier: Apache-2.0
+
+include:
+  - project: 'dhei/teams/io/templates/gitlab-pipelines'
+    file: '/helm/PublishChart.gitlab-ci.yml'
+    ref: develop

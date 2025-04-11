@@ -1,0 +1,12 @@
+# SPDX-FileCopyrightText: 2025 Deutsche Telekom AG
+#
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-realm
+  labels: {{ include "keycloak.labels" $ | nindent 4 }}
+data:
+  realms.json: |
+    {{- toJson .Values.realms | nindent 4 }}

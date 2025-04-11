@@ -3,11 +3,20 @@
 # SPDX-License-Identifier: Apache-2.0
 
 global:
-  metadata:
-    pipeline: {}
     
   platform: kubernetes
   #storageClassName: ""
+  labels:
+    # Common labels for all resources
+    common: []
+    # Monitoring related Labels
+    monitoring:
+      # General monitoring labels
+      general: []
+      # Labels for monitoring specific to Keycloak service
+      keycloak: []
+      # Labels for monitoring database services
+      database: []
 
   imagePullSecrets: []
 
@@ -34,7 +43,10 @@ sharedBuffers: "32MB"
 # setting this parameter to zero (default) disables the prepared-transaction feature
 maxPreparedTransactions: "0"
 
-image: bitnami/postgresql:12.3.0-debian-10-r70
+image:
+  repository: bitnami/postgresql
+  tag: 12.3.0-debian-10-r70
+  pullPolicy: IfNotPresent
 
 resources:
   limits:
@@ -45,7 +57,7 @@ resources:
     memory: 200Mi
 
 persistence:
-  keepOnDelete: false
+  keepOnDelete: true
   storageClassName: standard
   resources:
     requests:

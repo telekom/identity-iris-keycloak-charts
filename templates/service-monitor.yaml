@@ -1,0 +1,31 @@
+{{- if and (.Values.prometheus.enabled) (.Values.prometheus.serviceMonitor.enabled) -}}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ .Release.Name }}
+  labels: {{ include "keycloak.labels" $ | nindent 4 }}
+    release: {{ .Values.prometheus.serviceMonitor.selector | default "guardians-raccoon" }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels: {{ include "keycloak.selector" $ | nindent 6 }}
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+  endpoints:
+    - port: metrics-http
+      path: {{ .Values.prometheus.path | default "/metrics" }}
+      {{- if .Values.prometheus.serviceMonitor.scheme }}
+      scheme: {{ .Values.prometheus.serviceMonitor.scheme }}
+      {{- end }}
+      {{- if .Values.prometheus.serviceMonitor.interval }}
+      interval: {{ .Values.prometheus.serviceMonitor.interval | quote}}
+      {{- end }}
+      {{- if .Values.prometheus.serviceMonitor.scrapeTimeout }}
+      scrapeTimeout: {{ .Values.prometheus.serviceMonitor.scrapeTimeout | quote }}
+      {{- end }}
+      {{- if .Values.prometheus.serviceMonitor.honorLabels }}
+      honorLabels: {{ .Values.prometheus.serviceMonitor.honorLabels }}
+      {{- end }}
+  targetLabels: {{ include "service-monitor.targetLabels" $ | nindent 2 }}
+{{- end -}}
