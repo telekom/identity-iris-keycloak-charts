@@ -6,6 +6,11 @@ SPDX-License-Identifier: CC0-1.0
 
 # Changelog
 
+## [1.2.1]
+### Changed
+- Updated deprecated environment variable `KEYCLOAK_ADMIN` to `KC_BOOTSTRAP_ADMIN_USERNAME`.
+- Updated deprecated environment variable `KEYCLOAK_ADMIN_PASSWORD` to `KC_BOOTSTRAP_ADMIN_PASSWORD`.
+
 ## [1.2.0]
 ### Added
 - Configuration for **HorizontalPodAutoscaler**.
