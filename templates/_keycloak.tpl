@@ -145,9 +145,19 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- $mergedAnnotations | toYaml -}}
 {{ end -}}
 
-{{- define "keycloak.ingress.tlsSecret" -}}
-{{- if not (and (empty .Values.ingress.tlsSecret) (empty .Values.global.ingress.tlsSecret)) -}}
-secretName: {{ .Values.ingress.tlsSecret | default .Values.global.ingress.tlsSecret -}}
+{{- define "keycloak.tls.secret" -}}
+{{- if not (and (empty .Values.ingress.tls.secret) (empty .Values.global.ingress.tlsSecret)) -}}
+secretName: {{ .Values.ingress.tls.secret | default .Values.global.ingress.tlsSecret -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "keycloak.tls.hosts" -}}
+{{- if or (not .Values.ingress.tls.hosts) (eq (len .Values.ingress.tls.hosts) 0) -}}
+- {{ include "keycloak.host" . }}
+{{- else -}}
+{{- range .Values.ingress.tls.hosts }}
+- {{ . }}
+{{- end -}}
 {{- end -}}
 {{- end -}}
 
