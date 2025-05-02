@@ -209,8 +209,11 @@ ingress:
   hostname: localhost
 #  altHostname: ""   # alternative second host name in ingress
 #  adminHostname: ""   # overwrite host used in KC_HOSTNAME
-#  tlsSecret: ""
 #  ingressClassName: "nginx"
+  tls:
+    enabled: true   # Enable TLS section in Ingress (HTTPS support)
+    hosts: []       # List of TLS hostnames; default is ingress.hostname
+    secret: ""      # Secret name containing TLS certificate
   annotations: {}
 #    # With multiple replicas it might be necessary to add below cookie options to the ingress.
 #    nginx.ingress.kubernetes.io/affinity: 'cookie'

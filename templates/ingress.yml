@@ -30,12 +30,10 @@ spec:
               number: 80
 {{- end }}
 {{- include "keycloak.ingress.ingressClassName" . | nindent 2 }}
+{{- if .Values.ingress.tls.enabled }}
   tls:
   - hosts:
-    - {{ include "keycloak.host" . }}
-{{- if not (empty .Values.ingress.altHostname) }}
-    - {{ .Values.ingress.altHostname }}
-    secretName: {{ .Release.Namespace }}-wildcard
+{{- include "keycloak.tls.hosts" . | nindent 4 -}}
+{{- include "keycloak.tls.secret" . | nindent 4 -}}
 {{- end }}
-{{- include "keycloak.ingress.tlsSecret" . | nindent 4 -}}
 {{- end }}

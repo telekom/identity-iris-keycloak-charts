@@ -6,6 +6,13 @@ SPDX-License-Identifier: CC0-1.0
 
 # Changelog
 
+## [1.2.2]
+### Changed
+- Refactored Ingress TLS configuration to support flexible hostname management:
+    - Introduced `ingress.tls.enabled`, `ingress.tls.hosts`, and `ingress.tls.secret` fields in `values.yaml`.
+    - Deprecated `ingress.tlsSecret` in favor of `ingress.tls.secret`.
+    - Updated templates to reflect new structure for improved flexibility and consistency.
+
 ## [1.2.1]
 ### Changed
 - Updated deprecated environment variable `KEYCLOAK_ADMIN` to `KC_BOOTSTRAP_ADMIN_USERNAME`.
