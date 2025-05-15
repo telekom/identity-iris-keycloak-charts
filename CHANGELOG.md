@@ -6,6 +6,11 @@ SPDX-License-Identifier: CC0-1.0
 
 # Changelog
 
+## [1.2.3]
+### Fixed
+- Resolved issue with `401 Unauthorized` errors when running multiple Keycloak replicas:
+    - Added `--cache-stack=kubernetes` to support JGroups-based Infinispan discovery in Kubernetes.
+
 ## [1.2.2]
 ### Changed
 - Refactored Ingress TLS configuration to support flexible hostname management:
