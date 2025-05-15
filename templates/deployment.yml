@@ -75,6 +75,7 @@ spec:
           - "--import-realm"
           {{- if .Values.infinispan.enabled }}
           - "--cache=ispn"
+          - "--cache-stack=kubernetes"
           {{- end }}
         env:
         {{- include "keycloak.env" $ | indent 8 }}
