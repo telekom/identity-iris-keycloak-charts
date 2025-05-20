@@ -23,9 +23,9 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- define "keycloak.jdbcParams" -}}
 {{- $ssl := "true" }}
 {{- $sslMode := .Values.externalDatabase.sslMode | default "verify-full" }}
-{{- $sslCert := "&sslcert=" }}
-{{- $sslKey := "&sslkey=" }}
-{{- $sslRootCert := "&sslrootcert=" }}
+{{- $sslCert := "" }}
+{{- $sslKey := "" }}
+{{- $sslRootCert := "" }}
 
 {{- if .Values.externalDatabase.sslCert }}
 {{- $sslCert = "&sslcert=/certificates/sslcert.crt" }}
@@ -124,7 +124,7 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- end -}}
 
 {{- define "keycloak.db.certificates.volume" }}
-{{- if .Values.externalDatabase.ssl }}
+{{- if and .Values.externalDatabase.ssl (or .Values.externalDatabase.sslCert .Values.externalDatabase.sslKey .Values.externalDatabase.sslRootCert) }}
 - name: certificates
   secret:
     secretName: {{ .Release.Name }}-certificates
@@ -132,7 +132,7 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{ end -}}
 
 {{- define "keycloak.db.certificates.volumeMount" }}
-{{- if .Values.externalDatabase.ssl }}
+{{- if and .Values.externalDatabase.ssl (or .Values.externalDatabase.sslCert .Values.externalDatabase.sslKey .Values.externalDatabase.sslRootCert) }}
 - name: certificates
   mountPath: /certificates
 {{- end -}}
