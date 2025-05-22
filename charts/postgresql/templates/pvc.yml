@@ -16,7 +16,7 @@ metadata:
   {{- end -}}
 {{- end }}
 spec:
-  storageClassName: {{ include "platformSpecificValue" (list $ . ".Values.global.storageClassName") | default .Values.persistence.storageClassName | default "" }}
+  storageClassName: {{ .Values.persistence.storageClassName | default "" }}
   accessModes:
     - ReadWriteOnce
   resources: {{ .Values.persistence.resources | toYaml | nindent 4 }}
