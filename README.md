@@ -9,7 +9,7 @@ SPDX-License-Identifier: CC0-1.0
 ## Overview
 
 This chart installs [Keycloak](https://www.keycloak.org/documentation.html). \
-It is suitable for installations on AWS EKS. Recommended to use with customized keycloak docker \
+Recommended to use with customized keycloak docker \
 image (see the links section). \
 Default settings in this template are prepared for non-prod environments.
 
