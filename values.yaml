@@ -3,9 +3,6 @@
 # SPDX-License-Identifier: Apache-2.0
 
 global:
-
-  platform: kubernetes
-  #storageClassName: ""
   #volumeName: "pvcNameToOverride"
   domain: ""
   labels:
@@ -22,7 +19,6 @@ global:
   product: "iris_keycloak"
   ingress:
     # tlsSecret: ""
-    # ingressClassName: ""
     annotations: {}
       # external-dns.alpha.kubernetes.io/target: ""
       # kubernetes.io/ingress.class: ""
@@ -59,13 +55,8 @@ global:
 # want your deployment to use the latest configuration
 templateChangeTriggers: []
 
-#podSecurityContext: {}
-  #fsGroup: 999
-  #supplementalGroups: 999
-
+podSecurityContext: {}
 containerSecurityContext: {}
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
 
 #topologyKey: kubernetes.io/hostname
 
@@ -209,7 +200,7 @@ ingress:
   hostname: localhost
 #  altHostname: ""   # alternative second host name in ingress
 #  adminHostname: ""   # overwrite host used in KC_HOSTNAME
-#  ingressClassName: "nginx"
+  ingressClassName: ""
   tls:
     enabled: true   # Enable TLS section in Ingress (HTTPS support)
     hosts: []       # List of TLS hostnames; default is ingress.hostname
@@ -301,3 +292,4 @@ externalDatabase:
 #    -----BEGIN CERTIFICATE-----
 #    <Root certificate in PEM format here>
 #    -----END CERTIFICATE-----
+

@@ -160,9 +160,3 @@ secretName: {{ .Values.ingress.tls.secret | default .Values.global.ingress.tlsSe
 {{- end -}}
 {{- end -}}
 {{- end -}}
-
-{{- define "keycloak.ingress.ingressClassName" -}}
-{{- if or (include "platformSpecificValue" (list $ . ".Values.ingress.ingressClassName")) (include "platformSpecificValue" (list $ . ".Values.global.ingress.ingressClassName")) -}}
-ingressClassName: {{ include "platformSpecificValue" (list $ . ".Values.ingress.ingressClassName") | default (include "platformSpecificValue" (list $ . ".Values.global.ingress.ingressClassName")) }}
-{{- end -}}
-{{- end -}}

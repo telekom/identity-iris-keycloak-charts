@@ -6,6 +6,10 @@ SPDX-License-Identifier: CC0-1.0
 
 # Changelog
 
+## [1.2.4]
+### Refactored
+- Removed platform-specific values files, refactored template configuration
+
 ## [1.2.3]
 ### Fixed
 - Resolved issue with `401 Unauthorized` errors when running multiple Keycloak replicas:

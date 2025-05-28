@@ -3,9 +3,6 @@
 # SPDX-License-Identifier: Apache-2.0
 
 global:
-    
-  platform: kubernetes
-  #storageClassName: ""
   labels:
     # Common labels for all resources
     common: []
@@ -58,7 +55,7 @@ resources:
 
 persistence:
   keepOnDelete: true
-  storageClassName: standard
+  storageClassName: ""
   resources:
     requests:
       storage: 1Gi
@@ -66,3 +63,8 @@ persistence:
 
 deployment:
   annotations: {}
+
+podSecurityContext: {}
+
+containerSecurityContext: {}
+

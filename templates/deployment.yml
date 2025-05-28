@@ -47,15 +47,15 @@ spec:
                   operator: In
                   values:
                   - {{ .Release.Name }}-keycloak
-              topologyKey: {{ include "platformSpecificValue" (list $ . ".Values.topologyKey") | default "kubernetes.io/hostname" }}
+              topologyKey: {{ .Values.topologyKey | default "kubernetes.io/hostname" }}
       serviceAccount: ""
       serviceAccountName: ""
-      securityContext: {{ include "platformSpecificValue" (list $ . ".Values.podSecurityContext") | default "{}" | nindent 8 }}
+      securityContext: {{ .Values.podSecurityContext | toYaml | nindent 8 }}
       containers:
       - name: haproxy
         image: {{ .Values.haproxy.image.repository }}:{{ .Values.haproxy.image.tag }}
         imagePullPolicy: {{ .Values.haproxy.image.pullPolicy | default .Values.global.imagePullPolicy }}
-        securityContext: {{ include "platformSpecificValue" (list $ . ".Values.haproxy.containerSecurityContext") | default "{}" | nindent 10 }}
+        securityContext: {{ .Values.haproxy.containerSecurityContext | toYaml | nindent 10 }}
         ports:
         - { containerPort: 9090, protocol: TCP, name: http }
         {{- if eq .Values.prometheus.enabled true }}
@@ -68,7 +68,7 @@ spec:
       - name: keycloak
         image: {{ .Values.global.image.repository }}:{{ .Values.global.image.tag }}
         imagePullPolicy: {{ .Values.global.image.pullPolicy | default .Values.global.imagePullPolicy }}
-        securityContext: {{ include "platformSpecificValue" (list $ . ".Values.containerSecurityContext") | default "{}" | nindent 10 }}
+        securityContext: {{  .Values.containerSecurityContext | toYaml | nindent 10 }}
         args:
           - "start"
           - "--optimized"
@@ -108,7 +108,7 @@ spec:
       - name: "check-database"
         image: {{ .Values.postgresql.image.repository }}:{{ .Values.postgresql.image.tag }}
         imagePullPolicy: {{ .Values.postgresql.image.pullPolicy | default .Values.global.imagePullPolicy }}
-        securityContext: {{ include "platformSpecificValue" (list $ . ".Values.postgresql.containerSecurityContext") | default "{}" | nindent 10 }}
+        securityContext: {{ .Values.postgresql.containerSecurityContext | toYaml | nindent 10 }}
         command: ['/bin/bash']
         args: ['-c', 'until pg_isready -U {{ .Values.global.database.username }}; do echo waiting for database; sleep 2; done;']
         env:
