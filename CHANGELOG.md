@@ -6,6 +6,10 @@ SPDX-License-Identifier: CC0-1.0
 
 # Changelog
 
+## [1.2.5]
+### Refactored
+- Replaced deprecated `JDBC_PARAMS` with `KC_DB_URL_PROPERTIES` for Keycloak external database SSL configuration
+
 ## [1.2.4]
 ### Refactored
 - Removed platform-specific values files, refactored template configuration

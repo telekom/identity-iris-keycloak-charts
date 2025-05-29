@@ -20,8 +20,8 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- end -}}
 {{- end -}}
 
-{{- define "keycloak.jdbcParams" -}}
-{{- $ssl := "true" }}
+{{- define "keycloak.dbUrlProperties" -}}
+{{- $ssl := .Values.externalDatabase.ssl | default "true" }}
 {{- $sslMode := .Values.externalDatabase.sslMode | default "verify-full" }}
 {{- $sslCert := "" }}
 {{- $sslKey := "" }}
@@ -37,7 +37,7 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- $sslRootCert = "&sslrootcert=/certificates/sslrootcert.crt" }}
 {{- end -}}
 
-{{- printf "ssl=%s&sslmode=%s%s%s%s" $ssl $sslMode $sslCert $sslKey $sslRootCert -}}
+{{- printf "?ssl=%s&sslmode=%s%s%s%s" $ssl $sslMode $sslCert $sslKey $sslRootCert -}}
 {{ end -}}
 
 {{- define "keycloak.url" }}
@@ -88,8 +88,8 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
       name: {{ .Release.Name }}
       key: databasePassword
 {{- if .Values.externalDatabase.ssl }}
-- name: JDBC_PARAMS
-  value: {{ include "keycloak.jdbcParams" $ | quote }}
+- name: KC_DB_URL_PROPERTIES
+  value: {{ include "keycloak.dbUrlProperties" $ | quote }}
 {{- end -}}
 {{- end -}}
 
