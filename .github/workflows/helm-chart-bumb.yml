@@ -10,7 +10,7 @@ on:
       - '[0-9]+.[0-9]+.[0-9]+*'        # trigger on any SemVer tag, e.g. 1.2.3
 
 env:
-  TARGET_BRANCH: chore/chart-bump
+  TARGET_BRANCH: main
 
 jobs:
   bump:
