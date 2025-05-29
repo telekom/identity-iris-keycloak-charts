@@ -1,0 +1,40 @@
+# SPDX-FileCopyrightText: 2025 Free Software Foundation Europe e.V. <https://fsfe.org>
+#
+# SPDX-License-Identifier: CC0-1.0
+
+name: bump-chart-on-tag
+
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+*'        # trigger on any SemVer tag, e.g. 1.2.3
+
+env:
+  TARGET_BRANCH: chore/chart-bump
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0                # need full history for git-graph queries
+
+      - name: Install yq                # lightweight YAML processor
+        uses: mikefarah/yq@v4
+
+      - name: Check out target branch
+        run: git switch ${{ env.TARGET_BRANCH }}
+
+      - name: Bump chart version with yq
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          yq -i ".version = \"${VERSION}\"" Chart.yaml
+
+      - name: Commit and push changes
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Chart.yaml
+          git commit -m "chore(chart): bump to ${GITHUB_REF_NAME}"
+          git push
