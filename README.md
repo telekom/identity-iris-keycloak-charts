@@ -104,6 +104,12 @@ By participating in this project, you agree to abide by its [Code of Conduct](./
 This project follows the [REUSE standard for software licensing](https://reuse.software/).
 Each file contains copyright and license information, and license texts can be found in the [./LICENSES](./LICENSES) folder. For more information visit https://reuse.software/.
 
+## Conventional CommitsAdd commentMore actions
+
+This project enforces [Conventional Commits](https://www.conventionalcommits.org/) for all commits.
+**All commit messages must follow the Conventional Commits specification.**
+This is automatically checked in CI for both pushes and pull requests.
+
 ### REUSE
 
 The [reuse tool](https://github.com/fsfe/reuse-tool) can be used to verify and establish compliance when new files are added. 
