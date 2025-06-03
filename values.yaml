@@ -24,7 +24,7 @@ global:
       # kubernetes.io/ingress.class: ""
   image:
     repository: iris_keycloak
-    tag: latest
+    tag: 1.1.1
     pullPolicy: IfNotPresent
   # If imagePullSecrets is not empty, a pull secret will be deployed for each entry otherwise
   # no pull secret will be deployed
