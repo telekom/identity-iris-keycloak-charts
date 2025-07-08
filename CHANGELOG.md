@@ -6,6 +6,10 @@ SPDX-License-Identifier: CC0-1.0
 
 # Changelog
 
+## [1.2.7]
+### Fixed
+- Corrected `startup`, `readiness`, and `liveness` probe paths in `values.yaml` to match actual Keycloak health check endpoints.
+
 ## [1.2.6]
 ### Fixed
 - Updated `values.yaml` to use a fixed Docker image tag for Keycloak instead of `latest`, improving reproducibility and clarity.

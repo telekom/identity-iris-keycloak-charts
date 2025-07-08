@@ -24,7 +24,7 @@ global:
       # kubernetes.io/ingress.class: ""
   image:
     repository: iris_keycloak
-    tag: 1.1.1
+    tag: 1.1.2
     pullPolicy: IfNotPresent
   # If imagePullSecrets is not empty, a pull secret will be deployed for each entry otherwise
   # no pull secret will be deployed
@@ -170,22 +170,22 @@ resources:
 
 livenessProbe: |-
   httpGet:
-    path: '/auth/'
-    port: 8080
+    path: '/auth/health/live'
+    port: 9000
   initialDelaySeconds: 300
   timeoutSeconds: 5
 
 readinessProbe: |-
   httpGet:
-    path: '/auth/realms/master'
-    port: 8080
+    path: '/auth/health/ready'
+    port: 9000
   initialDelaySeconds: 30
   timeoutSeconds: 2
 
 startupProbe: |-
   httpGet:
-    path: '/auth/'
-    port: 8080
+    path: '/auth/health/started'
+    port: 9000
   initialDelaySeconds: 30
   timeoutSeconds: 2
   failureThreshold: 60
