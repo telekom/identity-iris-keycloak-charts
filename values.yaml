@@ -168,23 +168,23 @@ resources:
     cpu: 100m
     memory: 600Mi
 
-livenessProbe: |-
+livenessProbe:
   httpGet:
-    path: '/auth/health/live'
+    path: /auth/health/live
     port: 9090
   initialDelaySeconds: 300
   timeoutSeconds: 5
 
-readinessProbe: |-
+readinessProbe:
   httpGet:
-    path: '/auth/health/ready'
+    path: /auth/health/ready
     port: 9090
   initialDelaySeconds: 30
   timeoutSeconds: 2
 
-startupProbe: |-
+startupProbe:
   httpGet:
-    path: '/auth/health/started'
+    path: /auth/health/started
     port: 9090
   initialDelaySeconds: 30
   timeoutSeconds: 2

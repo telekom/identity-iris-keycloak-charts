@@ -80,16 +80,13 @@ spec:
         env:
         {{- include "keycloak.env" $ | indent 8 }}
         {{- with .Values.livenessProbe }}
-        livenessProbe:
-          {{- tpl . $ | nindent 10 }}
+        livenessProbe: {{- toYaml . | nindent 10 }}
         {{- end }}
         {{- with .Values.readinessProbe }}
-        readinessProbe:
-          {{- tpl . $ | nindent 10 }}
+        readinessProbe: {{- toYaml . | nindent 10 }}
         {{- end }}
         {{- with .Values.startupProbe }}
-        startupProbe:
-          {{- tpl . $ | nindent 10 }}
+        startupProbe: {{- toYaml . | nindent 10 }}
         {{- end }}
         resources: {{ .Values.resources | toYaml | nindent 10 }}
         volumeMounts:
