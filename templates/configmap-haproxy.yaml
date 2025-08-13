@@ -30,6 +30,10 @@ data:
         # acl block_url_param urlp(request_uri) -m found
         # http-request deny if block_url_param
         default_backend be_http_default
+
+        # route health paths to management backend
+        acl health_path path -m beg /auth/health # the path should start with '/auth/health'
+        use_backend be_http_management if health_path
 {{ if eq .Values.prometheus.enabled true }}    
     frontend metrics_http
         bind :{{ .Values.prometheus.port | default 9542 }}
@@ -58,3 +62,6 @@ data:
         http-request set-path /auth/realms/master/metrics
         server s1 127.0.0.1:8080
 
+    backend be_http_management # management port of Keycloak
+        mode http
+        server s1 127.0.0.1:9000

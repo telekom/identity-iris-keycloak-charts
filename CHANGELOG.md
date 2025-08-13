@@ -6,6 +6,10 @@ SPDX-License-Identifier: CC0-1.0
 
 # Changelog
 
+## [1.2.8]
+### Fixed
+- Route health endpoints to Keycloak management port (9000) via haproxy
+
 ## [1.2.7]
 ### Fixed
 - Corrected `startup`, `readiness`, and `liveness` probe paths in `values.yaml` to match actual Keycloak health check endpoints.
