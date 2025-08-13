@@ -6,6 +6,11 @@ SPDX-License-Identifier: CC0-1.0
 
 # Changelog
 
+## [1.2.9]
+### Fixed
+- Fixed ports in probe config
+- Updated probe values to be yaml instead of string
+
 ## [1.2.8]
 ### Fixed
 - Route health endpoints to Keycloak management port (9000) via haproxy
