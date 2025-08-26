@@ -6,6 +6,10 @@ SPDX-License-Identifier: CC0-1.0
 
 # Changelog
 
+## [1.2.10]
+### Fixed
+- Make health endpoints routing backward compatible with images version <= 1-1-1
+
 ## [1.2.9]
 ### Fixed
 - Fixed ports in probe config
