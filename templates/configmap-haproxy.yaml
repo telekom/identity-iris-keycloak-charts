@@ -31,9 +31,13 @@ data:
         # http-request deny if block_url_param
         default_backend be_http_default
 
+{{ if ge .Values.global.image.tag "1-1-2" }}
+        # from Iris image version 1-1-2 health endpoint are exposed on separate port
         # route health paths to management backend
         acl health_path path -m beg /auth/health # the path should start with '/auth/health'
         use_backend be_http_management if health_path
+{{- end }}
+
 {{ if eq .Values.prometheus.enabled true }}    
     frontend metrics_http
         bind :{{ .Values.prometheus.port | default 9542 }}
@@ -62,6 +66,8 @@ data:
         http-request set-path /auth/realms/master/metrics
         server s1 127.0.0.1:8080
 
+{{ if ge .Values.global.image.tag "1-1-2" }}
     backend be_http_management # management port of Keycloak
         mode http
         server s1 127.0.0.1:9000
+{{- end }}
