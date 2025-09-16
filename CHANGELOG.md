@@ -8,7 +8,7 @@ SPDX-License-Identifier: CC0-1.0
 
 ## [1.2.11]
 ### Fixed
-- Add the `PGPORT` env variable to make it configurable dynamically and check db init container
+- Add `PGPORT` env variable to make it configurable dynamically and check db init container
 - Harmonize chart image tags with the corresponding repository of Iris images (from dash-based to dot-based names)
 
 ## [1.2.10]
