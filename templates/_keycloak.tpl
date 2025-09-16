@@ -96,6 +96,8 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- define "keycloak.checkdatabase.env" }}
 - name: PGHOST
   value: {{ include "database.host" $ }}
+- name: PGPORT
+  value: {{ .Values.global.database.port | default "5432" | quote }}
 - name: PGDATABASE
   value: {{ .Values.global.database.database }}
 - name: PGUSER
