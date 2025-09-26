@@ -6,6 +6,12 @@ SPDX-License-Identifier: CC0-1.0
 
 # Changelog
 
+## [1.3.0]
+### Fixed
+- Fixed a bug where explicitly setting `externalDatabase.ssl` to `true`would break the connection string.
+### Changed
+- **BREAKING!** Updated the `externalDatabase.sslMode` default value from `verify-full` to `require`.
+
 ## [1.2.11]
 ### Fixed
 - Add `PGPORT` env variable to make it configurable dynamically and check db init container
