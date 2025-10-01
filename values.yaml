@@ -7,15 +7,15 @@ global:
   domain: ""
   labels:
     # Common labels for all resources
-    common: []
+    common: {}
     # Monitoring related Labels
     monitoring:
       # General monitoring labels
-      general: []
+      general: {}
       # Labels for monitoring specific to Keycloak service
-      keycloak: []
+      keycloak: {}
       # Labels for monitoring database services
-      database: []
+      database: {}
   product: "iris_keycloak"
   ingress:
     # tlsSecret: ""
