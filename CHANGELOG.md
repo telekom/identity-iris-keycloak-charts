@@ -6,6 +6,10 @@ SPDX-License-Identifier: CC0-1.0
 
 # Changelog
 
+## [1.2.12]
+### Fixed
+- Specified global label values as objects in schemas
+
 ## [1.2.11]
 ### Fixed
 - Add `PGPORT` env variable to make it configurable dynamically and check db init container
