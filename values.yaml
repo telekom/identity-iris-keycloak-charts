@@ -230,7 +230,7 @@ ingress:
 prometheus:
   enabled: true
   server: http://prom.srv
-  credentials: ""
+  credentials: "" # name of the ClusterTriggerAuthentication resource
   authToken: changeme
   #port: 9542
   #path: /metrics
