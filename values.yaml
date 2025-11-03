@@ -164,7 +164,7 @@ autoscaling:
   rps:
     selector: 'foo="bar"'
     threshold: 0
-    pollingInterval: 15
+  pollingInterval: 15
 
 resources:
   limits:

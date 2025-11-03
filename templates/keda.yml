@@ -19,7 +19,7 @@ spec:
   - type: prometheus
     metadata:
       metricName: rps_per_pod
-      query: sum(rate(keycloak_request_duration_count{{ cat "{" .Values.autoscaling.rps.selector "}" }}[1m])) / min(count:up1{{ cat "{" .Values.autoscaling.rps.selector "}" }})
+      query: sum(rate(keycloak_request_duration_count{{ cat "{" .Values.autoscaling.rps.selector "}" }}[1m]))
       serverAddress: {{ .Values.prometheus.server }}
       threshold: {{ .Values.autoscaling.rps.threshold | quote }}
       authModes: basic
