@@ -1,0 +1,38 @@
+{{- if .Values.autoscaling.enabled }}
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: iris-autoscale
+spec:
+  cooldownPeriod: 120
+  fallback:
+    behavior: static 
+    failureThreshold: 3
+    replicas: {{ .Values.autoscaling.fallbackReplicas }}
+  minReplicaCount: {{ .Values.autoscaling.minReplicas }}
+  maxReplicaCount: {{ .Values.autoscaling.maxReplicas }}
+  pollingInterval: {{ .Values.autoscaling.pollingInterval }}
+  scaleTargetRef:
+    name: iris
+  triggers:
+  {{- if .Values.prometheus.enabled }}
+  - type: prometheus
+    metadata:
+      metricName: rps_per_pod
+      query: sum(rate(keycloak_request_duration_count{{ cat "{" .Values.autoscaling.rps.selector "}" }}[1m])) / min(count:up1{{ cat "{" .Values.autoscaling.rps.selector "}" }})
+      serverAddress: {{ .Values.prometheus.server }}
+      threshold: {{ .Values.autoscaling.rps.threshold | quote }}
+      authModes: basic
+    authenticationRef:
+      kind: ClusterTriggerAuthentication
+      name: {{ .Values.prometheus.credentials }}
+  {{- end }}
+  - type: cpu
+    metricType: Utilization
+    metadata:
+      value: {{ .Values.autoscaling.targetCPUUtilizationPercentage | quote }}
+  - type: memory
+    metricType: Utilization
+    metadata:
+      value: {{ .Values.autoscaling.targetMemoryUtilizationPercentage | quote }}
+{{- end }}
