@@ -3,6 +3,9 @@
 # SPDX-License-Identifier: Apache-2.0
 
 global:
+  # Global image registry that will be used as fallback if component-specific registry is not set
+  # This should be the registry hostname only (e.g., "docker.io", "quay.io", "your.registry.hostname")
+  imageRegistry: ""
   #volumeName: "pvcNameToOverride"
   domain: ""
   labels:
@@ -22,9 +25,17 @@ global:
     annotations: {}
       # external-dns.alpha.kubernetes.io/target: ""
       # kubernetes.io/ingress.class: ""
+  # Keycloak image configuration
   image:
-    repository: iris_keycloak
+    # Image registry hostname (overrides global.imageRegistry if set)
+    registry: ""
+    # Image repository path within the registry (e.g., "bitnami/keycloak", "myorg/keycloak")
+    repository: keycloak/keycloak
+    # Image tag
     tag: 1.1.2
+    # Image digest (overrides tag if set, e.g., "sha256:abc123...")
+    digest: ""
+    # Image pull policy
     pullPolicy: IfNotPresent
   # If imagePullSecrets is not empty, a pull secret will be deployed for each entry otherwise
   # no pull secret will be deployed
@@ -246,8 +257,15 @@ prometheus:
 
 haproxy:
   image:
+    # Image registry hostname (overrides global.imageRegistry if set)
+    registry: ""
+    # Image repository path within the registry
     repository: haproxy
+    # Image tag
     tag: 3.1.6-alpine
+    # Image digest (overrides tag if set)
+    digest: ""
+    # Image pull policy
     pullPolicy: IfNotPresent
   containerSecurityContext: {}
   resources:
@@ -260,8 +278,15 @@ haproxy:
 
 postgresql:
   image:
+    # Image registry hostname (overrides global.imageRegistry if set)
+    registry: ""
+    # Image repository path within the registry
     repository: bitnami/postgresql
+    # Image tag
     tag: 12.3.0-debian-10-r70
+    # Image digest (overrides tag if set)
+    digest: ""
+    # Image pull policy
     pullPolicy: IfNotPresent
   containerSecurityContext: {}
 

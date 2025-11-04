@@ -3,6 +3,10 @@
 # SPDX-License-Identifier: Apache-2.0
 
 global:
+  # Global image registry that will be used as fallback if component-specific registry is not set
+  # This should be the registry hostname only (e.g., "docker.io", "quay.io", "your.registry.hostname")
+  imageRegistry: ""
+
   labels:
     # Common labels for all resources
     common: {}
@@ -41,8 +45,15 @@ sharedBuffers: "32MB"
 maxPreparedTransactions: "0"
 
 image:
+  # Image registry hostname (overrides global.imageRegistry if set)
+  registry: ""
+  # Image repository path within the registry
   repository: bitnami/postgresql
+  # Image tag
   tag: 12.3.0-debian-10-r70
+  # Image digest (overrides tag if set)
+  digest: ""
+  # Image pull policy
   pullPolicy: IfNotPresent
 
 resources:

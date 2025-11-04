@@ -35,7 +35,7 @@ spec:
         resources: {{ .Values.resources | toYaml | nindent 10 }}
         env:
         {{- include "postgresql.env" $ | indent 8 }}
-        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        image: {{ include "common.image" (dict "imageRoot" .Values.image "global" .Values.global) }}
         imagePullPolicy: {{ .Values.image.pullPolicy | default .Values.global.imagePullPolicy }}
         securityContext: {{ .Values.containerSecurityContext | toYaml | nindent 10 }}
         ports:
