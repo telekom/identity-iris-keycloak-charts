@@ -6,6 +6,10 @@ SPDX-License-Identifier: CC0-1.0
 
 # Changelog
 
+## [1.3.0]
+### Changed
+- Autoscaling support based on KEDA instead of HPA
+
 ## [1.2.12]
 ### Fixed
 - Specified global label values as objects in schemas
