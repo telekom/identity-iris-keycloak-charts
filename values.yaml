@@ -157,8 +157,14 @@ replicas: 1
 autoscaling:
   enabled: false
   minReplicas: 2
-  maxReplicas: 4
+  maxReplicas: 16
+  fallbackReplicas: 8
   targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+  rps:
+    selector: 'foo="bar"'
+    threshold: 0
+  pollingInterval: 15
 
 resources:
   limits:
@@ -223,6 +229,8 @@ ingress:
 
 prometheus:
   enabled: true
+  server: http://prom.srv
+  credentials: "" # name of the ClusterTriggerAuthentication resource
   authToken: changeme
   #port: 9542
   #path: /metrics
