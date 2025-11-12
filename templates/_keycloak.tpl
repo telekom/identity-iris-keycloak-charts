@@ -21,7 +21,7 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- end -}}
 
 {{- define "keycloak.dbUrlProperties" -}}
-{{- $ssl := .Values.externalDatabase.ssl | default "true" }}
+{{- $ssl := .Values.externalDatabase.ssl | default "true" | toString }}
 {{- $sslMode := .Values.externalDatabase.sslMode | default "verify-full" }}
 {{- $sslCert := "" }}
 {{- $sslKey := "" }}

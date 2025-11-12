@@ -287,7 +287,7 @@ externalDatabase:
 #  # Set host if you use an external database or service name is not sufficient
 #  host: ''
   ssl: false
-#  sslMode: 'verify-full'
+#  sslMode: 'verify-full' # one of 'disable', 'allow', 'prefer', 'require', 'verify-ca', 'verify-full'
 #  sslCert: |
 #    -----BEGIN CERTIFICATE-----
 #    <CA certificate in PEM format here>
