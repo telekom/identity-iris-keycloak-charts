@@ -17,6 +17,7 @@ global:
       # Labels for monitoring database services
       database: {}
   product: "iris_keycloak"
+  appName: iris
   ingress:
     # tlsSecret: ""
     annotations: {}

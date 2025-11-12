@@ -2,7 +2,7 @@
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
-  name: iris-autoscale
+  name: {{ appName }}-autoscale
 spec:
   cooldownPeriod: 120
   fallback:
