@@ -6,6 +6,11 @@ SPDX-License-Identifier: CC0-1.0
 
 # Changelog
 
+## [1.3.1]
+### Fixed
+- Proper handling and documentation of the ssl mode of the db connection string
+- Use release name for KEDA resource
+
 ## [1.3.0]
 ### Changed
 - Autoscaling support based on KEDA instead of HPA
