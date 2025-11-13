@@ -2,7 +2,7 @@
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
-  name: iris-autoscale
+  name: {{ .Release.Name }}-autoscale
 spec:
   cooldownPeriod: 120
   fallback:
@@ -13,7 +13,7 @@ spec:
   maxReplicaCount: {{ .Values.autoscaling.maxReplicas }}
   pollingInterval: {{ .Values.autoscaling.pollingInterval }}
   scaleTargetRef:
-    name: iris
+    name: {{ .Release.Name }}
   triggers:
   {{- if .Values.prometheus.enabled }}
   - type: prometheus
