@@ -27,13 +27,13 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- $sslKey := "" }}
 {{- $sslRootCert := "" }}
 
-{{- if .Values.externalDatabase.sslCert }}
+{{- if (eq .Values.externalDatabase.sslCert true) }}
 {{- $sslCert = "&sslcert=/certificates/sslcert.crt" }}
 {{- end -}}
-{{- if .Values.externalDatabase.sslKey }}
+{{- if (eq .Values.externalDatabase.sslKey true) }}
 {{- $sslKey = "&sslkey=/certificates/sslkey.pk8" }}
 {{- end -}}
-{{- if .Values.externalDatabase.sslRootCert }}
+{{- if (eq .Values.externalDatabase.sslRootCert true) }}
 {{- $sslRootCert = "&sslrootcert=/certificates/sslrootcert.crt" }}
 {{- end -}}
 
