@@ -16,7 +16,7 @@ global:
       database: {}
 
   imagePullSecrets: []
-
+    # - name: yourSecretName
   imagePullPolicy: IfNotPresent
 
   database:
@@ -67,4 +67,3 @@ deployment:
 podSecurityContext: {}
 
 containerSecurityContext: {}
-

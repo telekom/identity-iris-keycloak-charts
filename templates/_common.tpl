@@ -1,12 +1,8 @@
 {{- define "image_pull_secrets" -}}
-{{- if .Values.global.imagePullSecrets }}
+{{- if gt (len .Values.global.imagePullSecrets) 0 }}
 imagePullSecrets:
 {{- range .Values.global.imagePullSecrets }}
-{{- if not (kindIs "string" .) }}
-  - name: {{ $.Release.Name }}-{{ .name }}
-{{- else }}
-  - name: {{ . }}
-{{- end -}}
+  - name: {{ required "name key is required for imagePullSecrets" .name }}
 {{- end -}}
 {{- end -}}
 {{- end -}}
