@@ -288,6 +288,6 @@ externalDatabase:
 #  host: ''
   ssl: false
   sslMode: 'verify-full' # one of 'disable', 'allow', 'prefer', 'require', 'verify-ca', 'verify-full'
-  sslCert: false
-  sslKey: false
-  sslRootCert: false
+  sslCert: false # If true use provided cert at path /certificates/sslcert.crt
+  sslKey: false # If true use provided key at path /certificates/sslkey.pk8
+  sslRootCert: false # If true use provided cert at path /certificates/sslrootcert.crt
