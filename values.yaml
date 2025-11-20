@@ -268,8 +268,8 @@ haproxy:
 
 postgresql:
   image:
-    repository: bitnami/postgresql
-    tag: 12.3.0-debian-10-r70
+    repository: postgres
+    tag: 12.22-bookworm
     pullPolicy: IfNotPresent
   containerSecurityContext: {}
 
