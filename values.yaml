@@ -26,13 +26,9 @@ global:
     repository: iris_keycloak
     tag: 1.1.2
     pullPolicy: IfNotPresent
-  # If imagePullSecrets is not empty, a pull secret will be deployed for each entry otherwise
-  # no pull secret will be deployed
+  # pull secrets has to be deployed independently
   imagePullSecrets: []
-  #- name: secret
-  #  registry: https://<your-registry>
-  #  username: changeme
-  #  password: changeme
+    # - name: yourSecretName
   imagePullPolicy: IfNotPresent
 
   # Configuration for external secrets integration (e.g., HashiCorp Vault, AWS Secrets Manager, etc.)
