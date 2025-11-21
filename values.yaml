@@ -22,17 +22,24 @@ global:
     annotations: {}
       # external-dns.alpha.kubernetes.io/target: ""
       # kubernetes.io/ingress.class: ""
+
+  # Default registry and namespace for all images
+  # Can be overridden per component (e.g., image.registry, haproxy.image.registry)
+  #
+  # Images are constructed as: {registry}/{namespace}/{repository}:{tag}
+  # Example: mtr.devops.telekom.de/eu_it_co_development/o28m/identity-iris-keycloak:1.1.2
   image:
-    repository: iris_keycloak
-    tag: 1.1.2
-    pullPolicy: IfNotPresent
-  # If imagePullSecrets is not empty, a pull secret will be deployed for each entry otherwise
-  # no pull secret will be deployed
-  imagePullSecrets: []
-  #- name: secret
-  #  registry: https://<your-registry>
-  #  username: changeme
-  #  password: changeme
+    # -- Default registry for all images
+    registry: ""
+    # -- Default namespace for all images
+    namespace: ""
+
+  # -- Array of existing pull secret names to reference for image pulling
+  # Secrets must be created outside this chart and exist in the same namespace
+  # Example: ["my-registry-secret", "another-secret"]
+  imagePullSecrets:
+
+  # -- global default for imagePullPolicy
   imagePullPolicy: IfNotPresent
 
   # Configuration for external secrets integration (e.g., HashiCorp Vault, AWS Secrets Manager, etc.)
@@ -54,6 +61,20 @@ global:
 # This makes sense if you change configMaps or secrets, and you
 # want your deployment to use the latest configuration
 templateChangeTriggers: []
+
+# -- Keycloak image configuration (inherits global.image.registry and global.image.namespace)
+image:
+  # To override global defaults, set registry and/or namespace:
+  # registry: "my-registry.example.com"
+  # namespace: "my-namespace"
+  # To use a public image without namespace, set both to empty:
+  # registry: ""
+  # namespace: ""
+  repository: identity-iris-keycloak
+  tag: "1.1.2"
+
+# -- Image pull policy for Keycloak container
+imagePullPolicy: IfNotPresent
 
 podSecurityContext: {}
 containerSecurityContext: {}
@@ -253,10 +274,17 @@ prometheus:
     #honorLabels: ""
 
 haproxy:
+  # -- HAProxy image configuration (inherits global.image.registry and global.image.namespace)
   image:
+    # To use official HAProxy from Docker Hub, set both registry and namespace to empty:
+    # registry: ""
+    # namespace: ""
     repository: haproxy
-    tag: 3.1.6-alpine
-    pullPolicy: IfNotPresent
+    tag: "3.1.6-alpine"
+
+  # -- Image pull policy for HAProxy container
+  imagePullPolicy: IfNotPresent
+
   containerSecurityContext: {}
   resources:
     limits:
@@ -267,10 +295,17 @@ haproxy:
       cpu: 250m
 
 postgresql:
+  # -- PostgreSQL image configuration (inherits global.image.registry and global.image.namespace)
   image:
-    repository: bitnami/postgresql
-    tag: 12.3.0-debian-10-r70
-    pullPolicy: IfNotPresent
+    # To use official PostgreSQL from Docker Hub, set both registry and namespace to empty:
+    # registry: ""
+    # namespace: ""
+    repository: postgres
+    tag: "16.6"
+
+  # -- Image pull policy for PostgreSQL container
+  imagePullPolicy: IfNotPresent
+
   containerSecurityContext: {}
 
   maxPreparedTransactions: "100"
