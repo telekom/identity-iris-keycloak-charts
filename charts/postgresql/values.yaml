@@ -15,8 +15,22 @@ global:
       # Labels for monitoring database services
       database: {}
 
-  imagePullSecrets: []
+  # Default registry and namespace for all images
+  # Can be overridden per component (e.g., image.registry)
+  #
+  # Images are constructed as: {registry}/{namespace}/{repository}:{tag}
+  image:
+    # -- Default registry for all images
+    registry: ""
+    # -- Default namespace for all images
+    namespace: ""
 
+  # -- Array of existing pull secret names to reference for image pulling
+  # Secrets must be created outside this chart and exist in the same namespace
+  # Example: ["my-registry-secret", "another-secret"]
+  imagePullSecrets:
+
+  # -- global default for imagePullPolicy
   imagePullPolicy: IfNotPresent
 
   database:
@@ -40,10 +54,16 @@ sharedBuffers: "32MB"
 # setting this parameter to zero (default) disables the prepared-transaction feature
 maxPreparedTransactions: "0"
 
+# -- PostgreSQL image configuration (inherits global.image.registry and global.image.namespace)
 image:
-  repository: bitnami/postgresql
-  tag: 12.3.0-debian-10-r70
-  pullPolicy: IfNotPresent
+  # To use official PostgreSQL from Docker Hub, set both registry and namespace to empty:
+  registry: ""
+  namespace: ""
+  repository: postgres
+  tag: "16.6"
+
+# -- Image pull policy for PostgreSQL container
+imagePullPolicy: IfNotPresent
 
 resources:
   limits:
