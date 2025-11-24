@@ -235,6 +235,7 @@ prometheus:
   serviceMonitor:
     enabled: true
     targetLabels: []
+    metricRelabelings: []
     #selector: "guardians-raccoon"
     #scheme: http
     #interval: "15s"
@@ -242,6 +243,7 @@ prometheus:
     #honorLabels: ""
   podMonitor:
     enabled: false
+    metricRelabelings: []
     #selector: ""
     #scheme: http
     #interval: "15s"
