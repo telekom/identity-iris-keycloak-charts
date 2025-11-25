@@ -19,7 +19,7 @@ Default settings in this template are prepared for non-prod environments.
 |-----------------------------|--------------|
 | Keycloak                    | 26.0.8       |
 | java                        | 17.0.9       |
-| PostgreSQL                  | 12.3         |
+| PostgreSQL                  | 12.22        |
 
 ## Description
 
