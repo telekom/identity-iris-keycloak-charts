@@ -22,6 +22,20 @@ spec:
       {{- if .Values.prometheus.podMonitor.honorLabels }}
       honorLabels: {{ .Values.prometheus.podMonitor.honorLabels }}
       {{- end }}
+    - port: extra-metrics-http
+      path: "/extraMetrics"
+      {{- if .Values.prometheus.podMonitor.scheme }}
+      scheme: {{ .Values.prometheus.podMonitor.scheme }}
+      {{- end }}
+      {{- if .Values.prometheus.podMonitor.interval }}
+      interval: {{ .Values.prometheus.podMonitor.interval | quote}}
+      {{- end }}
+      {{- if .Values.prometheus.podMonitor.scrapeTimeout }}
+      scrapeTimeout: {{ .Values.prometheus.podMonitor.scrapeTimeout | quote }}
+      {{- end }}
+      {{- if .Values.prometheus.podMonitor.honorLabels }}
+      honorLabels: {{ .Values.prometheus.podMonitor.honorLabels }}
+      {{- end }}
   namespaceSelector:
     matchNames:
       - {{ .Release.Namespace }}

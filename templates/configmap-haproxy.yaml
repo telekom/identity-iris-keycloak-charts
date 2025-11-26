@@ -44,7 +44,8 @@ data:
         mode http
         option httplog
         # use metrics backend if the path is {{ .Values.prometheus.path | default "/metrics" }}
-        use_backend be_metrics_default if { path {{ .Values.prometheus.path | default "/metrics" }} } 
+        use_backend be_http_management if { path {{ .Values.prometheus.path | default "/metrics" }} }
+        use_backend be_metrics_default if { path "/extraMetrics" }
 {{- end }}
     # traffic routing
     backend be_http_default
@@ -69,5 +70,6 @@ data:
 {{ if ge .Values.global.image.tag "1.1.2" }}
     backend be_http_management # management port of Keycloak
         mode http
+        http-request replace-path /metrics(.*) /auth/metrics\1
         server s1 127.0.0.1:9000
 {{- end }}
