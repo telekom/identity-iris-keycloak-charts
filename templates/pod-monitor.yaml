@@ -22,7 +22,7 @@ spec:
       {{- if .Values.prometheus.podMonitor.honorLabels }}
       honorLabels: {{ .Values.prometheus.podMonitor.honorLabels }}
       {{- end }}
-    - port: extra-metrics-http
+    - port: metrics-http
       path: {{ .Values.prometheus.extraPath | default "/extraMetrics" }}
       {{- if .Values.prometheus.podMonitor.scheme }}
       scheme: {{ .Values.prometheus.podMonitor.scheme }}
