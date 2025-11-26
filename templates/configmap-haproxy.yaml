@@ -45,7 +45,7 @@ data:
         option httplog
         # use metrics backend if the path is {{ .Values.prometheus.path | default "/metrics" }}
         use_backend be_http_management if { path {{ .Values.prometheus.path | default "/metrics" }} }
-        use_backend be_metrics_default if { path "/extraMetrics" }
+        use_backend be_metrics_default if { path {{ .Values.prometheus.extraPath | default "/extraMetrics" }} }
 {{- end }}
     # traffic routing
     backend be_http_default
