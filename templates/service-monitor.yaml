@@ -15,6 +15,10 @@ spec:
   endpoints:
     - port: metrics-http
       path: {{ .Values.prometheus.path | default "/metrics" }}
+      {{- with .Values.prometheus.serviceMonitor.metricRelabelings }}
+      metricRelabelings:
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
       {{- if .Values.prometheus.serviceMonitor.scheme }}
       scheme: {{ .Values.prometheus.serviceMonitor.scheme }}
       {{- end }}
@@ -30,6 +34,10 @@ spec:
     - port: metrics-http
       path: {{ .Values.prometheus.extraPath | default "/extraMetrics" }}
       {{- if .Values.prometheus.serviceMonitor.scheme }}
+      {{- with .Values.prometheus.serviceMonitor.metricRelabelings }}
+      metricRelabelings:
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
       scheme: {{ .Values.prometheus.serviceMonitor.scheme }}
       {{- end }}
       {{- if .Values.prometheus.serviceMonitor.interval }}
