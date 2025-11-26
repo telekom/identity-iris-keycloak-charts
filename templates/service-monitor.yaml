@@ -28,7 +28,7 @@ spec:
       honorLabels: {{ .Values.prometheus.serviceMonitor.honorLabels }}
       {{- end }}
     - port: metrics-http
-      path: "/extraMetrics"
+      path: {{ .Values.prometheus.extraPath | default "/extraMetrics" }}
       {{- if .Values.prometheus.serviceMonitor.scheme }}
       scheme: {{ .Values.prometheus.serviceMonitor.scheme }}
       {{- end }}
