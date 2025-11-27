@@ -230,6 +230,7 @@ prometheus:
   authToken: changeme
   #port: 9542
   #path: /metrics
+  #extraPath: /extraMetrics
   # podMonitor is used to provide a PodMonitor CRD to integrate with prometheus operator
   # prometheus has to be enabled to use this
   serviceMonitor:
