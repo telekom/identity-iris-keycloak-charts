@@ -4,7 +4,6 @@ SPDX-FileCopyrightText: 2025 Deutsche Telekom AG
 SPDX-License-Identifier: CC0-1.0    
 -->
 
-# Changelog
 
 ## [1.3.1]
 ### Fixed
