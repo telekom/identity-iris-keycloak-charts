@@ -13,7 +13,12 @@ export default {
         [
             '@semantic-release/changelog',
             {
-                "changelogFile": "CHANGELOG.md"
+                "changelogFile": 'CHANGELOG.md',
+                "changelogTitle": `<!--
+SPDX-FileCopyrightText: 2025 Deutsche Telekom AG
+
+SPDX-License-Identifier: CC0-1.0    
+-->`
             }
         ],
         [
