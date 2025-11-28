@@ -10,7 +10,19 @@ export default {
         '@semantic-release/commit-analyzer',
         'semantic-release-export-data',
         '@semantic-release/release-notes-generator',
-        '@semantic-release/changelog',
+        [
+            '@semantic-release/changelog',
+            {
+                "changelogFile": "CHANGELOG.md"
+            }
+        ],
+        [
+            '@semantic-release/git',
+            {
+                "assets": ["CHANGELOG.md"],
+                "message": "chore(release): ${nextRelease.version} [skip actions]\n\n${nextRelease.notes}"
+            }
+        ],
         '@semantic-release/github'
     ]
 };
