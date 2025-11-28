@@ -4,6 +4,20 @@ SPDX-FileCopyrightText: 2025 Deutsche Telekom AG
 SPDX-License-Identifier: CC0-1.0    
 -->
 
+# [1.4.0](https://github.com/telekom/identity-iris-keycloak-charts/compare/1.3.1...1.4.0) (2025-11-28)
+
+
+### Bug Fixes
+
+* handle imagePullSecrets consitently ([#37](https://github.com/telekom/identity-iris-keycloak-charts/issues/37)) ([744a708](https://github.com/telekom/identity-iris-keycloak-charts/commit/744a7080f9f88d1fef8c3600b071a3ebf4ae9286))
+
+
+### Features
+
+* added metricRelabelings for monitoring resources ([#40](https://github.com/telekom/identity-iris-keycloak-charts/issues/40)) ([f35cf51](https://github.com/telekom/identity-iris-keycloak-charts/commit/f35cf51275d51f6fa4d90a283331548fda8ba4e7))
+* support for builtin metrics ([#41](https://github.com/telekom/identity-iris-keycloak-charts/issues/41)) ([880c52b](https://github.com/telekom/identity-iris-keycloak-charts/commit/880c52becb60890ef5e55c771af1f0068cb3e5cb))
+* update iris keycloak image to 1.1.3 ([#44](https://github.com/telekom/identity-iris-keycloak-charts/issues/44)) ([483f26f](https://github.com/telekom/identity-iris-keycloak-charts/commit/483f26f5fa9d1c3a7e2f3a0bb2cec86a797a5e6b))
+* use postgres image instead of bitnami ([#36](https://github.com/telekom/identity-iris-keycloak-charts/issues/36)) ([cc5daf2](https://github.com/telekom/identity-iris-keycloak-charts/commit/cc5daf276e57b9345e866218880702a1d5ba089b))
 
 ## [1.3.1]
 ### Fixed
@@ -105,4 +119,3 @@ SPDX-License-Identifier: CC0-1.0
 - Removed AWS-specific `storageClassName` from general templates.
 
 ## [1.0.0] - Init
-
