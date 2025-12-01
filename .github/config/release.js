@@ -28,12 +28,12 @@ SPDX-License-Identifier: CC0-1.0
                 "message": "chore(release): ${nextRelease.version} [skip actions]\n\n${nextRelease.notes}"
             }
         ],
-        [
-            'semantic-release-helm3',
-            {
-                onlyUpdateVersion: true,
-            }
-        ],
+            [
+                'semantic-release-helm3',
+                {
+                    onlyUpdateVersion: true,
+                }
+            ],
         '@semantic-release/github'
     ]
 };

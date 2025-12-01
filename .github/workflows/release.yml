@@ -14,10 +14,6 @@ on:
         options:
           - "yes"
           - "no"
-      chart_ver:
-        required: false
-        description: "Chart version to set (only for test branch)"
-        default: "5.5.5"
 
 
 jobs:
@@ -58,33 +54,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npx semantic-release --extends ./.github/config/release.js
-
-  increase-chart-version:
-    runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/test' }}
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Install yq
-        run: sudo snap install yq
-
-      - name: Set VERSION
-        run: |
-          echo "VERSION=${{ inputs.chart_version }}" >> "$GITHUB_ENV"
-
-      - name: Update Chart.yaml version
-        run: |
-          echo "New version: $VERSION"
-          yq -i ".version = \"$VERSION\"" Chart.yaml
-
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
-
-          git add Chart.yaml
-          git commit -m "chore(chart): bump version to $VERSION" || echo "No changes to commit"
-          git push
