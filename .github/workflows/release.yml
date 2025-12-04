@@ -45,6 +45,7 @@ jobs:
           npm install @semantic-release/changelog
           npm install @semantic-release/github
           npm install @semantic-release/git
+          npm install semantic-release-helm3
       - name: Run Dry Run Semantic Release
         id: dry-run
         env:
