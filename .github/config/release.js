@@ -22,18 +22,18 @@ SPDX-License-Identifier: CC0-1.0
             }
         ],
         [
-            '@semantic-release/git',
-            {
-                "assets": ["CHANGELOG.md"],
-                "message": "chore(release): ${nextRelease.version} [skip actions]\n\n${nextRelease.notes}"
-            }
-        ],
-            [
                 'semantic-release-helm3',
                 {
                     onlyUpdateVersion: true,
                 }
-            ],
+        ],
+        [
+            '@semantic-release/git',
+            {
+                "assets": ["CHANGELOG.md", "Chart.yaml"],
+                "message": "chore(release): ${nextRelease.version} [skip actions]\n\n${nextRelease.notes}"
+            }
+        ],
         '@semantic-release/github'
     ]
 };
