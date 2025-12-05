@@ -4,6 +4,14 @@ SPDX-FileCopyrightText: 2025 Deutsche Telekom AG
 SPDX-License-Identifier: CC0-1.0    
 -->
 
+## [1.4.1](https://github.com/telekom/identity-iris-keycloak-charts/compare/1.4.0...1.4.1) (2025-12-05)
+
+
+### Bug Fixes
+
+* correct indentation of monitor resources ([481fba2](https://github.com/telekom/identity-iris-keycloak-charts/commit/481fba2f08423cd28a0447f3f2578cdfb655cdf3))
+* install helm plugin for release workflow ([ad13b9f](https://github.com/telekom/identity-iris-keycloak-charts/commit/ad13b9f213883dc79f66d2afbbd37df960cab289))
+
 # [1.4.0](https://github.com/telekom/identity-iris-keycloak-charts/compare/1.3.1...1.4.0) (2025-11-28)
 
 
