@@ -28,11 +28,11 @@ spec:
       {{- end }}
     - port: metrics-http
       path: {{ .Values.prometheus.extraPath | default "/extraMetrics" }}
-      {{- if .Values.prometheus.podMonitor.scheme }}
       {{- with .Values.prometheus.podMonitor.metricRelabelings }}
       metricRelabelings:
       {{- toYaml . | nindent 6 }}
       {{- end }}
+      {{- if .Values.prometheus.podMonitor.scheme }}
       scheme: {{ .Values.prometheus.podMonitor.scheme }}
       {{- end }}
       {{- if .Values.prometheus.podMonitor.interval }}
