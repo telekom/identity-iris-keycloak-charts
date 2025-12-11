@@ -54,6 +54,9 @@ templateChangeTriggers: []
 podSecurityContext: {}
 containerSecurityContext: {}
 
+# custom annotations for iris pods
+annotations: {}
+
 #topologyKey: kubernetes.io/hostname
 
 # Keycloak admin role credentials

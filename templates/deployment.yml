@@ -25,11 +25,9 @@ spec:
     metadata:
       annotations:
       {{- include "keycloak.checksums" $ | nindent 8 }}
-{{- if eq .Values.prometheus.enabled true }}
-        prometheus.io/path: '{{ .Values.prometheus.path | default "/metrics" }}'
-        prometheus.io/scrape: 'true'
-        prometheus.io/port: '{{ .Values.prometheus.port | default 9542 }}'
-{{- end }}
+      {{- with .Values.annotations }}
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
       labels:
       {{- include "keycloak.labels" $ | nindent 8 }}
       {{- include "common.status-monitor.labels" $ | nindent 8 }}
