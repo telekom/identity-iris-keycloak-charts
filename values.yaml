@@ -51,6 +51,8 @@ global:
 # want your deployment to use the latest configuration
 templateChangeTriggers: []
 
+revisionHistoryLimit: 10
+
 podSecurityContext: {}
 containerSecurityContext: {}
 
