@@ -4,7 +4,7 @@
 
 apiVersion: v2
 name: iris_keycloak
-version: 1.4.2
+version: 1.5.0
 appVersion: 1.3.0
 keywords:
   - iris_keycloak

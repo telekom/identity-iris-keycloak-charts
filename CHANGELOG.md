@@ -4,6 +4,14 @@ SPDX-FileCopyrightText: 2025 Deutsche Telekom AG
 SPDX-License-Identifier: CC0-1.0    
 -->
 
+# [1.5.0](https://github.com/telekom/identity-iris-keycloak-charts/compare/1.4.2...1.5.0) (2025-12-11)
+
+
+### Features
+
+* **template:** add configuration option for revision history limit ([#47](https://github.com/telekom/identity-iris-keycloak-charts/issues/47)) ([d69f139](https://github.com/telekom/identity-iris-keycloak-charts/commit/d69f13907be000a91230b52a8ac0058308dc6c85))
+* **template:** remove prometheus annotations ([#46](https://github.com/telekom/identity-iris-keycloak-charts/issues/46)) ([f7a5e93](https://github.com/telekom/identity-iris-keycloak-charts/commit/f7a5e93daffa8e9c8b254b329051bb9ce88b524c))
+
 ## [1.4.2](https://github.com/telekom/identity-iris-keycloak-charts/compare/1.4.1...1.4.2) (2025-12-05)
 
 
