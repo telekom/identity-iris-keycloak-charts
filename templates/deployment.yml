@@ -25,7 +25,9 @@ spec:
     metadata:
       annotations:
       {{- include "keycloak.checksums" $ | nindent 8 }}
-      {{- toYaml .Values.annotations | nindent 8 }}
+      {{- with .Values.annotations }}
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
       labels:
       {{- include "keycloak.labels" $ | nindent 8 }}
       {{- include "common.status-monitor.labels" $ | nindent 8 }}
