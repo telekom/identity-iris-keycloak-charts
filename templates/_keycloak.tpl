@@ -121,12 +121,24 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- end -}}
 {{- end -}}
 
-{{- define "keycloak.host" -}}
-{{- if not (empty .Values.ingress.hostname) }}
-{{- .Values.ingress.hostname -}}
-{{- else }}
-{{- printf "%s-%s.%s" .Release.Name .Release.Namespace .Values.global.domain }}
-{{- end -}}
+
+{{- define "keycloak.hosts" }}
+  {{- $mainHost := (printf "%s-%s.%s" .Release.Name .Release.Namespace .Values.global.domain) }}
+  {{- if not (empty .Values.ingress.hostname) }}
+    {{- $mainHost = .Values.ingress.hostname }}
+  {{- end }}
+  {{- $hosts := list $mainHost }}
+  {{- $altHost := .Values.ingress.altHostname }}
+  {{- if not (empty $altHost) }}
+    {{- if (kindIs "slice" $altHost) }}
+      {{- range (compact $altHost) }}
+        {{- $hosts = append $hosts . }}
+      {{- end }}
+    {{- else }}
+      {{- $hosts = append $hosts .Values.ingress.altHostname }}
+    {{- end }}
+  {{- end }}
+  {{- $hosts  | toYaml }}
 {{- end -}}
 
 {{- define "keycloak.db.certificates.volume" }}
