@@ -121,12 +121,15 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- end -}}
 {{- end -}}
 
+{{- define "keycloak.mainHost" -}}
+{{- if not (empty .Values.ingress.hostname) }}
+{{- .Values.ingress.hostname -}}
+{{- else }}
+{{- printf "%s-%s.%s" .Release.Name .Release.Namespace .Values.global.domain }}
+{{- end -}}
 
 {{- define "keycloak.hosts" }}
-  {{- $mainHost := (printf "%s-%s.%s" .Release.Name .Release.Namespace .Values.global.domain) }}
-  {{- if not (empty .Values.ingress.hostname) }}
-    {{- $mainHost = .Values.ingress.hostname }}
-  {{- end }}
+  {{- $mainHost := {{ include "keycloak.mainHost . "}} }}
   {{- $hosts := list $mainHost }}
   {{- $altHost := .Values.ingress.altHostname }}
   {{- if not (empty $altHost) }}
@@ -171,7 +174,7 @@ secretName: {{ .Values.ingress.tls.secret | default .Values.global.ingress.tlsSe
 
 {{- define "keycloak.tls.hosts" -}}
 {{- if or (not .Values.ingress.tls.hosts) (eq (len .Values.ingress.tls.hosts) 0) -}}
-- {{ include "keycloak.host" . }}
+- {{ include "keycloak.mainHost" . }}
 {{- else -}}
 {{- range .Values.ingress.tls.hosts }}
 - {{ . }}
