@@ -131,7 +131,7 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
         {{- $hosts = append $hosts . }}
       {{- end }}
     {{- else }}
-      {{- $hosts = append $hosts .Values.ingress.altHostname }}
+      {{- $hosts = append $hosts $altHost }}
     {{- end }}
   {{- end }}
   {{- $hosts | toYaml }}
