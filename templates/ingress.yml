@@ -6,9 +6,8 @@ metadata:
   name: {{ .Release.Name }}
   labels: {{ include "keycloak.labels" $ | nindent 4 }}
 spec:
-  {{- $hosts := include "keycloak.hosts" . | fromYamlArray }}
   rules:
-  {{- range $hosts }}
+  {{- range (include "keycloak.hosts" . | fromYamlArray) }}
   - host: {{ . }}
     http:
       paths:
