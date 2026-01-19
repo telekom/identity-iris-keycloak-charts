@@ -113,23 +113,16 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
       key: databasePassword
 {{- end -}}
 
-{{- define "keycloak.adminHost" }}
-{{- if not (empty .Values.ingress.adminHostname) -}}
-{{- .Values.ingress.adminHostname -}}
-{{- else -}}
-{{ include "keycloak.host" $ }}
-{{- end -}}
+{{- define "keycloak.mainHost" }}
+  {{- .Values.ingress.hostname | default (printf "%s-%s.%s" .Release.Name .Release.Namespace .Values.global.domain) }}
 {{- end -}}
 
-{{- define "keycloak.mainHost" -}}
-{{- if not (empty .Values.ingress.hostname) }}
-{{- .Values.ingress.hostname -}}
-{{- else }}
-{{- printf "%s-%s.%s" .Release.Name .Release.Namespace .Values.global.domain }}
+{{- define "keycloak.adminHost" }}
+  {{- .Values.ingress.adminHostname | default (include "keycloak.mainHost" .) }}
 {{- end -}}
 
 {{- define "keycloak.hosts" }}
-  {{- $mainHost := {{ include "keycloak.mainHost . "}} }}
+  {{- $mainHost := include "keycloak.mainHost" . }}
   {{- $hosts := list $mainHost }}
   {{- $altHost := .Values.ingress.altHostname }}
   {{- if not (empty $altHost) }}
@@ -141,7 +134,7 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
       {{- $hosts = append $hosts .Values.ingress.altHostname }}
     {{- end }}
   {{- end }}
-  {{- $hosts  | toYaml }}
+  {{- $hosts | toYaml }}
 {{- end -}}
 
 {{- define "keycloak.db.certificates.volume" }}
