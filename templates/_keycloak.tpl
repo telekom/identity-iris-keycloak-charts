@@ -113,20 +113,28 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
       key: databasePassword
 {{- end -}}
 
-{{- define "keycloak.adminHost" }}
-{{- if not (empty .Values.ingress.adminHostname) -}}
-{{- .Values.ingress.adminHostname -}}
-{{- else -}}
-{{ include "keycloak.host" $ }}
-{{- end -}}
+{{- define "keycloak.mainHost" }}
+  {{- .Values.ingress.hostname | default (printf "%s-%s.%s" .Release.Name .Release.Namespace .Values.global.domain) }}
 {{- end -}}
 
-{{- define "keycloak.host" -}}
-{{- if not (empty .Values.ingress.hostname) }}
-{{- .Values.ingress.hostname -}}
-{{- else }}
-{{- printf "%s-%s.%s" .Release.Name .Release.Namespace .Values.global.domain }}
+{{- define "keycloak.adminHost" }}
+  {{- .Values.ingress.adminHostname | default (include "keycloak.mainHost" $) }}
 {{- end -}}
+
+{{- define "keycloak.hosts" }}
+  {{- $mainHost := include "keycloak.mainHost" $ }}
+  {{- $hosts := list $mainHost }}
+  {{- $altHost := .Values.ingress.altHostname }}
+  {{- if not (empty $altHost) }}
+    {{- if (kindIs "slice" $altHost) }}
+      {{- range (compact $altHost) }}
+        {{- $hosts = append $hosts . }}
+      {{- end }}
+    {{- else }}
+      {{- $hosts = append $hosts $altHost }}
+    {{- end }}
+  {{- end }}
+  {{- $hosts | toYaml }}
 {{- end -}}
 
 {{- define "keycloak.db.certificates.volume" }}
@@ -159,7 +167,7 @@ secretName: {{ .Values.ingress.tls.secret | default .Values.global.ingress.tlsSe
 
 {{- define "keycloak.tls.hosts" -}}
 {{- if or (not .Values.ingress.tls.hosts) (eq (len .Values.ingress.tls.hosts) 0) -}}
-- {{ include "keycloak.host" . }}
+- {{ include "keycloak.mainHost" $ }}
 {{- else -}}
 {{- range .Values.ingress.tls.hosts }}
 - {{ . }}

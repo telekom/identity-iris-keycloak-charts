@@ -7,28 +7,18 @@ metadata:
   labels: {{ include "keycloak.labels" $ | nindent 4 }}
 spec:
   rules:
-  - host: {{ include "keycloak.host" . }}
+  {{- range (include "keycloak.hosts" . | fromYamlArray) }}
+  - host: {{ . }}
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: {{ .Release.Name }}
+            name: {{ $.Release.Name }}
             port:
               number: 80
-{{- if not (empty .Values.ingress.altHostname) }}
-  - host: {{ .Values.ingress.altHostname  }}
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: {{ .Release.Name }}
-            port:
-              number: 80
-{{- end }}
+  {{- end }}
 {{- if .Values.ingress.ingressClassName }}
   ingressClassName: {{ .Values.ingress.ingressClassName }}
 {{- end }}

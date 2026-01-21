@@ -205,7 +205,7 @@ logLevel: INFO
 ingress:
   enabled: true
   hostname: localhost
-#  altHostname: ""   # alternative second host name in ingress
+#  altHostname: ""   # alternative hostnames in ingress, either a string or a list of strings
 #  adminHostname: ""   # overwrite host used in KC_HOSTNAME
   ingressClassName: ""
   tls:
