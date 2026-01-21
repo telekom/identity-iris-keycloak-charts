@@ -4,6 +4,13 @@ SPDX-FileCopyrightText: 2025 Deutsche Telekom AG
 SPDX-License-Identifier: CC0-1.0    
 -->
 
+# [1.6.0](https://github.com/telekom/identity-iris-keycloak-charts/compare/1.5.0...1.6.0) (2026-01-21)
+
+
+### Features
+
+* multiple alternative hostnames for ingress ([#48](https://github.com/telekom/identity-iris-keycloak-charts/issues/48)) ([5edb629](https://github.com/telekom/identity-iris-keycloak-charts/commit/5edb629ce6b061aa2320ebb88a942acedb2f2485))
+
 # [1.5.0](https://github.com/telekom/identity-iris-keycloak-charts/compare/1.4.2...1.5.0) (2025-12-11)
 
 
