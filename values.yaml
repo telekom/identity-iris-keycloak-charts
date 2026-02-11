@@ -67,6 +67,9 @@ adminPassword: changeme
 
 clientAuthMethodMetricsEnabled: "false"
 
+# keycloakAdditionalArgs:
+#  - "--log-console-output=json"
+
 # Infinispan cache configuration for Keycloak
 # This configuration defines cache containers, transport settings, and cache-specific configurations
 infinispan:
