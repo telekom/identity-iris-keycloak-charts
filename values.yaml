@@ -67,8 +67,11 @@ adminPassword: changeme
 
 clientAuthMethodMetricsEnabled: "false"
 
-# keycloakAdditionalArgs:
-#  - "--log-console-output=json"
+# Options could be found in documentation: https://www.keycloak.org/server/configuration
+# Some environments vars are already configured in: ./templates/_keycloak.tpl
+keycloakExtraEnvVars: []
+  # - name: KC_LOG_CONSOLE_FORMAT
+  #   value: json
 
 # Infinispan cache configuration for Keycloak
 # This configuration defines cache containers, transport settings, and cache-specific configurations

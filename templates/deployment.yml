@@ -76,11 +76,8 @@ spec:
           - "--cache=ispn"
           - "--cache-stack=kubernetes"
           {{- end }}
-          {{- if .Values.keycloakAdditionalArgs }}
-          {{- toYaml .Values.keycloakAdditionalArgs | nindent 10 }}
-          {{- end }}
         env:
-        {{- include "keycloak.env" $ | indent 8 }}
+        {{- include "keycloak.env" $ | indent 8 -}}
         {{- with .Values.livenessProbe }}
         livenessProbe: {{- toYaml . | nindent 10 }}
         {{- end }}

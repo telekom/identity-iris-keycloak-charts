@@ -70,7 +70,7 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
     secretKeyRef:
       name: {{ .Release.Name }}
       key: adminPassword
-- name: KEYCLOAK_LOGLEVEL
+- name: KC_LOG_LEVEL # CHECK IT
   value: {{ .Values.logLevel | default "INFO" }}
 - name: PROXY_ADDRESS_FORWARDING
   value: "true"
@@ -94,6 +94,9 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- if .Values.externalDatabase.ssl }}
 - name: KC_DB_URL_PROPERTIES
   value: {{ include "keycloak.dbUrlProperties" $ | quote }}
+{{- end -}}
+{{- if .Values.keycloakExtraEnvVars }}
+{{ tpl (toYaml .Values.keycloakExtraEnvVars) $ }}
 {{- end -}}
 {{- end -}}
 
