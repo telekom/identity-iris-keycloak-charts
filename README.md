@@ -1,7 +1,7 @@
 <!--
 SPDX-FileCopyrightText: 2025 Deutsche Telekom AG
 
-SPDX-License-Identifier: CC0-1.0    
+SPDX-License-Identifier: CC0-1.0
 -->
 
 # Iris Keycloak Charts
@@ -15,7 +15,7 @@ Default settings in this template are prepared for non-prod environments.
 
 ## Version
 
-| Installed software versions | Version Info |    
+| Installed software versions | Version Info |
 |-----------------------------|--------------|
 | Keycloak                    | 26.0.8       |
 | java                        | 21.0.9       |
@@ -112,7 +112,7 @@ This is automatically checked in CI for both pushes and pull requests.
 
 ### REUSE
 
-The [reuse tool](https://github.com/fsfe/reuse-tool) can be used to verify and establish compliance when new files are added. 
+The [reuse tool](https://github.com/fsfe/reuse-tool) can be used to verify and establish compliance when new files are added.
 
 For more information on the reuse tool visit https://github.com/fsfe/reuse-tool.
 
