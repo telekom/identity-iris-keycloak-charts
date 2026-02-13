@@ -49,5 +49,7 @@ spec:
       {{- if .Values.prometheus.serviceMonitor.honorLabels }}
       honorLabels: {{ .Values.prometheus.serviceMonitor.honorLabels }}
       {{- end }}
+  {{- if .Values.prometheus.serviceMonitor.targetLabels }}  
   targetLabels: {{ include "service-monitor.targetLabels" $ | nindent 2 }}
+  {{- end }}
 {{- end -}}
