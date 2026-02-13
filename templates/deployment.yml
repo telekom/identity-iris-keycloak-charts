@@ -77,7 +77,7 @@ spec:
           - "--cache-stack=kubernetes"
           {{- end }}
         env:
-        {{- include "keycloak.env" $ | indent 8 }}
+        {{- include "keycloak.env" $ | indent 8 -}}
         {{- with .Values.livenessProbe }}
         livenessProbe: {{- toYaml . | nindent 10 }}
         {{- end }}
