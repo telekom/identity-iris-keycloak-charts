@@ -70,7 +70,7 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
     secretKeyRef:
       name: {{ .Release.Name }}
       key: adminPassword
-- name: KC_LOG_LEVEL # CHECK IT
+- name: KC_LOG_LEVEL
   value: {{ .Values.logLevel | default "INFO" }}
 - name: PROXY_ADDRESS_FORWARDING
   value: "true"
