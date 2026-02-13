@@ -18,7 +18,7 @@ Default settings in this template are prepared for non-prod environments.
 | Installed software versions | Version Info |    
 |-----------------------------|--------------|
 | Keycloak                    | 26.0.8       |
-| java                        | 17.0.9       |
+| java                        | 21.0.9       |
 | PostgreSQL                  | 12.22        |
 
 ## Description
