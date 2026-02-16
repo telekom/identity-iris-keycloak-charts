@@ -4,6 +4,18 @@ SPDX-FileCopyrightText: 2025 Deutsche Telekom AG
 SPDX-License-Identifier: CC0-1.0    
 -->
 
+# [1.7.0](https://github.com/telekom/identity-iris-keycloak-charts/compare/1.6.0...1.7.0) (2026-02-16)
+
+
+### Bug Fixes
+
+* added condition for servicemonitor targetLabels ([#49](https://github.com/telekom/identity-iris-keycloak-charts/issues/49)) ([97e0ab0](https://github.com/telekom/identity-iris-keycloak-charts/commit/97e0ab02387eca791923bce26518b2e107953ae8))
+
+
+### Features
+
+* enable extends keycloak env vars([#50](https://github.com/telekom/identity-iris-keycloak-charts/issues/50)) ([5f462fd](https://github.com/telekom/identity-iris-keycloak-charts/commit/5f462fd33fc54cedbabe0f61adcce2c96f920aee))
+
 # [1.6.0](https://github.com/telekom/identity-iris-keycloak-charts/compare/1.5.0...1.6.0) (2026-01-21)
 
 
