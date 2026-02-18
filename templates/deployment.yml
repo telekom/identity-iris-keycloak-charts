@@ -88,6 +88,12 @@ spec:
         startupProbe: {{- toYaml . | nindent 10 }}
         {{- end }}
         resources: {{ .Values.resources | toYaml | nindent 10 }}
+        {{- if .Values.terminationKeycloakLatencySeconds }}
+        lifecycle:
+          preStop:
+            exec:
+              command: ["sleep", {{ .Values.terminationKeycloakLatencySeconds }} ]
+        {{ end }}
         volumeMounts:
         {{- if .Values.infinispan.enabled }}
         - name: cache-config
