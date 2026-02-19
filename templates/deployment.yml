@@ -92,7 +92,7 @@ spec:
         lifecycle:
           preStop:
             exec:
-              command: ["sleep", ({{ .Values.terminationKeycloakLatencySeconds }} | quote) ]
+              command: ["sleep", {{ .Values.terminationKeycloakLatencySeconds | quote }} ]
         {{ end }}
         volumeMounts:
         {{- if .Values.infinispan.enabled }}
