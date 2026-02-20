@@ -88,7 +88,7 @@ spec:
         startupProbe: {{- toYaml . | nindent 10 }}
         {{- end }}
         resources: {{ .Values.resources | toYaml | nindent 10 }}
-        {{- if gt .Values.terminationKeycloakDelaySeconds 0 }}
+        {{- if gt (.Values.terminationKeycloakDelaySeconds | int) 0 }}
         lifecycle:
           preStop:
             exec:
