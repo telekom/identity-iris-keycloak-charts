@@ -206,6 +206,12 @@ startupProbe:
 
 terminationGracePeriodSeconds: 60
 
+# How much should the Keycloak container wait before terminating
+# Meant to avoid race-conditions between Keycloak and HAProxy by forcing HAProxy to finish draining first
+# If you experience such cases, increase this value
+# Setting this to 0 switch off this behaviour
+terminationKeycloakDelaySeconds: 5
+
 logLevel: INFO
 
 ingress:
