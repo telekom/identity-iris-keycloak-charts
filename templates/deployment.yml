@@ -88,11 +88,11 @@ spec:
         startupProbe: {{- toYaml . | nindent 10 }}
         {{- end }}
         resources: {{ .Values.resources | toYaml | nindent 10 }}
-        {{- if gt .Values.terminationKeycloakLatencySeconds 0 }}
+        {{- if gt .Values.terminationKeycloakDelaySeconds 0 }}
         lifecycle:
           preStop:
             exec:
-              command: ["sleep", {{ .Values.terminationKeycloakLatencySeconds | quote }} ]
+              command: ["sleep", {{ .Values.terminationKeycloakDelaySeconds | quote }} ]
         {{ end }}
         volumeMounts:
         {{- if .Values.infinispan.enabled }}
