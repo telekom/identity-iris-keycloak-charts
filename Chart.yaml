@@ -11,3 +11,4 @@ keywords:
 dependencies:
   - name: postgresql
     version: 1.2.0
+kubeVersion: '>= 1.30.0'

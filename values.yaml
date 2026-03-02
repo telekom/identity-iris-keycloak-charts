@@ -204,13 +204,14 @@ startupProbe:
   failureThreshold: 60
   periodSeconds: 5
 
-terminationGracePeriodSeconds: 60
+terminationGracePeriodSeconds: 75
 
 # How much should the Keycloak container wait before terminating
 # Meant to avoid race-conditions between Keycloak and HAProxy by forcing HAProxy to finish draining first
 # If you experience such cases, increase this value
 # Setting this to 0 switch off this behaviour
-terminationKeycloakDelaySeconds: 5
+terminationKeycloakDelaySeconds: 15
+terminationHaproxyDelaySeconds: 20
 
 logLevel: INFO
 
@@ -317,3 +318,15 @@ externalDatabase:
 #    <Root certificate in PEM format here>
 #    -----END CERTIFICATE-----
 
+pdb:
+  create: true
+  minAvailable: ""
+  maxUnavailable: 1
+
+affinity: {}
+
+deploymentStrategy:
+  rollingUpdate:
+    maxSurge: 1
+    maxUnavailable: 0
+  type: RollingUpdate

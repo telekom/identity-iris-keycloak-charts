@@ -20,6 +20,8 @@ spec:
   replicas: {{ .Values.replicas }}
   {{- end }}
   revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
+  strategy:
+    {{- toYaml .Values.deploymentStrategy | nindent 4 }}
   selector:
     matchLabels: {{ include "keycloak.selector" $ | nindent 6 }}
   template:
@@ -36,17 +38,24 @@ spec:
     spec:
       {{- include "image_pull_secrets" $ | indent 6 }}
       affinity:
+      {{- if .Values.affinity }}
+        {{- toYaml . | nindent 8 }}
+      {{- else }}
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            podAffinityTerm:
-              labelSelector:
-                matchExpressions:
-                - key: app.kubernetes.io/instance
-                  operator: In
-                  values:
-                  - {{ .Release.Name }}-keycloak
-              topologyKey: {{ .Values.topologyKey | default "kubernetes.io/hostname" }}
+            - podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    {{- include "keycloak.selector" $ | nindent 20 }}
+                topologyKey: topology.kubernetes.io/zone
+              weight: 100
+            - podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    {{- include "keycloak.selector" $ | nindent 20 }}
+                topologyKey: kubernetes.io/hostname
+              weight: 50
+      {{- end }}
       serviceAccount: ""
       serviceAccountName: ""
       securityContext: {{ .Values.podSecurityContext | toYaml | nindent 8 }}
@@ -61,6 +70,10 @@ spec:
         - { containerPort: {{ .Values.prometheus.port | default 9542 }}, protocol: TCP, name: metrics-http }
         {{- end }}
         resources: {{ .Values.haproxy.resources | toYaml | nindent 10 }}
+        lifecycle:
+          preStop:
+            sleep:
+              seconds: {{ .Values.terminationHaproxyDelaySeconds | int }}
         volumeMounts:
         - name: ha-proxy-config
           mountPath: /usr/local/etc/haproxy
@@ -88,12 +101,10 @@ spec:
         startupProbe: {{- toYaml . | nindent 10 }}
         {{- end }}
         resources: {{ .Values.resources | toYaml | nindent 10 }}
-        {{- if gt (.Values.terminationKeycloakDelaySeconds | int) 0 }}
         lifecycle:
           preStop:
-            exec:
-              command: ["sleep", {{ .Values.terminationKeycloakDelaySeconds | quote }} ]
-        {{ end }}
+            sleep:
+              seconds: {{ .Values.terminationKeycloakDelaySeconds | int }}
         volumeMounts:
         {{- if .Values.infinispan.enabled }}
         - name: cache-config

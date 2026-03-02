@@ -67,3 +67,12 @@ deployment:
 podSecurityContext: {}
 
 containerSecurityContext: {}
+
+pdb:
+  create: true
+  minAvailable: ""
+  maxUnavailable: 1
+
+affinity: {}
+
+terminationPostgresqlDelaySeconds: 30

@@ -30,6 +30,25 @@ spec:
     spec:
       {{- include "image_pull_secrets" $ | indent 6 }}
       securityContext: {{ .Values.podSecurityContext | default (dict "fsGroup" 999) | toYaml | nindent 8 }}
+      affinity:
+      {{- if .Values.affinity }}
+        {{- toYaml . | nindent 8 }}
+      {{- else }}
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    {{- include "postgresql.selector" $ | nindent 20 }}
+                topologyKey: topology.kubernetes.io/zone
+              weight: 100
+            - podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    {{- include "postgresql.selector" $ | nindent 20 }}
+                topologyKey: kubernetes.io/hostname
+              weight: 50
+      {{- end }}
       containers:
       - name: postgresql
         resources: {{ .Values.resources | toYaml | nindent 10 }}
@@ -48,6 +67,10 @@ spec:
           name: {{ include "postgresql.deploymentName" . }}-run
         - mountPath: {{ .Values.persistence.mountDir | default "/var/lib/postgresql/data" }}
           name: {{ include "postgresql.deploymentName" . }}-data
+        lifecycle:
+          preStop:
+            sleep:
+              seconds: {{ .Values.terminationPostgresqlDelaySeconds | int }}
         livenessProbe:
           tcpSocket:
             port: {{ .Values.global.database.port | default 5432 }}
@@ -77,5 +100,5 @@ spec:
           claimName: {{ include "postgresql.pvcName" . }}
       restartPolicy: Always
       dnsPolicy: ClusterFirst
-      terminationGracePeriodSeconds: 30
+      terminationGracePeriodSeconds: 90
 {{- end }}
