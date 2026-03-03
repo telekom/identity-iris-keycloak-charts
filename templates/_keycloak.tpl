@@ -15,7 +15,6 @@ app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
 
 {{- define "keycloak.checksums" -}}
 checksum/config: {{ .Values.infinispan.nativeConfig | sha256sum }}
-checksum/image: {{ .Values.image.tag | sha256sum }}
 {{- range .Values.templateChangeTriggers }}
 checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- end -}}
