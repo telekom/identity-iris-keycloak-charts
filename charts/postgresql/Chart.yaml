@@ -11,3 +11,4 @@ description: PostgreSQL deployment based on Bitnami, embedded for use alongside 
 keywords:
   - db
   - postgresql
+kubeVersion: '>= 1.30.0'
