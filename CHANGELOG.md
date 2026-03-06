@@ -4,6 +4,14 @@ SPDX-FileCopyrightText: 2025 Deutsche Telekom AG
 SPDX-License-Identifier: CC0-1.0    
 -->
 
+# [1.8.0](https://github.com/telekom/identity-iris-keycloak-charts/compare/1.7.0...1.8.0) (2026-03-06)
+
+
+### Features
+
+* force the Keycloak container to wait during shutdown ([#54](https://github.com/telekom/identity-iris-keycloak-charts/issues/54)) ([645781f](https://github.com/telekom/identity-iris-keycloak-charts/commit/645781f4a2f89456822e81bf9637e3e0828cfef5))
+* improve high-availibility ([#55](https://github.com/telekom/identity-iris-keycloak-charts/issues/55)) ([31464cf](https://github.com/telekom/identity-iris-keycloak-charts/commit/31464cf7899488f101e3121b6af1505b837273ea)), closes [hi#availibility](https://github.com/hi/issues/availibility)
+
 # [1.7.0](https://github.com/telekom/identity-iris-keycloak-charts/compare/1.6.0...1.7.0) (2026-02-16)
 
 
