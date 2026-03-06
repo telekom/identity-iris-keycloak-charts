@@ -206,12 +206,11 @@ startupProbe:
 
 # Termination delays ensure the proper shutdown order of containers and removing endpoints from service.
 # This is intended to avoid race conditions between Keycloak and HAProxy by forcing HAProxy to finish draining first.
-# Keycloak should always shut down before HAProxy.
 # Setting this to 0 disables this behavior.
 # docs: https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#lifecycle-1
 #   section: preStop hook
-terminationKeycloakDelaySeconds: 15
-terminationHaproxyDelaySeconds: 20
+terminationKeycloakDelaySeconds: 20
+terminationHaproxyDelaySeconds: 15
 
 # TerminationGracePeriodSeconds should be higher as container termination delay values above.
 # docs: https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#lifecycle
