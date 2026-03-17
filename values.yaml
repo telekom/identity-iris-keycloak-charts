@@ -169,7 +169,8 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
   targetMemoryUtilizationPercentage: 80
   rps:
-    selector: 'foo="bar"'
+    # Selector for an Iris pod, depends on the cluster
+    selector: "{namespace='ns', app='iris'}"
     threshold: 0
   pollingInterval: 15
 
