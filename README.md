@@ -10,7 +10,7 @@ SPDX-License-Identifier: CC0-1.0
 
 This chart installs [Keycloak](https://www.keycloak.org/documentation.html). \
 Recommended to use with customized keycloak docker \
-image (see the links section). \
+identity-iris-keycloak image version >= 1.1.2 (see the links section). \
 Default settings in this template are prepared for non-prod environments.
 
 ## Version
