@@ -19,4 +19,5 @@ spec:
   selector:
     matchLabels:
       {{- include "keycloak.selector" . | nindent 6 }}
+      {{- include "keycloak.nameLabel" . | nindent 6 }}
 {{- end }}

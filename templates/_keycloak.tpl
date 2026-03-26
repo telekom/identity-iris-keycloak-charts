@@ -1,7 +1,7 @@
 {{- define "keycloak.labels" -}}
 app: {{ .Release.Name }}
 helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
-app.kubernetes.io/name: keycloak
+{{ include "keycloak.nameLabel" . }}
 {{ include "keycloak.selector" . }}
 app.kubernetes.io/component: idp
 {{- if .Values.global.labels.common }}
@@ -11,6 +11,10 @@ app.kubernetes.io/component: idp
 
 {{- define "keycloak.selector" -}}
 app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
+{{- end -}}
+
+{{- define "keycloak.nameLabel" -}}
+app.kubernetes.io/name: keycloak
 {{- end -}}
 
 {{- define "keycloak.checksums" -}}

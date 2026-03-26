@@ -8,7 +8,9 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   selector:
-    matchLabels: {{ include "keycloak.selector" $ | nindent 6 }}
+    matchLabels:
+      {{- include "keycloak.selector" $ | nindent 6 }}
+      {{- include "keycloak.nameLabel" $ | nindent 6 }}
   namespaceSelector:
     matchNames:
       - {{ .Release.Namespace }}
@@ -49,7 +51,7 @@ spec:
       {{- if .Values.prometheus.serviceMonitor.honorLabels }}
       honorLabels: {{ .Values.prometheus.serviceMonitor.honorLabels }}
       {{- end }}
-  {{- if .Values.prometheus.serviceMonitor.targetLabels }}  
+  {{- if .Values.prometheus.serviceMonitor.targetLabels }}
   targetLabels: {{ include "service-monitor.targetLabels" $ | nindent 2 }}
   {{- end }}
 {{- end -}}
