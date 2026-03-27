@@ -4,6 +4,15 @@ SPDX-FileCopyrightText: 2025 Deutsche Telekom AG
 SPDX-License-Identifier: CC0-1.0    
 -->
 
+# [1.9.0](https://github.com/telekom/identity-iris-keycloak-charts/compare/1.8.0...1.9.0) (2026-03-27)
+
+
+### Features
+
+* improve label selectors ([#59](https://github.com/telekom/identity-iris-keycloak-charts/issues/59)) ([489b283](https://github.com/telekom/identity-iris-keycloak-charts/commit/489b283ec2677c99772c69e4aca75c335620c032))
+* migrate keda query to builtin metric ([#57](https://github.com/telekom/identity-iris-keycloak-charts/issues/57)) ([69a800d](https://github.com/telekom/identity-iris-keycloak-charts/commit/69a800d7db88cc1c56a96cabebc2864e80a39278))
+* remove support for image < 1.1.2 ([258c97c](https://github.com/telekom/identity-iris-keycloak-charts/commit/258c97cd6360ed0a027b372d80cebd5b2efe1c3c))
+
 # [1.8.0](https://github.com/telekom/identity-iris-keycloak-charts/compare/1.7.0...1.8.0) (2026-03-06)
 
 
