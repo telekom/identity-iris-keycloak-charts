@@ -9,7 +9,7 @@ app.kubernetes.io/component: idp
 {{- end }}
 {{- end -}}
 
-{{/* we don't need redeploy image, when chart version is changed */}}
+{{/* we don't need to redeploy the image when the chart version is changed */}}
 {{- define "keycloak.podLabels" -}}
 app: {{ .Release.Name }}
 {{ include "keycloak.nameLabel" . }}
