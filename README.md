@@ -17,16 +17,16 @@ Default settings in this template are prepared for non-prod environments.
 
 | Installed software versions | Version Info |
 |-----------------------------|--------------|
-| Keycloak                    | 26.0.8       |
+| Keycloak                    | 26.5.6       |
 | java                        | 21.0.9       |
-| PostgreSQL                  | 12.22        |
+| PostgreSQL                  | 17.9         |
 
 ## Description
 
 **Important links:**
 
 - Keycloak
-  - [Keycloak documentation](https://www.keycloak.org/docs/latest/release_notes/index.html#keycloak-26-0-0)
+  - [Keycloak documentation](https://www.keycloak.org/docs/latest/release_notes/index.html#keycloak-26-5-0)
     - [Docker image documentation](https://hub.docker.com/r/jboss/keycloak/)
     - [GitHub repository](https://github.com/keycloak/keycloak)
     - [Iris keycloak image (IKI)](https://github.com/telekom/iris-image)
@@ -109,6 +109,33 @@ Each file contains copyright and license information, and license texts can be f
 This project enforces [Conventional Commits](https://www.conventionalcommits.org/) for all commits.
 **All commit messages must follow the Conventional Commits specification.**
 This is automatically checked in CI for both pushes and pull requests.
+
+## Upgrade to Iris Keycloak 1.4.0
+
+The latest version of Iris Keycloak (1.4.0) no longer supports PostgreSQL 12.x.
+If you are currently using PostgreSQL 12.x via the Helm chart, you must upgrade your database before deploying the new Iris Keycloak version.
+
+### Migration Approach
+
+The recommended migration strategy is based on a backup and restore process. Please note that this procedure requires system downtime.
+
+The steps outlined below serve as a general guideline. Depending on your environment, tooling, and deployment specifics, certain steps may vary slightly.
+
+### Migration Steps
+
+1. Scale down Iris Keycloak to 0 replicas.
+1. Create a backup of the Keycloak database using `pg_dump`.
+    *Note: Do not backup the entire PostgreSQL instance, as the newer version uses a different authentication mechanism.*
+1. Scale down Postgresql to 0 replicas.
+1. Delete the existing PostgreSQL Persistent Volume Claim (PVC).
+1. Provision a new PostgreSQL PVC.
+1. Configure PostgreSQL to use the newly created PVC.
+1. Upgrade the Helm chart to deploy the updated versions of Keycloak and PostgreSQL.
+    *Note: Ensure that Keycloak remains scaled to 0 replicas during this step.*
+1. Wait for the PostgreSQL instance to complete its initialization.
+1. Restore the database backup.
+1. Scale Iris Keycloak back up to the desired number of replicas.
+1. Verify that the system is functioning as expected.
 
 ### REUSE
 

@@ -291,7 +291,7 @@ haproxy:
 postgresql:
   image:
     repository: postgres
-    tag: 12.22-bookworm
+    tag: 17.9-trixie
     pullPolicy: IfNotPresent
   containerSecurityContext: {}
 
