@@ -173,6 +173,7 @@ autoscaling:
     selector: "{namespace='ns', app='iris'}"
     threshold: 0
   pollingInterval: 15
+  extraTriggers: []
 
 resources:
   limits:

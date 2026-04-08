@@ -35,4 +35,7 @@ spec:
     metricType: Utilization
     metadata:
       value: {{ .Values.autoscaling.targetMemoryUtilizationPercentage | quote }}
+  {{- with .Values.autoscaling.extraTriggers }}
+    {{- toYaml . | nindent 2 }}
+  {{- end }}
 {{- end }}
