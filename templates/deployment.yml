@@ -32,7 +32,7 @@ spec:
       {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-      {{- include "keycloak.labels" $ | nindent 8 }}
+      {{- include "keycloak.podLabels" $ | nindent 8 }}
       {{- include "common.status-monitor.labels" $ | nindent 8 }}
       {{- include "keycloak.status-monitor.labels" $ | nindent 8 }}
     spec:

@@ -9,6 +9,17 @@ app.kubernetes.io/component: idp
 {{- end }}
 {{- end -}}
 
+{{/* we don't need to redeploy the pods when the chart version is changed */}}
+{{- define "keycloak.podLabels" -}}
+app: {{ .Release.Name }}
+{{ include "keycloak.nameLabel" . }}
+{{ include "keycloak.selector" . }}
+app.kubernetes.io/component: idp
+{{- if .Values.global.labels.common }}
+{{ .Values.global.labels.common | toYaml }}
+{{- end -}}
+{{- end -}}
+
 {{- define "keycloak.selector" -}}
 app.kubernetes.io/instance: {{ .Release.Name }}-keycloak
 {{- end -}}
