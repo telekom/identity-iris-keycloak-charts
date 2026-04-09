@@ -4,6 +4,24 @@ SPDX-FileCopyrightText: 2025 Deutsche Telekom AG
 SPDX-License-Identifier: CC0-1.0    
 -->
 
+# [2.0.0](https://github.com/telekom/identity-iris-keycloak-charts/compare/1.9.0...2.0.0) (2026-04-09)
+
+
+### Bug Fixes
+
+* remove helm.sh/chart label from pods ([#61](https://github.com/telekom/identity-iris-keycloak-charts/issues/61)) ([fa72618](https://github.com/telekom/identity-iris-keycloak-charts/commit/fa7261872cdaac96e471078cd46a7c9ddf7d37f8))
+
+
+### Features
+
+* enable to use custom triggers for keda ([#63](https://github.com/telekom/identity-iris-keycloak-charts/issues/63)) ([fab6689](https://github.com/telekom/identity-iris-keycloak-charts/commit/fab6689d8d6fe5d3dc27953867aba64c83604641))
+* upgrade iris-keycloak to 1.4.0 ([#62](https://github.com/telekom/identity-iris-keycloak-charts/issues/62)) ([20ea5f5](https://github.com/telekom/identity-iris-keycloak-charts/commit/20ea5f540e6f70cfe2e6f0ad769a8ca5345c4b44))
+
+
+### BREAKING CHANGES
+
+* minimally PostgreSQL 13 is required
+
 # [1.9.0](https://github.com/telekom/identity-iris-keycloak-charts/compare/1.8.0...1.9.0) (2026-03-27)
 
 
