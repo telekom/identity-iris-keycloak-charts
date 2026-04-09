@@ -41,8 +41,8 @@ sharedBuffers: "32MB"
 maxPreparedTransactions: "0"
 
 image:
-  repository: bitnami/postgresql
-  tag: 12.3.0-debian-10-r70
+  repository: postgres
+  tag: 17.9-trixie
   pullPolicy: IfNotPresent
 
 resources:

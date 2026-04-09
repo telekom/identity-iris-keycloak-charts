@@ -87,7 +87,8 @@ spec:
           - "--import-realm"
           {{- if .Values.infinispan.enabled }}
           - "--cache=ispn"
-          - "--cache-stack=kubernetes"
+          - "--cache-stack=jdbc-ping"
+          - "--cache-config-mutate=true"
           {{- end }}
         env:
         {{- include "keycloak.env" $ | indent 8 -}}

@@ -68,8 +68,6 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
   value: "true"
 - name: QUARKUS_TRANSACTION_MANAGER_ENABLE_RECOVERY
   value: "false"
-- name: JAVA_OPTS_APPEND
-  value: -Djgroups.dns.query={{ .Release.Name }}-jgroups.{{ .Release.Namespace }}
 - name: KC_METRICS_ENABLED
   value: "true"
 - name: KC_HTTP_METRICS_HISTOGRAMS_ENABLED
