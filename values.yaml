@@ -24,7 +24,7 @@ global:
       # kubernetes.io/ingress.class: ""
   image:
     repository: iris_keycloak
-    tag: 1.4.0
+    tag: 1.4.1
     pullPolicy: IfNotPresent
   # pull secrets has to be deployed independently
   imagePullSecrets: []
