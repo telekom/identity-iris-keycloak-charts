@@ -273,13 +273,12 @@ prometheus:
     enabled: true
     targetLabels: []
     metricRelabelings:
-      - metricRelabelings:
-        - action: drop
-          regex: http_server_requests_seconds_bucket;(.{6,})
-          separator: ;
-          sourceLabels:
-            - __name__
-            - le
+      - action: drop
+        regex: http_server_requests_seconds_bucket;(.{6,})
+        separator: ;
+        sourceLabels:
+          - __name__
+          - le
     #selector: "guardians-raccoon"
     #scheme: http
     #interval: "15s"
@@ -288,13 +287,12 @@ prometheus:
   podMonitor:
     enabled: false
     metricRelabelings:
-      - metricRelabelings:
-        - action: drop
-          regex: http_server_requests_seconds_bucket;(.{6,})
-          separator: ;
-          sourceLabels:
-            - __name__
-            - le
+      - action: drop
+        regex: http_server_requests_seconds_bucket;(.{6,})
+        separator: ;
+        sourceLabels:
+          - __name__
+          - le
     #selector: ""
     #scheme: http
     #interval: "15s"
