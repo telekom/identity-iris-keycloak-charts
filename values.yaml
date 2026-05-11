@@ -24,7 +24,7 @@ global:
       # kubernetes.io/ingress.class: ""
   image:
     repository: iris_keycloak
-    tag: 1.4.1
+    tag: 1.5.0
     pullPolicy: IfNotPresent
   # pull secrets has to be deployed independently
   imagePullSecrets: []
@@ -69,7 +69,19 @@ clientAuthMethodMetricsEnabled: "false"
 
 # Options could be found in documentation: https://www.keycloak.org/server/configuration
 # Some environments vars are already configured in: ./templates/_keycloak.tpl
-keycloakExtraEnvVars: []
+keycloakExtraEnvVars:
+  - name: KC_HTTP_METRICS_HISTOGRAMS_ENABLED
+    value: "true"
+  - name: KC_HTTP_METRICS_SLOS
+    value: 5,10,25,50,250,500,1000,2500,5000,10000
+  - name: KC_EVENT_METRICS_USER_ENABLED
+    value: 'true'
+  - name: KC_EVENT_METRICS_USER_EVENTS
+    value: login,logout
+  - name: KC_EVENT_METRICS_USER_TAGS
+    value: realm,clientId
+  - name: QUARKUS_MICROMETER_BINDER_HTTP_SERVER_IGNORE_PATTERNS
+    value: /auth/health.*,/auth/metrics
   # - name: KC_LOG_CONSOLE_OUTPUT
   #   value: json
 
@@ -260,7 +272,13 @@ prometheus:
   serviceMonitor:
     enabled: true
     targetLabels: []
-    metricRelabelings: []
+    metricRelabelings:
+      - action: drop
+        regex: http_server_requests_seconds_bucket;(.{6,})
+        separator: ;
+        sourceLabels:
+          - __name__
+          - le
     #selector: "guardians-raccoon"
     #scheme: http
     #interval: "15s"
@@ -268,7 +286,13 @@ prometheus:
     #honorLabels: ""
   podMonitor:
     enabled: false
-    metricRelabelings: []
+    metricRelabelings:
+      - action: drop
+        regex: http_server_requests_seconds_bucket;(.{6,})
+        separator: ;
+        sourceLabels:
+          - __name__
+          - le
     #selector: ""
     #scheme: http
     #interval: "15s"

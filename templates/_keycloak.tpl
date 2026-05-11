@@ -70,8 +70,6 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
   value: "false"
 - name: KC_METRICS_ENABLED
   value: "true"
-- name: KC_HTTP_METRICS_HISTOGRAMS_ENABLED
-  value: "true"
 - name: URI_METRICS_ENABLED
   value: "true"
 - name: CLIENT_AUTH_METHOD_METRICS_ENABLED
