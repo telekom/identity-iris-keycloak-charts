@@ -10,5 +10,6 @@ keywords:
   - iris_keycloak
 dependencies:
   - name: postgresql
-    version: 1.2.0
+    version: 1.2.1
+    condition: postgresql.enabled
 kubeVersion: '>= 1.30.0'

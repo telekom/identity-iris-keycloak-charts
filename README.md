@@ -51,9 +51,9 @@ To configure the is mounted to the Keycloak pod.
 
 ### Database
 
-To modify the behavior of database deployment, you can adjust the value of `database.location` to switch between "local"
-and "external". When set to "local", the deployment will utilize the PostgreSQL chart located within the charts
-directory to store Keycloak data. Conversely, if set to "external", you must include the `externalDatabase.host`
+To modify the behavior of database deployment, you can adjust the value of `postgresql.enabled` to switch between `true`
+and `false`. When set to `true`, the deployment will utilize the PostgreSQL chart located within the charts
+directory to store Keycloak data. Conversely, if set to `false`, you must include the `externalDatabase.host`
 parameter, directing it towards the designated database. Additionally, you need to provide the essential user data and
 database schema within the database field in the values.yaml file, enabling Keycloak to establish a connection.
 

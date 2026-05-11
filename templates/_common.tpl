@@ -8,9 +8,13 @@ imagePullSecrets:
 {{- end -}}
 
 {{- define "database.host" -}}
-  {{- if and (eq .Values.global.database.location "external") .Values.externalDatabase.host  -}}
-    {{- .Values.externalDatabase.host -}}
-  {{- else -}}
+  {{- if .Values.postgresql.enabled -}}
     {{ .Release.Name }}-postgresql
+  {{- else -}}
+    {{- if .Values.externalDatabase.host -}}
+      {{- .Values.externalDatabase.host -}}
+    {{- else -}}
+      {{ fail "if postgresql isn't enabled, externalDatabase.host has to be defined." }}
+    {{- end -}}
   {{- end -}}
 {{- end -}}

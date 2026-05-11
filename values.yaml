@@ -37,7 +37,6 @@ global:
     path: "secret/data/my-app"
 
   database:
-    location: local
     port: 5432
     database: pgdb
     username: pgusr
@@ -314,6 +313,7 @@ haproxy:
       cpu: 250m
 
 postgresql:
+  enabled: true
   image:
     repository: postgres
     tag: 17.9-trixie
