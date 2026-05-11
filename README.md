@@ -17,7 +17,7 @@ Default settings in this template are prepared for non-prod environments.
 
 | Installed software versions | Version Info |
 |-----------------------------|--------------|
-| Keycloak                    | 26.5.6       |
+| Keycloak                    | 26.5.7       |
 | PostgreSQL                  | 17.9         |
 
 ## Description
@@ -25,23 +25,14 @@ Default settings in this template are prepared for non-prod environments.
 **Important links:**
 
 - Keycloak
-  - [Keycloak documentation](https://www.keycloak.org/docs/latest/release_notes/index.html#keycloak-26-5-0)
-    - [Docker image documentation](https://hub.docker.com/r/jboss/keycloak/)
-    - [GitHub repository](https://github.com/keycloak/keycloak)
-    - [Iris keycloak image (IKI)](https://github.com/telekom/iris-image)
+    - [Keycloak documentation](https://www.keycloak.org/docs/latest/release_notes/index.html#keycloak-26-5-0)
+        - [Docker image documentation](https://hub.docker.com/r/jboss/keycloak/)
+        - [GitHub repository](https://github.com/keycloak/keycloak)
+        - [Iris keycloak image (IKI)](https://github.com/telekom/iris-image)
 - PostgreSQL
     - [Docker image documentation](https://hub.docker.com/_/postgres)
 
 ## Configuration
-
-### Platform
-
-You can select a platform to use predefined settings specifically dedicated to the platform. \
-Note that you can overwrite platform specific values in the values.yaml. \
-To add a new platform specific values.yaml, add the required values as `platformName.yaml` to the `platforms` folder.
-
-**Note:** Assigning platform-specific values to the sub-chart through the platform-specific `platformName.yaml` \
-of your main chart will not be effective, as the sub-chart's platform settings take precedence.
 
 ### Configuration Files
 
@@ -86,11 +77,11 @@ authentication.
 ## Local launch with Kind, Docker and Helm
 
 1. Setup all the required tools: Docker, Kind and Helm \
-2. Use CKI and pull it to your machine (see the useful links).
-3. Add to the Kind images using `kind load docker-image` command  to add also ha-proxy and postgres images
-4. Archive the chart using command `tar cfvz <archive-name>.tgz <chart-folder>`
-5. use helm install with providing values.yaml files for postgres and custom keycloak charts \
-   e.g. `helm install <chart-name> <archive-name.tgz> --values .\<iris_keycloak_chart_folder>\values.yaml --values .\<iris_keycloak_chart_folder>\charts\postgresql\values.yaml`
+1. Use CKI and pull it to your machine (see the useful links).
+1. Add to the Kind images using `kind load docker-image` command  to add also ha-proxy and postgres images
+1. Archive the chart using command `tar cfvz <archive-name>.tgz <chart-folder>`
+1. use helm install with providing values.yaml files for postgres and custom keycloak charts \
+    e.g. `helm install <chart-name> <archive-name.tgz> --values .\<iris_keycloak_chart_folder>\values.yaml --values .\<iris_keycloak_chart_folder>\charts\postgresql\values.yaml`
 
 ## Code of Conduct
 
