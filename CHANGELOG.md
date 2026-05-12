@@ -4,6 +4,20 @@ SPDX-FileCopyrightText: 2025 Deutsche Telekom AG
 SPDX-License-Identifier: CC0-1.0    
 -->
 
+# [3.0.0](https://github.com/telekom/identity-iris-keycloak-charts/compare/2.0.1...3.0.0) (2026-05-12)
+
+
+### Features
+
+* upgrade iris to 1.5.0 ([#66](https://github.com/telekom/identity-iris-keycloak-charts/issues/66)) ([746f778](https://github.com/telekom/identity-iris-keycloak-charts/commit/746f7782a4b9805990e8b3012aaf0c3466241b6c))
+* use condition to generate postgresql resources ([#67](https://github.com/telekom/identity-iris-keycloak-charts/issues/67)) ([a802b6b](https://github.com/telekom/identity-iris-keycloak-charts/commit/a802b6b6cf7a8151ef87f01a7d9e81784cf3056a))
+
+
+### BREAKING CHANGES
+
+* if you use external database, postgresql.enabled has to
+be set to false
+
 ## [2.0.1](https://github.com/telekom/identity-iris-keycloak-charts/compare/2.0.0...2.0.1) (2026-04-15)
 
 
