@@ -6,7 +6,7 @@ apiVersion: v1
 name: postgresql
 version: 1.2.1
 icon: https://www.postgresql.org/media/img/about/press/elephant.png
-appVersion: 17.9.x
+appVersion: 17.10.x
 description: PostgreSQL deployment based on Bitnami, embedded for use alongside Iris deployment
 keywords:
   - db

@@ -316,7 +316,7 @@ postgresql:
   enabled: true
   image:
     repository: postgres
-    tag: 17.9-trixie
+    tag: 17.10-trixie
     pullPolicy: IfNotPresent
   containerSecurityContext: {}
 
