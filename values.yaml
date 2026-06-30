@@ -70,13 +70,13 @@ clientAuthMethodMetricsEnabled: "false"
 # Some environments vars are already configured in: ./templates/_keycloak.tpl
 keycloakExtraEnvVars:
   - name: KC_HTTP_METRICS_HISTOGRAMS_ENABLED
-    value: "true"
+    value: "false"
   - name: KC_HTTP_METRICS_SLOS
     value: 5,10,25,50,250,500,1000,2500,5000,10000
   - name: KC_EVENT_METRICS_USER_ENABLED
-    value: 'true'
+    value: "true"
   - name: KC_EVENT_METRICS_USER_EVENTS
-    value: login,logout
+    value: login,logout,client_login
   - name: KC_EVENT_METRICS_USER_TAGS
     value: realm,clientId
   - name: QUARKUS_MICROMETER_BINDER_HTTP_SERVER_IGNORE_PATTERNS
@@ -271,13 +271,7 @@ prometheus:
   serviceMonitor:
     enabled: true
     targetLabels: []
-    metricRelabelings:
-      - action: drop
-        regex: http_server_requests_seconds_bucket;(.{6,})
-        separator: ;
-        sourceLabels:
-          - __name__
-          - le
+    metricRelabelings: []
     #selector: "guardians-raccoon"
     #scheme: http
     #interval: "15s"
@@ -285,13 +279,7 @@ prometheus:
     #honorLabels: ""
   podMonitor:
     enabled: false
-    metricRelabelings:
-      - action: drop
-        regex: http_server_requests_seconds_bucket;(.{6,})
-        separator: ;
-        sourceLabels:
-          - __name__
-          - le
+    metricRelabelings: []
     #selector: ""
     #scheme: http
     #interval: "15s"
