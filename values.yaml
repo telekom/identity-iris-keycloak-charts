@@ -197,33 +197,31 @@ resources:
 livenessProbe:
   httpGet:
     path: /auth/health/live
-    port: 9090
+    port: 9000
   initialDelaySeconds: 300
   timeoutSeconds: 5
 
 readinessProbe:
   httpGet:
     path: /auth/health/ready
-    port: 9090
+    port: 9000
   initialDelaySeconds: 30
   timeoutSeconds: 2
 
 startupProbe:
   httpGet:
     path: /auth/health/started
-    port: 9090
+    port: 9000
   initialDelaySeconds: 30
   timeoutSeconds: 2
   failureThreshold: 60
   periodSeconds: 5
 
 # Termination delays ensure the proper shutdown order of containers and removing endpoints from service.
-# This is intended to avoid race conditions between Keycloak and HAProxy by forcing HAProxy to finish draining first.
 # Setting this to 0 disables this behavior.
 # docs: https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#lifecycle-1
 #   section: preStop hook
 terminationKeycloakDelaySeconds: 20
-terminationHaproxyDelaySeconds: 15
 
 # TerminationGracePeriodSeconds should be higher as container termination delay values above.
 # docs: https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#lifecycle
@@ -258,21 +256,29 @@ ingress:
 #   nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
 #   nginx.ingress.kubernetes.io/proxy-next-upstream-tries: "1"
 
+#   Blocking exposing metrics endpoints to the public, as they can contain sensitive information.
+#   Redirect / into UI
+#   nginx.ingress.kubernetes.io/use-regex: 'true'
+#   nginx.ingress.kubernetes.io/configuration-snippet: |
+#     if ($$request_uri ~ "^/$") {
+#       return 301 /auth;
+#     }
+#     if ($request_uri ~* "/auth/realms/[^/]+/metrics") {
+#       return 403;
+#     }
+
 prometheus:
   enabled: true
   server: http://prom.srv
   credentials: "" # name of the ClusterTriggerAuthentication resource
   authToken: changeme
-  #port: 9542
-  #path: /metrics
-  #extraPath: /extraMetrics
   # podMonitor is used to provide a PodMonitor CRD to integrate with prometheus operator
   # prometheus has to be enabled to use this
   serviceMonitor:
     enabled: true
     targetLabels: []
     metricRelabelings: []
-    #selector: "guardians-raccoon"
+    #selector: guardians-raccoon
     #scheme: http
     #interval: "15s"
     #scrapeTimeout: "3s"
@@ -285,20 +291,6 @@ prometheus:
     #interval: "15s"
     #scrapeTimeout: "3s"
     #honorLabels: ""
-
-haproxy:
-  image:
-    repository: haproxy
-    tag: 3.1.6-alpine
-    pullPolicy: IfNotPresent
-  containerSecurityContext: {}
-  resources:
-    limits:
-      memory: 1Gi
-      cpu: 1
-    requests:
-      memory: 250Mi
-      cpu: 250m
 
 postgresql:
   enabled: true
