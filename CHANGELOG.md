@@ -17,8 +17,11 @@ SPDX-License-Identifier: CC0-1.0
 * **postgres:** upgrade to 17.10 ([#70](https://github.com/telekom/identity-iris-keycloak-charts/issues/70)) ([0faa05f](https://github.com/telekom/identity-iris-keycloak-charts/commit/0faa05f7887b53583f8a6bbd51b6139cfbf6cca4))
 * remove ha-proxy ([#71](https://github.com/telekom/identity-iris-keycloak-charts/issues/71)) ([b4f5c3f](https://github.com/telekom/identity-iris-keycloak-charts/commit/b4f5c3f1242382cec388abf4ffaf81cdfa7bed28))
 
-# [3.0.0](https://github.com/telekom/identity-iris-keycloak-charts/compare/2.0.1...3.0.0) (2026-05-12)
+### Note
 
+* The Web UI is not available at the root path / by default. You can either configure a custom redirect rule or access it by appending /auth/ to the domain.
+
+# [3.0.0](https://github.com/telekom/identity-iris-keycloak-charts/compare/2.0.1...3.0.0) (2026-05-12)
 
 ### Features
 
