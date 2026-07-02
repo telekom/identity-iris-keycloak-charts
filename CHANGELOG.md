@@ -4,6 +4,19 @@ SPDX-FileCopyrightText: 2025 Deutsche Telekom AG
 SPDX-License-Identifier: CC0-1.0    
 -->
 
+# [3.1.0](https://github.com/telekom/identity-iris-keycloak-charts/compare/3.0.0...3.1.0) (2026-07-02)
+
+
+### Bug Fixes
+
+* optimize metrics ([#69](https://github.com/telekom/identity-iris-keycloak-charts/issues/69)) ([9bf06c6](https://github.com/telekom/identity-iris-keycloak-charts/commit/9bf06c649e37731828291b2fc6ebd8e11dfad00a))
+
+
+### Features
+
+* **postgres:** upgrade to 17.10 ([#70](https://github.com/telekom/identity-iris-keycloak-charts/issues/70)) ([0faa05f](https://github.com/telekom/identity-iris-keycloak-charts/commit/0faa05f7887b53583f8a6bbd51b6139cfbf6cca4))
+* remove ha-proxy ([#71](https://github.com/telekom/identity-iris-keycloak-charts/issues/71)) ([b4f5c3f](https://github.com/telekom/identity-iris-keycloak-charts/commit/b4f5c3f1242382cec388abf4ffaf81cdfa7bed28))
+
 # [3.0.0](https://github.com/telekom/identity-iris-keycloak-charts/compare/2.0.1...3.0.0) (2026-05-12)
 
 
