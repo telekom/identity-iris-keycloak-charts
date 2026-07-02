@@ -3,20 +3,24 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: {{ .Release.Name }}
-  labels: {{ include "keycloak.labels" $ | nindent 4 }}
-    release: {{ .Values.prometheus.serviceMonitor.selector | default "guardians-raccoon" }}
   namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "keycloak.labels" $ | nindent 4 }}
+    {{- if .Values.prometheus.serviceMonitor.selector }}
+    release: {{ .Values.prometheus.serviceMonitor.selector }}
+    {{- end }}
 spec:
   selector:
     matchLabels:
       {{- include "keycloak.selector" $ | nindent 6 }}
       {{- include "keycloak.nameLabel" $ | nindent 6 }}
+      interface: metrics
   namespaceSelector:
     matchNames:
       - {{ .Release.Namespace }}
   endpoints:
-    - port: metrics-http
-      path: {{ .Values.prometheus.path | default "/metrics" }}
+    - port: metrics-mgmt
+      path: "/auth/metrics"
       {{- with .Values.prometheus.serviceMonitor.metricRelabelings }}
       metricRelabelings:
       {{- toYaml . | nindent 6 }}
@@ -34,7 +38,7 @@ spec:
       honorLabels: {{ .Values.prometheus.serviceMonitor.honorLabels }}
       {{- end }}
     - port: metrics-http
-      path: {{ .Values.prometheus.extraPath | default "/extraMetrics" }}
+      path: "/auth/realms/master/metrics"
       {{- with .Values.prometheus.serviceMonitor.metricRelabelings }}
       metricRelabelings:
       {{- toYaml . | nindent 6 }}

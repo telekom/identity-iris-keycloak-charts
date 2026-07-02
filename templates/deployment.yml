@@ -6,6 +6,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
   annotations:
   {{ include "keycloak.checksums" $ | nindent 4 }}
   {{- if .Values.global.externalSecrets.enabled }}
@@ -60,23 +61,6 @@ spec:
       serviceAccountName: ""
       securityContext: {{ .Values.podSecurityContext | toYaml | nindent 8 }}
       containers:
-      - name: haproxy
-        image: {{ .Values.haproxy.image.repository }}:{{ .Values.haproxy.image.tag }}
-        imagePullPolicy: {{ .Values.haproxy.image.pullPolicy | default .Values.global.imagePullPolicy }}
-        securityContext: {{ .Values.haproxy.containerSecurityContext | toYaml | nindent 10 }}
-        ports:
-        - { containerPort: 9090, protocol: TCP, name: http }
-        {{- if eq .Values.prometheus.enabled true }}
-        - { containerPort: {{ .Values.prometheus.port | default 9542 }}, protocol: TCP, name: metrics-http }
-        {{- end }}
-        resources: {{ .Values.haproxy.resources | toYaml | nindent 10 }}
-        lifecycle:
-          preStop:
-            sleep:
-              seconds: {{ .Values.terminationHaproxyDelaySeconds | int }}
-        volumeMounts:
-        - name: ha-proxy-config
-          mountPath: /usr/local/etc/haproxy
       - name: keycloak
         image: {{ .Values.global.image.repository }}:{{ .Values.global.image.tag }}
         imagePullPolicy: {{ .Values.global.image.pullPolicy | default .Values.global.imagePullPolicy }}
@@ -101,6 +85,13 @@ spec:
         {{- with .Values.startupProbe }}
         startupProbe: {{- toYaml . | nindent 10 }}
         {{- end }}
+        ports:
+          - containerPort: 8080
+            protocol: TCP
+            name: http
+          - containerPort: 9000
+            protocol: TCP
+            name: mgmt
         resources: {{ .Values.resources | toYaml | nindent 10 }}
         lifecycle:
           preStop:
@@ -139,9 +130,6 @@ spec:
         configMap:
           name: {{ .Release.Name }}-cache-config
       {{ end }}
-      - name: ha-proxy-config
-        configMap:
-          name: {{ .Release.Name }}-ha-proxy-config
       - name: realms
         configMap:
           name: {{ .Release.Name }}-realm

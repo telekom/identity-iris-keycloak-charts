@@ -3,13 +3,16 @@ apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:
   name: {{ .Release.Name }}
-  labels: {{ include "keycloak.labels" $ | nindent 4 }}
-    release: {{ .Values.prometheus.podMonitor.selector | default "guardians-raccoon" }}
   namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "keycloak.labels" $ | nindent 4 }}
+    {{- if .Values.prometheus.podMonitor.selector }}
+    release: {{ .Values.prometheus.podMonitor.selector }}
+    {{- end }}
 spec:
   podMetricsEndpoints:
-    - port: metrics-http
-      path: {{ .Values.prometheus.path | default "/metrics" }}
+    - port: mgmt
+      path: "/auth/metrics"
       {{- with .Values.prometheus.podMonitor.metricRelabelings }}
       metricRelabelings:
       {{- toYaml . | nindent 6 }}
@@ -26,8 +29,8 @@ spec:
       {{- if .Values.prometheus.podMonitor.honorLabels }}
       honorLabels: {{ .Values.prometheus.podMonitor.honorLabels }}
       {{- end }}
-    - port: metrics-http
-      path: {{ .Values.prometheus.extraPath | default "/extraMetrics" }}
+    - port: http
+      path: "/auth/realms/master/metrics"
       {{- with .Values.prometheus.podMonitor.metricRelabelings }}
       metricRelabelings:
       {{- toYaml . | nindent 6 }}
