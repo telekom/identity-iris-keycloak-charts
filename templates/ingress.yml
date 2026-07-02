@@ -45,7 +45,8 @@ spec:
               port:
                 number: 80
           path: /.well-known/
-          pathType: Prefix
+          # some ingress doesn't support Prefix pathType, so we use ImplementationSpecific to support them
+          pathType: ImplementationSpecific
   {{- end }}
 {{- if .Values.ingress.ingressClassName }}
   ingressClassName: {{ .Values.ingress.ingressClassName }}
