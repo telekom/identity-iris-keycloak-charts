@@ -266,6 +266,43 @@ ingress:
 #     if ($request_uri ~* "/auth/realms/[^/]+/metrics") {
 #       return 403;
 #     }
+  paths:
+    - backend:
+        service:
+          name: "{{ $.Release.Name }}"
+          port:
+            number: 80
+      path: /realms/
+      pathType: Prefix
+    - backend:
+        service:
+          name: "{{ $.Release.Name }}"
+          port:
+            number: 80
+      path: /auth
+      pathType: Prefix
+    - backend:
+        service:
+          name: "{{ $.Release.Name }}"
+          port:
+            number: 80
+      path: /admin/
+      pathType: Prefix
+    - backend:
+        service:
+          name: "{{ $.Release.Name }}"
+          port:
+            number: 80
+      path: /resources/
+      pathType: Prefix
+    - backend:
+        service:
+          name: "{{ $.Release.Name }}"
+          port:
+            number: 80
+      path: /.well-known/
+      # some ingress doesn't support Prefix pathType, so we use ImplementationSpecific to support them
+      pathType: ImplementationSpecific
 
 prometheus:
   enabled: true
