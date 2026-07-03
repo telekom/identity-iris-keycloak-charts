@@ -11,41 +11,7 @@ spec:
   - host: {{ . }}
     http:
       paths:
-        - backend:
-            service:
-              name: {{ $.Release.Name }}
-              port:
-                number: 80
-          path: /realms/
-          pathType: Prefix
-        - backend:
-            service:
-              name: {{ $.Release.Name }}
-              port:
-                number: 80
-          path: /auth
-          pathType: Prefix
-        - backend:
-            service:
-              name: {{ $.Release.Name }}
-              port:
-                number: 80
-          path: /admin/
-          pathType: Prefix
-        - backend:
-            service:
-              name: {{ $.Release.Name }}
-              port:
-                number: 80
-          path: /resources/
-          pathType: Prefix
-        - backend:
-            service:
-              name: {{ $.Release.Name }}
-              port:
-                number: 80
-          path: /.well-known/
-          pathType: Prefix
+        {{- tpl (toYaml $.Values.ingress.paths) $ | nindent 8 }}
   {{- end }}
 {{- if .Values.ingress.ingressClassName }}
   ingressClassName: {{ .Values.ingress.ingressClassName }}
