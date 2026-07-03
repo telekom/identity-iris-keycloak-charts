@@ -4,6 +4,13 @@ SPDX-FileCopyrightText: 2025 Deutsche Telekom AG
 SPDX-License-Identifier: CC0-1.0    
 -->
 
+## [3.1.1](https://github.com/telekom/identity-iris-keycloak-charts/compare/3.1.0...3.1.1) (2026-07-03)
+
+
+### Bug Fixes
+
+* configure ingress paths from values ([#72](https://github.com/telekom/identity-iris-keycloak-charts/issues/72)) ([b1a427e](https://github.com/telekom/identity-iris-keycloak-charts/commit/b1a427e583e301110af088c9e990fc79d66324de))
+
 # [3.1.0](https://github.com/telekom/identity-iris-keycloak-charts/compare/3.0.0...3.1.0) (2026-07-02)
 
 
