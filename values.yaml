@@ -295,14 +295,6 @@ ingress:
             number: 80
       path: /resources/
       pathType: Prefix
-    - backend:
-        service:
-          name: "{{ $.Release.Name }}"
-          port:
-            number: 80
-      path: /.well-known/
-      # some ingress doesn't support Prefix pathType, so we use ImplementationSpecific to support them
-      pathType: ImplementationSpecific
 
 prometheus:
   enabled: true
