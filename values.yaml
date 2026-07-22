@@ -24,7 +24,7 @@ global:
       # kubernetes.io/ingress.class: ""
   image:
     repository: iris_keycloak
-    tag: 1.5.0
+    tag: 1.5.2
     pullPolicy: IfNotPresent
   # pull secrets has to be deployed independently
   imagePullSecrets: []
@@ -256,16 +256,8 @@ ingress:
 #   nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
 #   nginx.ingress.kubernetes.io/proxy-next-upstream-tries: "1"
 
-#   Blocking exposing metrics endpoints to the public, as they can contain sensitive information.
 #   Redirect / into UI
-#   nginx.ingress.kubernetes.io/use-regex: 'true'
-#   nginx.ingress.kubernetes.io/configuration-snippet: |
-#     if ($$request_uri ~ "^/$") {
-#       return 301 /auth;
-#     }
-#     if ($request_uri ~* "/auth/realms/[^/]+/metrics") {
-#       return 403;
-#     }
+#   nginx.ingress.kubernetes.io/app-root: /auth/
   paths:
     - backend:
         service:
