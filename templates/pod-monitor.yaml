@@ -29,6 +29,7 @@ spec:
       {{- if .Values.prometheus.podMonitor.honorLabels }}
       honorLabels: {{ .Values.prometheus.podMonitor.honorLabels }}
       {{- end }}
+    {{- if .Values.prometheus.httpMetricsEnabled }}
     - port: http
       path: "/auth/realms/master/metrics"
       {{- with .Values.prometheus.podMonitor.metricRelabelings }}
@@ -47,6 +48,7 @@ spec:
       {{- if .Values.prometheus.podMonitor.honorLabels }}
       honorLabels: {{ .Values.prometheus.podMonitor.honorLabels }}
       {{- end }}
+    {{- end }}
   namespaceSelector:
     matchNames:
       - {{ .Release.Namespace }}
