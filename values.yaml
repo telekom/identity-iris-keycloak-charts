@@ -295,6 +295,7 @@ prometheus:
   authToken: changeme
   # podMonitor is used to provide a PodMonitor CRD to integrate with prometheus operator
   # prometheus has to be enabled to use this
+  httpMetricsEnabled: false
   serviceMonitor:
     enabled: true
     targetLabels: []

@@ -12,10 +12,12 @@ spec:
   type: ClusterIP
   selector: {{ include "keycloak.selector" $ | nindent 4 }}
   ports:
+  {{- if .Values.prometheus.httpMetricsEnabled }}
   - name: metrics-http
     port: 8080
     protocol: TCP
     targetPort: http
+  {{- end }}
   - name: metrics-mgmt
     port: 9000
     protocol: TCP
