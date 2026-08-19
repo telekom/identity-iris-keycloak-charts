@@ -42,7 +42,7 @@ maxPreparedTransactions: "0"
 
 image:
   repository: postgres
-  tag: 17.10-trixie
+  tag: 18.6-trixie
   pullPolicy: IfNotPresent
 
 resources:
