@@ -107,7 +107,7 @@ spec:
         - name: tmp
           mountPath: /tmp
         - name: tmp
-          mountPath: /opt/keycloak/data/tmp
+          mountPath: /opt/keycloak/data/
         {{- include "keycloak.db.certificates.volumeMount" $ | indent 8 }}
       initContainers:
       - name: "check-database"
@@ -122,8 +122,6 @@ spec:
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds | default 60 }}
       volumes:
       - name: tmp
-        emptyDir: {}
-      - name: jboss
         emptyDir: {}
       {{- if .Values.infinispan.enabled }}
       - name: cache-config
