@@ -8,16 +8,16 @@ SPDX-License-Identifier: CC0-1.0
 
 ## Overview
 
-This chart installs [Keycloak](https://www.keycloak.org/documentation.html). \
-Recommended to use with customized keycloak docker \
-identity-iris-keycloak image version >= 1.1.2 (see the links section). \
+This chart installs [Keycloak](https://www.keycloak.org/documentation.html).
+Recommended to use with customized keycloak docker
+identity-iris-keycloak image version >= 1.1.2 (see [Important links](#description)).
 Default settings in this template are prepared for non-prod environments.
 
 ## Version
 
 | Installed software versions | Version Info |
 |-----------------------------|--------------|
-| Keycloak                    | 26.5.7       |
+| Keycloak                    | 26.7.2       |
 | PostgreSQL                  | 18.6         |
 
 ## Description
@@ -25,20 +25,16 @@ Default settings in this template are prepared for non-prod environments.
 **Important links:**
 
 - Keycloak
-    - [Keycloak documentation](https://www.keycloak.org/docs/latest/release_notes/index.html#keycloak-26-5-0)
-        - [Docker image documentation](https://hub.docker.com/r/jboss/keycloak/)
-        - [GitHub repository](https://github.com/keycloak/keycloak)
-        - [Iris keycloak image (IKI)](https://github.com/telekom/iris-image)
+    - [Keycloak documentation](https://www.keycloak.org/docs/latest/release_notes/index.html#keycloak-26-7-2)
+    - [Docker image (Quay.io)](https://quay.io/repository/keycloak/keycloak)
+    - [GitHub repository](https://github.com/keycloak/keycloak)
+    - [Iris keycloak image (IKI)](https://github.com/telekom/identity-iris-keycloak-image)
 - PostgreSQL
     - [Docker image documentation](https://hub.docker.com/_/postgres)
 
 ## Configuration
 
-### Configuration Files
-
-Keycloak infinispan caches (mainly number of owners per cache) is configured in the `infinispan.xml` file. \
-At start, this file is copied to the proper location and used as a configuration file. \
-To configure the is mounted to the Keycloak pod.
+We prefer configuration over environment variables, which can be defined in `values.yaml` under `.keycloakExtraEnvVars`.
 
 ### Database
 
@@ -51,37 +47,29 @@ database schema within the database field in the values.yaml file, enabling Keyc
 ## Build time Configuration with Quarkus
 
 Keycloak on Quarkus is using a two staged approach where the command `kc.sh build` creates the specific configuration
-and `kc.sh start` runs the preconfigured Keycloak. \
-Because of this following settings are already set in [IKI](https://github.com/telekom/iris-image):
+and `kc.sh start` runs the preconfigured Keycloak.
+Because of this, the following settings are already set in [IKI](https://github.com/telekom/identity-iris-keycloak-image):
 
 - Metrics enabled
 - Health enabled
 - Caching mode: Infinispan
-- clustering detection: kubernetes
+- Clustering detection: ispn
 
 These configurations can't be overridden in the chart.
 
-## Prometheus / Metrics-SPI
+## Metrics
 
-The Metrics-SPI can be used as before in keycloak. It is added in IKI.
-
-The Wildfly redirection from /auth/realms/master/metrics to /metric does not work anymore. This functionality is now
-done within ha-proxy.
-Ha-Proxy provides (in the chart default configuration) and frontend at port 9542 where requests that are send to the
-path /metrics are forwarded to the metrics path of Keycloak.
-All other requests to this port are blocked and result in an 503 http error.
-
-The path /auth/realms/master/metrics is also blocked for port 8080 on Keycloak because it's not secured by any
-authentication.
+This chart uses Keycloak's built-in metrics. For configuration details, see the
+[Keycloak metrics documentation](https://www.keycloak.org/observability/configuration-metrics).
 
 ## Local launch with Kind, Docker and Helm
 
-1. Setup all the required tools: Docker, Kind and Helm \
+1. Setup all the required tools: Docker, Kind and Helm.
 1. Use CKI and pull it to your machine (see the useful links).
-1. Add to the Kind images using `kind load docker-image` command  to add also ha-proxy and postgres images
-1. Archive the chart using command `tar cfvz <archive-name>.tgz <chart-folder>`
-1. use helm install with providing values.yaml files for postgres and custom keycloak charts \
-    e.g. `helm install <chart-name> <archive-name.tgz> --values .\<iris_keycloak_chart_folder>\values.yaml --values .\<iris_keycloak_chart_folder>\charts\postgresql\values.yaml`
+1. Add to the Kind images using `kind load docker-image` command to add also postgres images.
+1. Archive the chart using command `tar cfvz <archive-name>.tgz <chart-folder>`.
+1. Use helm install with providing values.yaml files for postgres and custom keycloak charts,
+    e.g. `helm install <chart-name> <archive-name.tgz> --values ./<iris_keycloak_chart_folder>/values.yaml --values ./<iris_keycloak_chart_folder>/charts/postgresql/values.yaml`
 
 ## Code of Conduct
 
@@ -92,18 +80,22 @@ By participating in this project, you agree to abide by its [Code of Conduct](./
 ## Licensing
 
 This project follows the [REUSE standard for software licensing](https://reuse.software/).
-Each file contains copyright and license information, and license texts can be found in the [./LICENSES](./LICENSES) folder. For more information visit https://reuse.software/.
+Each file contains copyright and license information, and license texts can be found in the [./LICENSES](./LICENSES) folder. For more information visit [reuse.software](https://reuse.software/).
 
-## Conventional CommitsAdd commentMore actions
+## Conventional Commits
 
 This project enforces [Conventional Commits](https://www.conventionalcommits.org/) for all commits.
 **All commit messages must follow the Conventional Commits specification.**
 This is automatically checked in CI for both pushes and pull requests.
 
-## Upgrade to Iris Keycloak 1.4.0
+## Upgrade to Helm chart to 4.0.0
 
-The latest version of Iris Keycloak (1.4.0) no longer supports PostgreSQL 12.x.
-If you are currently using PostgreSQL 12.x via the Helm chart, you must upgrade your database before deploying the new Iris Keycloak version.
+The release upgrades PostgreSQL from version 17 to version 18.
+If you are using a deployment with `postgresql.enabled: true` that
+uses the PostgreSQL instance deployed by this Helm chart, you must
+migrate the database before deploying the new chart version.
+This migration requires system downtime. Deployments that use an
+external database are not affected.
 
 ### Migration Approach
 
@@ -115,23 +107,24 @@ The steps outlined below serve as a general guideline. Depending on your environ
 
 1. Scale down Iris Keycloak to 0 replicas.
 1. Create a backup of the Keycloak database using `pg_dump`.
-    *Note: Do not backup the entire PostgreSQL instance, as the newer version uses a different authentication mechanism.*
-1. Scale down Postgresql to 0 replicas.
+1. Scale down PostgreSQL to 0 replicas.
 1. Delete the existing PostgreSQL Persistent Volume Claim (PVC).
 1. Provision a new PostgreSQL PVC.
 1. Configure PostgreSQL to use the newly created PVC.
 1. Upgrade the Helm chart to deploy the updated versions of Keycloak and PostgreSQL.
-    *Note: Ensure that Keycloak remains scaled to 0 replicas during this step.*
+
+    > Note: Ensure that Keycloak remains scaled to 0 replicas during this step.
+
 1. Wait for the PostgreSQL instance to complete its initialization.
 1. Restore the database backup.
 1. Scale Iris Keycloak back up to the desired number of replicas.
 1. Verify that the system is functioning as expected.
 
-### REUSE
+## REUSE
 
 The [reuse tool](https://github.com/fsfe/reuse-tool) can be used to verify and establish compliance when new files are added.
 
-For more information on the reuse tool visit https://github.com/fsfe/reuse-tool.
+For more information on the reuse tool visit the [reuse-tool repository](https://github.com/fsfe/reuse-tool).
 
 **Check for incompliant files (= not properly licensed)**
 
@@ -145,7 +138,7 @@ Run `pipx run reuse spdx`
 
 Run `pipx run reuse annotate -c="<COPYRIGHT>" -l="<LICENSE-SPDX-IDENTIFIER>" <file>`
 
-Replace `<COPYRIGHT>` with the copyright holder, e.g "Deutsche Telekom AG", and `<LICENSE-SPDX-IDENTIFIER>` with the ID of the license the file should be under. For possible IDs see https://spdx.org/licenses/.
+Replace `<COPYRIGHT>` with the copyright holder, e.g "Deutsche Telekom AG", and `<LICENSE-SPDX-IDENTIFIER>` with the ID of the license the file should be under. For possible IDs see the [SPDX License List](https://spdx.org/licenses/).
 
 **Add a new license text**
 
