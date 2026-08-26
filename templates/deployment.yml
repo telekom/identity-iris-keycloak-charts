@@ -69,11 +69,6 @@ spec:
           - "start"
           - "--optimized"
           - "--import-realm"
-          {{- if .Values.infinispan.enabled }}
-          - "--cache=ispn"
-          - "--cache-stack=jdbc-ping"
-          - "--cache-config-mutate=true"
-          {{- end }}
         env:
         {{- include "keycloak.env" $ | indent 8 -}}
         {{- with .Values.livenessProbe }}
@@ -98,7 +93,7 @@ spec:
             sleep:
               seconds: {{ .Values.terminationKeycloakDelaySeconds | int }}
         volumeMounts:
-        {{- if .Values.infinispan.enabled }}
+        {{- if .Values.infinispan.customConfig }}
         - name: cache-config
           mountPath: /opt/keycloak/conf/
         {{ end }}
@@ -123,11 +118,11 @@ spec:
       volumes:
       - name: tmp
         emptyDir: {}
-      {{- if .Values.infinispan.enabled }}
+      {{- if .Values.infinispan.customConfig }}
       - name: cache-config
         configMap:
           name: {{ .Release.Name }}-cache-config
-      {{ end }}
+      {{- end }}
       - name: realms
         configMap:
           name: {{ .Release.Name }}-realm

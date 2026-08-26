@@ -29,7 +29,9 @@ app.kubernetes.io/name: keycloak
 {{- end -}}
 
 {{- define "keycloak.checksums" -}}
-checksum/config: {{ .Values.infinispan.nativeConfig | sha256sum }}
+{{- if $.Values.infinispan.customConfig }}
+checksum/config: {{ $.Values.infinispan.customConfig | sha256sum }}
+{{- end }}
 {{- range .Values.templateChangeTriggers }}
 checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- end -}}
@@ -108,6 +110,10 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- end -}}
 {{- if .Values.keycloakExtraEnvVars }}
 {{ tpl (toYaml .Values.keycloakExtraEnvVars) $ }}
+{{- end -}}
+{{- if .Values.infinispan.customConfig }}
+- name: KC_CACHE_CONFIG_MUTATE
+  value: "true"
 {{- end -}}
 {{- end -}}
 
