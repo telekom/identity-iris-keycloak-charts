@@ -4,6 +4,25 @@ SPDX-FileCopyrightText: 2025 Deutsche Telekom AG
 SPDX-License-Identifier: CC0-1.0    
 -->
 
+# [4.0.0](https://github.com/telekom/identity-iris-keycloak-charts/compare/3.2.0...4.0.0) (2026-08-27)
+
+
+* feat!: use env vars for configuration for cache ([#77](https://github.com/telekom/identity-iris-keycloak-charts/issues/77)) ([6bcd06e](https://github.com/telekom/identity-iris-keycloak-charts/commit/6bcd06e8c5bab8355dea3f85abde4c5d7567b6fc))
+
+
+### Features
+
+* upgrade iris image to 1.6.0 ([#76](https://github.com/telekom/identity-iris-keycloak-charts/issues/76)) ([8017796](https://github.com/telekom/identity-iris-keycloak-charts/commit/80177960143d16f556ffbe03d10803236140b60f))
+* upgrade postgresql to 18.6 ([#75](https://github.com/telekom/identity-iris-keycloak-charts/issues/75)) ([f1c1c78](https://github.com/telekom/identity-iris-keycloak-charts/commit/f1c1c78c113c45a963415c91b4db4c495e7032b3))
+
+
+### BREAKING CHANGES
+
+* remove the inline `infinispan.nativeConfig` values
+configuration. Consumers using custom cache settings must migrate to the
+new environment-variable-based configuration or the new custom configuration
+field.
+
 # [3.2.0](https://github.com/telekom/identity-iris-keycloak-charts/compare/3.1.1...3.2.0) (2026-07-27)
 
 
