@@ -1,0 +1,14 @@
+# SPDX-FileCopyrightText: 2025 Deutsche Telekom AG
+#
+# SPDX-License-Identifier: Apache-2.0
+
+{{- if .Values.ingress.admin.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-haproxy
+  namespace: {{ .Release.Namespace }}
+  labels: {{ include "keycloak.labels" $ | nindent 4 }}
+data:
+  haproxy.cfg: | {{- tpl (.Values.haproxy.config) $ | nindent 4 }}
+{{- end }}

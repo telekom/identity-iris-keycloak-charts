@@ -104,6 +104,21 @@ spec:
         - name: tmp
           mountPath: /opt/keycloak/data/
         {{- include "keycloak.db.certificates.volumeMount" $ | indent 8 }}
+      {{- if .Values.ingress.admin.enabled }}
+      - name: haproxy
+        image: {{ .Values.haproxy.image.repository }}:{{ .Values.haproxy.image.tag }}
+        imagePullPolicy: {{ .Values.haproxy.image.pullPolicy }}
+        securityContext: {{ .Values.haproxy.securityContext | toYaml | nindent 10 }}
+        resources: {{ .Values.haproxy.resources | toYaml | nindent 10 }}
+        ports:
+          - containerPort: {{ .Values.haproxy.service.port }}
+            protocol: TCP
+            name: haproxy
+        volumeMounts:
+          - name: haproxy-config
+            mountPath: /usr/local/etc/haproxy/
+            readOnly: true
+      {{- end }}
       initContainers:
       - name: "check-database"
         image: {{ .Values.postgresql.image.repository }}:{{ .Values.postgresql.image.tag }}
@@ -126,4 +141,9 @@ spec:
       - name: realms
         configMap:
           name: {{ .Release.Name }}-realm
+      {{- if .Values.ingress.admin.enabled }}
+      - name: haproxy-config
+        configMap:
+          name: {{ .Release.Name }}-haproxy
+      {{- end }}
       {{- include "keycloak.db.certificates.volume" $ | indent 6 }}

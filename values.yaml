@@ -237,63 +237,142 @@ terminationGracePeriodSeconds: 75
 
 logLevel: INFO
 
+# Public and optional dedicated admin ingress for Keycloak's /auth context path.
 ingress:
+  # Controls creation of both ingress resources.
   enabled: true
-  hostname: localhost
-#  altHostname: ""   # alternative hostnames in ingress, either a string or a list of strings
-#  adminHostname: ""   # overwrite host used in KC_HOSTNAME
-  ingressClassName: ""
-  tls:
-    enabled: true   # Enable TLS section in Ingress (HTTPS support)
-    hosts: []       # List of TLS hostnames; default is ingress.hostname
-    secret: ""      # Secret name containing TLS certificate
-  annotations: {}
-#    # With multiple replicas it might be necessary to add below cookie options to the ingress.
-#    nginx.ingress.kubernetes.io/affinity: 'cookie'
-#    nginx.ingress.kubernetes.io/session-cookie-path: '/'
+  # Provides the public entry point for application sign-in and realm endpoints.
+  # With the default paths and admin ingress enabled, application realm requests
+  # reach Keycloak while master realm requests go to HAProxy's deny listener.
+  # Without admin ingress, this entry point also exposes the admin paths under /auth.
+  default:
+    # Public hostname; use a DNS name covered by the ingress TLS certificate.
+    hostname: localhost
+    # alternative hostnames in ingress, either a string or a list of strings
+    # altHostname: ""
+    # Empty omits ingressClassName and uses the cluster's default ingress class.
+    ingressClassName: ""
+    # TLS terminates at the ingress controller, not at HAProxy or Keycloak.
+    # A TLS section alone does not enforce HTTPS; configure the controller accordingly.
+    tls:
+      enabled: true   # Include the TLS section in the public ingress.
+      hosts: []       # Empty defaults to ingress.default.hostname; include aliases explicitly.
+      secret: ""      # Falls back to global.ingress.tlsSecret; otherwise secretName is omitted.
+    # Merged with global.ingress.annotations; these values take precedence.
+    # The examples below apply only to the NGINX ingress controller.
+    annotations: {}
+  #    # With multiple replicas it might be necessary to add below cookie options to the ingress.
+  #    nginx.ingress.kubernetes.io/affinity: 'cookie'
+  #    nginx.ingress.kubernetes.io/session-cookie-path: '/'
 
-#   # Enable CORS (Cross-Origin Resource Sharing)
-#   nginx.ingress.kubernetes.io/enable-cors: "true"
-#   nginx.ingress.kubernetes.io/cors-allow-methods: GET, POST, HEAD, PUT, PATCH, DELETE, OPTIONS
-#   nginx.ingress.kubernetes.io/cors-allow-origin: https://allow-origin.com
+  #   # Enable CORS (Cross-Origin Resource Sharing)
+  #   nginx.ingress.kubernetes.io/enable-cors: "true"
+  #   nginx.ingress.kubernetes.io/cors-allow-methods: GET, POST, HEAD, PUT, PATCH, DELETE, OPTIONS
+  #   nginx.ingress.kubernetes.io/cors-allow-origin: https://allow-origin.com
 
-#   # NGINX ingress controller annotations including SSL redirection, backend protocol specification,
-#   # and retry attempts for failed requests to upstream servers.
-#   nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-#   nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-#   nginx.ingress.kubernetes.io/proxy-next-upstream-tries: "1"
+  #   # NGINX ingress controller annotations including SSL redirection, backend protocol specification,
+  #   # and retry attempts for failed requests to upstream servers.
+  #   nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  #   nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+  #   nginx.ingress.kubernetes.io/proxy-next-upstream-tries: "1"
 
-#   Redirect / into UI
-#   nginx.ingress.kubernetes.io/app-root: /auth/
-  paths:
-    - backend:
-        service:
-          name: "{{ $.Release.Name }}"
-          port:
-            number: 80
-      path: /realms/
-      pathType: Prefix
-    - backend:
-        service:
-          name: "{{ $.Release.Name }}"
-          port:
-            number: 80
-      path: /auth
-      pathType: Prefix
-    - backend:
-        service:
-          name: "{{ $.Release.Name }}"
-          port:
-            number: 80
-      path: /admin/
-      pathType: Prefix
-    - backend:
-        service:
-          name: "{{ $.Release.Name }}"
-          port:
-            number: 80
-      path: /resources/
-      pathType: Prefix
+  #   Redirect / into UI
+  #   nginx.ingress.kubernetes.io/app-root: /auth/
+    # Helm-templated YAML string, not a YAML list.
+    # With admin ingress enabled, the more specific master realm prefix goes to
+    # HAProxy's deny listener; other realm requests go directly to Keycloak on port 80.
+    # Without admin ingress, all /auth paths (including admin) go to Keycloak.
+    # Prefix paths match whole path segments; this is routing, not authorization.
+    paths: |-
+      {{- if .Values.ingress.admin.enabled -}}
+      - backend:
+          service:
+            name: "{{ $.Release.Name }}"
+            port:
+              number: {{ $.Values.haproxy.service.port }}
+        path: /auth/realms/master/
+        pathType: Prefix
+      - backend:
+          service:
+            name: "{{ $.Release.Name }}"
+            port:
+              number: 80
+        path: /auth/realms/
+        pathType: Prefix
+      {{- else -}}
+      - backend:
+          service:
+            name: "{{ $.Release.Name }}"
+            port:
+              number: 80
+        path: /auth/
+        pathType: Prefix
+      {{- end }}
+  # Provides a separate hostname for Keycloak administration: the admin console/API
+  # and the master realm used for administrator sign-in, on the same Keycloak instance.
+  # With the default paths, enabling this keeps application realms on the public
+  # hostname and sends public master realm requests to HAProxy's deny listener.
+  # Disabling this exposes all /auth paths through the public ingress instead.
+  # This controls ingress routing only; it does not create users or grant admin roles.
+  # After enabling, set the master realm frontendUrl manually (see "Admin Ingress Frontend URL" in README.md).
+  admin:
+    # Requires ingress.enabled=true and a hostname different from ingress.default.hostname.
+    # A separate hostname does not restrict access; protect it at the controller/network layer.
+    enabled: true
+    hostname: localhost
+    # Empty omits ingressClassName and uses the cluster's default ingress class.
+    ingressClassName: ""
+    tls:
+      enabled: true   # Include the TLS section; HTTPS enforcement is controller-specific.
+      hosts: []       # Empty defaults to ingress.admin.hostname.
+      secret: ""      # Falls back to global.ingress.tlsSecret; otherwise secretName is omitted.
+    # Overrides matching global.ingress.annotations; NGINX examples follow.
+    # Apply admin access restrictions here using annotations supported by your controller.
+    annotations: {}
+  #    # With multiple replicas it might be necessary to add below cookie options to the ingress.
+  #    nginx.ingress.kubernetes.io/affinity: 'cookie'
+  #    nginx.ingress.kubernetes.io/session-cookie-path: '/'
+
+  #   # Enable CORS (Cross-Origin Resource Sharing)
+  #   nginx.ingress.kubernetes.io/enable-cors: "true"
+  #   nginx.ingress.kubernetes.io/cors-allow-methods: GET, POST, HEAD, PUT, PATCH, DELETE, OPTIONS
+  #   nginx.ingress.kubernetes.io/cors-allow-origin: https://allow-origin.com
+
+  #   # NGINX ingress controller annotations including SSL redirection, backend protocol specification,
+  #   # and retry attempts for failed requests to upstream servers.
+  #   nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  #   nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+  #   nginx.ingress.kubernetes.io/proxy-next-upstream-tries: "1"
+
+  #   Redirect / into UI
+  #   nginx.ingress.kubernetes.io/app-root: /auth/
+    # YAML list whose entries are evaluated as Helm templates.
+    # These routes bypass HAProxy and reach Keycloak directly on service port 80.
+    # Keycloak's built-in admin realm is /auth/realms/master/ (singular).
+    # The existing /masters/ route below does not match that realm.
+    # Console assets under /auth/resources/ also need a route if the console uses them.
+    paths: |-
+      - backend:
+          service:
+            name: "{{ $.Release.Name }}"
+            port:
+              number: 80
+        path: /auth/admin/
+        pathType: Prefix
+      - backend:
+          service:
+            name: "{{ $.Release.Name }}"
+            port:
+              number: 80
+        path: /auth/realms/master/
+        pathType: Prefix
+      - backend:
+          service:
+            name: "{{ $.Release.Name }}"
+            port:
+              number: 80
+        path: /auth/resources/
+        pathType: Prefix
 
 prometheus:
   enabled: true
@@ -369,3 +448,35 @@ deploymentStrategy:
     maxSurge: 1
     maxUnavailable: 0
   type: RollingUpdate
+
+haproxy:
+  service:
+    port: 8081
+  image:
+    repository: haproxy
+    tag: 3.4.6-trixie
+    pullPolicy: IfNotPresent
+  securityContext:
+    runAsUser: 99
+    runAsGroup: 99
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    seccompProfile:
+      type: RuntimeDefault
+  resources:
+    requests:
+      cpu: 50m
+      memory: 32Mi
+    limits:
+      cpu: 500m
+      memory: 128Mi
+  config: |
+    frontend forbidden
+      bind :{{ .Values.haproxy.service.port }}
+      mode http
+
+      http-request deny

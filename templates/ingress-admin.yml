@@ -1,0 +1,30 @@
+{{- if and .Values.ingress.enabled .Values.ingress.admin.enabled }}
+{{- if eq .Values.ingress.admin.hostname .Values.ingress.default.hostname }}
+{{- fail "admin and default hostname cannot be same. You don't need admin ingress, if hostname is the same." -}}
+{{- end }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  {{- include "keycloak.ingress.annotations" (dict "root" $ "ingress" .Values.ingress.admin) | nindent 2 }}
+  name: {{ .Release.Name }}-admin
+  namespace: {{ .Release.Namespace }}
+  labels: {{ include "keycloak.labels" $ | nindent 4 }}
+spec:
+  rules:
+  - host: {{ .Values.ingress.admin.hostname }}
+    http:
+      paths: {{- tpl ($.Values.ingress.admin.paths) $ | nindent 8 }}
+{{- if .Values.ingress.admin.ingressClassName }}
+  ingressClassName: {{ .Values.ingress.admin.ingressClassName }}
+{{- end }}
+{{- if .Values.ingress.admin.tls.enabled }}
+  tls:
+  - hosts:
+  {{- if and .Values.ingress.admin.tls.hosts (gt (len .Values.ingress.admin.tls.hosts) 0) }}
+    {{- toYaml .Values.ingress.admin.tls.hosts | nindent 6 }}
+  {{- else }}
+    - {{ .Values.ingress.admin.hostname }}
+  {{- end }}
+  {{- include "keycloak.tls.secret" (dict "root" $ "ingress" .Values.ingress.admin) | nindent 4 -}}
+{{- end }}
+{{- end }}

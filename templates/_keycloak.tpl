@@ -62,8 +62,16 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- end }}
 
 {{- define "keycloak.env" }}
+{{- if .Values.ingress.admin.enabled }}
+{{/* /auth is required for compatibility with controlplane and backward compatibility */}}
+- name: KC_HOSTNAME_ADMIN
+  value: {{ ternary "https" "http" .Values.ingress.admin.tls.enabled }}://{{ .Values.ingress.admin.hostname }}/auth
 - name: KC_HOSTNAME
-  value: {{ include "keycloak.adminHost" $ }}
+  value: {{ ternary "https" "http" .Values.ingress.default.tls.enabled }}://{{ include "keycloak.mainHost" $ }}/auth
+{{- else }}
+- name: KC_HOSTNAME
+  value: {{ include "keycloak.mainHost" $ }}
+{{- end }}
 - name: KC_PROXY_HEADERS
   value: "xforwarded"
 - name: KC_HTTP_ENABLED
@@ -134,17 +142,13 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{- end -}}
 
 {{- define "keycloak.mainHost" }}
-  {{- .Values.ingress.hostname | default (printf "%s-%s.%s" .Release.Name .Release.Namespace .Values.global.domain) }}
-{{- end -}}
-
-{{- define "keycloak.adminHost" }}
-  {{- .Values.ingress.adminHostname | default (include "keycloak.mainHost" $) }}
+  {{- .Values.ingress.default.hostname | default (printf "%s-%s.%s" .Release.Name .Release.Namespace .Values.global.domain) }}
 {{- end -}}
 
 {{- define "keycloak.hosts" }}
   {{- $mainHost := include "keycloak.mainHost" $ }}
   {{- $hosts := list $mainHost }}
-  {{- $altHost := .Values.ingress.altHostname }}
+  {{- $altHost := .Values.ingress.default.altHostname }}
   {{- if not (empty $altHost) }}
     {{- if (kindIs "slice" $altHost) }}
       {{- range (compact $altHost) }}
@@ -173,24 +177,14 @@ checksum/{{ . }}: {{ include (print $.Template.BasePath "/" . ) $ | sha256sum }}
 {{ end -}}
 
 {{- define "keycloak.ingress.annotations" }}
-{{- $globalAnnotations := dict "annotations" .Values.global.ingress.annotations | deepCopy -}}
-{{- $localAnnotations := dict "annotations" .Values.ingress.annotations -}}
+{{- $globalAnnotations := dict "annotations" .root.Values.global.ingress.annotations | deepCopy -}}
+{{- $localAnnotations := dict "annotations" .ingress.annotations -}}
 {{- $mergedAnnotations := mergeOverwrite $globalAnnotations $localAnnotations }}
 {{- $mergedAnnotations | toYaml -}}
 {{ end -}}
 
 {{- define "keycloak.tls.secret" -}}
-{{- if not (and (empty .Values.ingress.tls.secret) (empty .Values.global.ingress.tlsSecret)) -}}
-secretName: {{ .Values.ingress.tls.secret | default .Values.global.ingress.tlsSecret -}}
-{{- end -}}
-{{- end -}}
-
-{{- define "keycloak.tls.hosts" -}}
-{{- if or (not .Values.ingress.tls.hosts) (eq (len .Values.ingress.tls.hosts) 0) -}}
-- {{ include "keycloak.mainHost" $ }}
-{{- else -}}
-{{- range .Values.ingress.tls.hosts }}
-- {{ . }}
-{{- end -}}
+{{- if not (and (empty .ingress.tls.secret) (empty .root.Values.global.ingress.tlsSecret)) -}}
+secretName: {{ .ingress.tls.secret | default .root.Values.global.ingress.tlsSecret -}}
 {{- end -}}
 {{- end -}}

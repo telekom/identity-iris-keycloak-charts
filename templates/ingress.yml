@@ -2,24 +2,28 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  {{- include "keycloak.ingress.annotations" $ | nindent 2 }}
+  {{- include "keycloak.ingress.annotations" (dict "root" $ "ingress" .Values.ingress.default) | nindent 2 }}
   name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
   labels: {{ include "keycloak.labels" $ | nindent 4 }}
 spec:
   rules:
   {{- range (include "keycloak.hosts" . | fromYamlArray) }}
   - host: {{ . }}
     http:
-      paths:
-        {{- tpl (toYaml $.Values.ingress.paths) $ | nindent 8 }}
+      paths: {{- tpl ($.Values.ingress.default.paths) $ | nindent 8 }}
   {{- end }}
-{{- if .Values.ingress.ingressClassName }}
-  ingressClassName: {{ .Values.ingress.ingressClassName }}
+{{- if .Values.ingress.default.ingressClassName }}
+  ingressClassName: {{ .Values.ingress.default.ingressClassName }}
 {{- end }}
-{{- if .Values.ingress.tls.enabled }}
+{{- if .Values.ingress.default.tls.enabled }}
   tls:
   - hosts:
-{{- include "keycloak.tls.hosts" . | nindent 4 -}}
-{{- include "keycloak.tls.secret" . | nindent 4 -}}
+  {{- if and .Values.ingress.default.tls.hosts (gt (len .Values.ingress.default.tls.hosts) 0) }}
+    {{- toYaml .Values.ingress.default.tls.hosts | nindent 6 }}
+  {{- else }}
+    - {{ .Values.ingress.default.hostname }}
+  {{- end }}
+{{- include "keycloak.tls.secret" (dict "root" $ "ingress" .Values.ingress.default) | nindent 4 -}}
 {{- end }}
 {{- end }}

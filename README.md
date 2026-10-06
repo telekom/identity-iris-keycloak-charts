@@ -44,6 +44,31 @@ directory to store Keycloak data. Conversely, if set to `false`, you must includ
 parameter, directing it towards the designated database. Additionally, you need to provide the essential user data and
 database schema within the database field in the values.yaml file, enabling Keycloak to establish a connection.
 
+### Admin Ingress Frontend URL
+
+When `ingress.admin.enabled` is true, the master realm's frontend URL must be set once after Keycloak is ready.
+Otherwise the admin console served on `ingress.admin.hostname` does not work properly. The Keycloak container already
+provides `KC_BOOTSTRAP_ADMIN_USERNAME`, `KC_BOOTSTRAP_ADMIN_PASSWORD` and, only with the admin ingress,
+`KC_HOSTNAME_ADMIN`, so the same commands work for enabling and disabling:
+
+```bash
+kubectl exec -it -n <namespace> deploy/<release> -c keycloak -- bash
+
+export KC_CLI_PASSWORD="$KC_BOOTSTRAP_ADMIN_PASSWORD"
+/opt/keycloak/bin/kcadm.sh config credentials \
+  --server http://localhost:8080/auth --realm master --user "$KC_BOOTSTRAP_ADMIN_USERNAME"
+
+if [ -n "${KC_HOSTNAME_ADMIN:-}" ]; then
+  /opt/keycloak/bin/kcadm.sh update realms/master -s "attributes.frontendUrl=$KC_HOSTNAME_ADMIN"
+else
+  /opt/keycloak/bin/kcadm.sh update realms/master -d attributes.frontendUrl
+fi
+```
+
+The bootstrap credentials must still be the live administrator credentials; they do not rotate in an existing
+database. The value is stored in the database and persists across Pod restarts and upgrades. Application realms
+are not changed. Changing the frontend URL invalidates the current CLI token, so log in again before further commands.
+
 ## Build time Configuration with Quarkus
 
 Keycloak on Quarkus is using a two staged approach where the command `kc.sh build` creates the specific configuration
