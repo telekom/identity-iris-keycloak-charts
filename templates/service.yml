@@ -19,3 +19,9 @@ spec:
     port: 80
     protocol: TCP
     targetPort: http
+{{- if .Values.ingress.admin.enabled }}
+  - name: haproxy
+    port: {{ .Values.haproxy.service.port }}
+    protocol: TCP
+    targetPort: haproxy
+{{- end }}
