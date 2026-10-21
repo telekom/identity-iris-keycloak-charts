@@ -474,9 +474,3 @@ haproxy:
     limits:
       cpu: 500m
       memory: 128Mi
-  config: |
-    frontend forbidden
-      bind :{{ .Values.haproxy.service.port }}
-      mode http
-
-      http-request deny

@@ -10,5 +10,10 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels: {{ include "keycloak.labels" $ | nindent 4 }}
 data:
-  haproxy.cfg: | {{- tpl (.Values.haproxy.config) $ | nindent 4 }}
-{{- end }}
+  haproxy.cfg: |
+    frontend forbidden
+    bind :{{ .Values.haproxy.service.port }}
+    mode http
+
+    http-request deny
+{{- end -}}
