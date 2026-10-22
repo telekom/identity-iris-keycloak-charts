@@ -82,7 +82,7 @@ else
 fi
 ```
 
-Check:
+Check (after login as admin again!):
 
 ```bash
 /opt/keycloak/bin/kcadm.sh get realms/master --config /tmp/kcadm.config --fields 'attributes(frontendUrl)'
