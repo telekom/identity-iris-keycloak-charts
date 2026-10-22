@@ -51,18 +51,41 @@ Otherwise the admin console served on `ingress.admin.hostname` does not work pro
 provides `KC_BOOTSTRAP_ADMIN_USERNAME`, `KC_BOOTSTRAP_ADMIN_PASSWORD` and, only with the admin ingress,
 `KC_HOSTNAME_ADMIN`, so the same commands work for enabling and disabling:
 
+Login to Keycloak container:
+
 ```bash
 kubectl exec -it -n <namespace> deploy/<release> -c keycloak -- bash
+```
 
+Login as admin:
+
+```bash
 export KC_CLI_PASSWORD="$KC_BOOTSTRAP_ADMIN_PASSWORD"
 /opt/keycloak/bin/kcadm.sh config credentials \
-  --server http://localhost:8080/auth --realm master --user "$KC_BOOTSTRAP_ADMIN_USERNAME"
+  --config /tmp/kcadm.config \
+  --server http://localhost:8080/auth \
+  --realm master \
+  --user "$KC_BOOTSTRAP_ADMIN_USERNAME"
+```
 
+Update admin config:
+
+```bash
 if [ -n "${KC_HOSTNAME_ADMIN:-}" ]; then
-  /opt/keycloak/bin/kcadm.sh update realms/master -s "attributes.frontendUrl=$KC_HOSTNAME_ADMIN"
+  /opt/keycloak/bin/kcadm.sh update realms/master \
+  --config /tmp/kcadm.config \
+  -s "attributes.frontendUrl=$KC_HOSTNAME_ADMIN"
 else
-  /opt/keycloak/bin/kcadm.sh update realms/master -d attributes.frontendUrl
+  /opt/keycloak/bin/kcadm.sh update realms/master \
+  --config /tmp/kcadm.config \
+  -d "attributes.frontendUrl"
 fi
+```
+
+Check:
+
+```bash
+/opt/keycloak/bin/kcadm.sh get realms/master --config /tmp/kcadm.config --fields 'attributes(frontendUrl)'
 ```
 
 The bootstrap credentials must still be the live administrator credentials; they do not rotate in an existing
