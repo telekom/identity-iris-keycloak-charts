@@ -31,7 +31,7 @@ spec:
               number: 80
         path: /auth/realms/
         pathType: Prefix
-      {{- else -}}
+      {{- else }}
       - backend:
           service:
             name: "{{ $.Release.Name }}"
