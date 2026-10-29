@@ -16,7 +16,7 @@ spec:
       # Without admin ingress, all /auth paths (including admin) go to Keycloak.
       # Prefix paths match whole path segments; this is routing, not authorization.
       paths: 
-       {{- if .Values.ingress.admin.enabled -}}
+      {{- if $.Values.ingress.admin.enabled }}
       - backend:
           service:
             name: "{{ $.Release.Name }}"
