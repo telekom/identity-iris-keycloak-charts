@@ -278,36 +278,6 @@ ingress:
 
   #   Redirect / into UI
   #   nginx.ingress.kubernetes.io/app-root: /auth/
-    # Helm-templated YAML string, not a YAML list.
-    # With admin ingress enabled, the more specific master realm prefix goes to
-    # HAProxy's deny listener; other realm requests go directly to Keycloak on port 80.
-    # Without admin ingress, all /auth paths (including admin) go to Keycloak.
-    # Prefix paths match whole path segments; this is routing, not authorization.
-    paths: |-
-      {{- if .Values.ingress.admin.enabled -}}
-      - backend:
-          service:
-            name: "{{ $.Release.Name }}"
-            port:
-              number: {{ $.Values.haproxy.service.port }}
-        path: /auth/realms/master/
-        pathType: Prefix
-      - backend:
-          service:
-            name: "{{ $.Release.Name }}"
-            port:
-              number: 80
-        path: /auth/realms/
-        pathType: Prefix
-      {{- else -}}
-      - backend:
-          service:
-            name: "{{ $.Release.Name }}"
-            port:
-              number: 80
-        path: /auth/
-        pathType: Prefix
-      {{- end }}
   # Provides a separate hostname for Keycloak administration: the admin console/API
   # and the master realm used for administrator sign-in, on the same Keycloak instance.
   # With the default paths, enabling this keeps application realms on the public
@@ -346,33 +316,6 @@ ingress:
 
   #   Redirect / into UI
   #   nginx.ingress.kubernetes.io/app-root: /auth/
-    # YAML list whose entries are evaluated as Helm templates.
-    # These routes bypass HAProxy and reach Keycloak directly on service port 80.
-    # Keycloak's built-in admin realm is /auth/realms/master/ (singular).
-    # The existing /masters/ route below does not match that realm.
-    # Console assets under /auth/resources/ also need a route if the console uses them.
-    paths: |-
-      - backend:
-          service:
-            name: "{{ $.Release.Name }}"
-            port:
-              number: 80
-        path: /auth/admin/
-        pathType: Prefix
-      - backend:
-          service:
-            name: "{{ $.Release.Name }}"
-            port:
-              number: 80
-        path: /auth/realms/master/
-        pathType: Prefix
-      - backend:
-          service:
-            name: "{{ $.Release.Name }}"
-            port:
-              number: 80
-        path: /auth/resources/
-        pathType: Prefix
 
 prometheus:
   enabled: true

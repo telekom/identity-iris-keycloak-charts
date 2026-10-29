@@ -13,7 +13,32 @@ spec:
   rules:
   - host: {{ .Values.ingress.admin.hostname }}
     http:
-      paths: {{- tpl ($.Values.ingress.admin.paths) $ | nindent 8 }}
+      # These routes bypass HAProxy and reach Keycloak directly on service port 80.
+      # Keycloak's built-in admin realm is /auth/realms/master/ (singular).
+      # The existing /masters/ route below does not match that realm.
+      # Console assets under /auth/resources/ also need a route if the console uses them.
+      paths:
+      - backend:
+          service:
+            name: "{{ $.Release.Name }}"
+            port:
+              number: 80
+        path: /auth/admin/
+        pathType: Prefix
+      - backend:
+          service:
+            name: "{{ $.Release.Name }}"
+            port:
+              number: 80
+        path: /auth/realms/master/
+        pathType: Prefix
+      - backend:
+          service:
+            name: "{{ $.Release.Name }}"
+            port:
+              number: 80
+        path: /auth/resources/
+        pathType: Prefix
 {{- if .Values.ingress.admin.ingressClassName }}
   ingressClassName: {{ .Values.ingress.admin.ingressClassName }}
 {{- end }}

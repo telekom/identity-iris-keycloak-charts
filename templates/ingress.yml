@@ -11,7 +11,35 @@ spec:
   {{- range (include "keycloak.hosts" . | fromYamlArray) }}
   - host: {{ . }}
     http:
-      paths: {{- tpl ($.Values.ingress.default.paths) $ | nindent 8 }}
+      # With admin ingress enabled, the more specific master realm prefix goes to
+      # HAProxy's deny listener; other realm requests go directly to Keycloak on port 80.
+      # Without admin ingress, all /auth paths (including admin) go to Keycloak.
+      # Prefix paths match whole path segments; this is routing, not authorization.
+      paths: 
+       {{- if .Values.ingress.admin.enabled -}}
+      - backend:
+          service:
+            name: "{{ $.Release.Name }}"
+            port:
+              number: {{ $.Values.haproxy.service.port }}
+        path: /auth/realms/master/
+        pathType: Prefix
+      - backend:
+          service:
+            name: "{{ $.Release.Name }}"
+            port:
+              number: 80
+        path: /auth/realms/
+        pathType: Prefix
+      {{- else -}}
+      - backend:
+          service:
+            name: "{{ $.Release.Name }}"
+            port:
+              number: 80
+        path: /auth/
+        pathType: Prefix
+      {{- end }}
   {{- end }}
 {{- if .Values.ingress.default.ingressClassName }}
   ingressClassName: {{ .Values.ingress.default.ingressClassName }}
