@@ -18,6 +18,9 @@ spec:
       # The existing /masters/ route below does not match that realm.
       # Console assets under /auth/resources/ also need a route if the console uses them.
       paths:
+      {{- if hasKey $.Values.ingress.admin "paths" }}
+      {{- tpl $.Values.ingress.admin.paths $ | nindent 8 }}
+      {{- else }}
       - backend:
           service:
             name: "{{ $.Release.Name }}"
@@ -39,6 +42,7 @@ spec:
               number: 80
         path: /auth/resources/
         pathType: Prefix
+      {{- end }}
 {{- if .Values.ingress.admin.ingressClassName }}
   ingressClassName: {{ .Values.ingress.admin.ingressClassName }}
 {{- end }}
