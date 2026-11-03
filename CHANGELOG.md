@@ -4,6 +4,38 @@ SPDX-FileCopyrightText: 2025 Deutsche Telekom AG
 SPDX-License-Identifier: CC0-1.0    
 -->
 
+# [5.0.0](https://github.com/telekom/identity-iris-keycloak-charts/compare/4.0.0...5.0.0) (2026-11-03)
+
+
+### Bug Fixes
+
+* admin hostname readme ([#81](https://github.com/telekom/identity-iris-keycloak-charts/issues/81)) ([8ee5bef](https://github.com/telekom/identity-iris-keycloak-charts/commit/8ee5befbe33041ff0bd30255dfe6d33cf12cd90d))
+* refactor templating from values.yaml ([#82](https://github.com/telekom/identity-iris-keycloak-charts/issues/82)) ([e9b0516](https://github.com/telekom/identity-iris-keycloak-charts/commit/e9b05160a330fda363c8c9e887267fa9e1cd6cc9))
+
+
+### Features
+
+* add dedicated admin ingress with HAProxy guard ([#79](https://github.com/telekom/identity-iris-keycloak-charts/issues/79)) ([46b0203](https://github.com/telekom/identity-iris-keycloak-charts/commit/46b0203df53903dde8d82b9bdfe67aca6e950022))
+
+
+### BREAKING CHANGES
+
+* ingress values are restructured and the admin ingress is
+enabled by default.
+- ingress.{hostname,altHostname,ingressClassName,tls,annotations,paths}
+  moved to ingress.default.*
+- ingress.adminHostname is replaced by ingress.admin.hostname
+- ingress.default.paths is now a Helm-templated string, not a YAML list
+- public paths changed to /auth/realms/ (master realm denied); the admin
+  console and master realm are no longer served on the public hostname
+- KC_HOSTNAME is a full URL ending in /auth when the admin ingress is on
+
+Migration: move ingress.* settings under ingress.default, set
+ingress.admin.hostname, then set the master realm frontendUrl as described in
+the README ("Admin Ingress Frontend URL").
+
+* fix: use static haproxy config
+
 # [4.0.0](https://github.com/telekom/identity-iris-keycloak-charts/compare/3.2.0...4.0.0) (2026-08-27)
 
 
