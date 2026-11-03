@@ -15,8 +15,10 @@ spec:
       # HAProxy's deny listener; other realm requests go directly to Keycloak on port 80.
       # Without admin ingress, all /auth paths (including admin) go to Keycloak.
       # Prefix paths match whole path segments; this is routing, not authorization.
-      paths: 
-      {{- if $.Values.ingress.admin.enabled }}
+      paths:
+      {{- if hasKey $.Values.ingress.default "paths" }}
+      {{- tpl $.Values.ingress.default.paths $ | nindent 8 }}
+      {{- else if $.Values.ingress.admin.enabled }}
       - backend:
           service:
             name: "{{ $.Release.Name }}"
