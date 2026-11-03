@@ -55,3 +55,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npx semantic-release --extends ./.github/config/release.js
+
+  publish:
+    needs: [release]
+    if: ${{ needs.release.outputs.new-release-published == 'true' }}
+    permissions:
+      contents: read
+    uses: ./.github/workflows/publish-oci.yml
+    with:
+      tag: ${{ needs.release.outputs.new-release-version }}
+    secrets:
+      ARTIFACTORY_O28M_PUSH_USER: ${{ secrets.ARTIFACTORY_O28M_PUSH_USER }}
+      ARTIFACTORY_O28M_PUSH_TOKEN: ${{ secrets.ARTIFACTORY_O28M_PUSH_TOKEN }}

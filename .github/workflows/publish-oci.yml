@@ -1,0 +1,138 @@
+# SPDX-FileCopyrightText: 2026 Deutsche Telekom AG
+#
+# SPDX-License-Identifier: Apache-2.0
+
+name: Publish to OCI Registry
+
+# Packages the chart at a release tag and pushes it to an OCI registry.
+#
+# release.yml calls this workflow after semantic-release has created the tag.
+# `workflow_dispatch` publishes an existing tag again, for example after a failed push.
+#
+# A published version is not overwritten. If the version already exists in the registry,
+# the workflow does nothing.
+#
+# Required repository variables:
+# - REGISTRY_HOST: registry host name, for example `registry.example.com`
+# - REGISTRY_REPO: repository path with a leading slash, without the chart name, for
+#   example `/my-oci-local/helm`
+#
+# Required secrets:
+# - ARTIFACTORY_O28M_PUSH_USER: registry user with push permission
+# - ARTIFACTORY_O28M_PUSH_TOKEN: registry token of that user
+
+on:
+  workflow_call:
+    inputs:
+      tag:
+        description: The release tag to package and publish.
+        required: true
+        type: string
+    secrets:
+      ARTIFACTORY_O28M_PUSH_USER:
+        required: true
+      ARTIFACTORY_O28M_PUSH_TOKEN:
+        required: true
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: The existing release tag to package and publish.
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+env:
+  RELEASE_TAG: ${{ inputs.tag }}
+  REGISTRY_HOST: ${{ vars.REGISTRY_HOST }}
+  REGISTRY: oci://${{ vars.REGISTRY_HOST }}${{ vars.REGISTRY_REPO }}
+
+jobs:
+  publish-oci:
+    name: Package and publish chart
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check the registry configuration
+        env:
+          REGISTRY_REPO: ${{ vars.REGISTRY_REPO }}
+        run: |
+          set -euo pipefail
+          if [ -z "${REGISTRY_HOST}" ] || [ -z "${REGISTRY_REPO}" ]; then
+            printf 'publish: set the REGISTRY_HOST and REGISTRY_REPO repository variables\n' >&2
+            exit 1
+          fi
+
+      - name: Check out the release tag
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
+        with:
+          ref: refs/tags/${{ inputs.tag }}
+
+      - name: Check the chart version matches the release tag
+        id: chart
+        run: |
+          set -euo pipefail
+          version="$(yq '.version' Chart.yaml)"
+          if [ "${version}" != "${RELEASE_TAG}" ]; then
+            printf 'publish: Chart.yaml version %s does not match release tag %s\n' \
+              "${version}" "${RELEASE_TAG}" >&2
+            exit 1
+          fi
+          echo "name=$(yq '.name' Chart.yaml)" >> "${GITHUB_OUTPUT}"
+
+      - name: Set up Helm
+        uses: azure/setup-helm@dda3372f752e03dde6b3237bc9431cdc2f7a02a2 #v5.0.0
+
+      - name: Log in to the registry
+        env:
+          REGISTRY_USER: ${{ secrets.ARTIFACTORY_O28M_PUSH_USER }}
+          REGISTRY_PASSWORD: ${{ secrets.ARTIFACTORY_O28M_PUSH_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${REGISTRY_USER}" ] || [ -z "${REGISTRY_PASSWORD}" ]; then
+            printf 'publish: the registry credentials are not set\n' >&2
+            exit 1
+          fi
+          printf '%s' "${REGISTRY_PASSWORD}" |
+            helm registry login "${REGISTRY_HOST}" -u "${REGISTRY_USER}" --password-stdin
+
+      - name: Check if chart is already published
+        id: published
+        env:
+          CHART_NAME: ${{ steps.chart.outputs.name }}
+        run: |
+          set -uo pipefail
+          chart_ref="${REGISTRY}/${CHART_NAME}"
+          if ! output="$(helm show chart "${chart_ref}" --version "${RELEASE_TAG}" 2>&1)"; then
+            printf 'publish: %s:%s is not published yet\n%s\n' "${chart_ref}" "${RELEASE_TAG}" "${output}"
+            echo "exists=false" >> "${GITHUB_OUTPUT}"
+            exit 0
+          fi
+          printf 'publish: %s:%s is already published; nothing to do\n' "${chart_ref}" "${RELEASE_TAG}"
+          echo "exists=true" >> "${GITHUB_OUTPUT}"
+
+      - name: Package and push chart
+        if: steps.published.outputs.exists == 'false'
+        env:
+          CHART_NAME: ${{ steps.chart.outputs.name }}
+        run: |
+          set -euo pipefail
+          helm package .
+
+          # Retry the push, because a transient error would otherwise leave the registry
+          # without this version.
+          attempts=3
+          delay=5
+          for attempt in $(seq 1 "${attempts}"); do
+            if helm push "${CHART_NAME}-${RELEASE_TAG}.tgz" "${REGISTRY}"; then
+              exit 0
+            fi
+            if [ "${attempt}" -lt "${attempts}" ]; then
+              printf 'publish: push failed (attempt %s of %s); retrying in %ss\n' \
+                "${attempt}" "${attempts}" "${delay}" >&2
+              sleep "${delay}"
+              delay=$(( delay * 2 ))
+            fi
+          done
+          printf 'publish: push failed after %s attempts\n' "${attempts}" >&2
+          exit 1
