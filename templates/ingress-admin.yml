@@ -11,7 +11,8 @@ metadata:
   labels: {{ include "keycloak.labels" $ | nindent 4 }}
 spec:
   rules:
-  - host: {{ .Values.ingress.admin.hostname }}
+  {{- range (compact (list .Values.ingress.admin.hostname .Values.ingress.admin.altHostname)) }}
+  - host: {{ . }}
     http:
       # These routes bypass HAProxy and reach Keycloak directly on service port 80.
       # Keycloak's built-in admin realm is /auth/realms/master/ (singular).
@@ -43,6 +44,7 @@ spec:
         path: /auth/resources/
         pathType: Prefix
       {{- end }}
+  {{- end }}
 {{- if .Values.ingress.admin.ingressClassName }}
   ingressClassName: {{ .Values.ingress.admin.ingressClassName }}
 {{- end }}

@@ -46,6 +46,10 @@ database schema within the database field in the values.yaml file, enabling Keyc
 
 ### Admin Ingress Frontend URL
 
+Additional admin hostnames (for example a cluster-specific DNS name that Route53 points the main admin hostname to)
+can be added via `ingress.admin.altHostname` (string). It is added as an extra rule to the admin ingress;
+`KC_HOSTNAME_ADMIN` and the master realm frontend URL keep using `ingress.admin.hostname`.
+
 When `ingress.admin.enabled` is true, the master realm's frontend URL must be set once after Keycloak is ready.
 Otherwise the admin console served on `ingress.admin.hostname` does not work properly. The Keycloak container already
 provides `KC_BOOTSTRAP_ADMIN_USERNAME`, `KC_BOOTSTRAP_ADMIN_PASSWORD` and, only with the admin ingress,

@@ -290,11 +290,15 @@ ingress:
     # A separate hostname does not restrict access; protect it at the controller/network layer.
     enabled: false
     hostname: localhost
+    # Optional alternative admin hostname (e.g. cluster-specific DNS name used for Route53 mapping).
+    # Only adds an extra rule to the admin ingress; KC_HOSTNAME_ADMIN keeps using ingress.admin.hostname.
+    # Empty means no alternative hostname.
+    altHostname: ""
     # Empty omits ingressClassName and uses the cluster's default ingress class.
     ingressClassName: ""
     tls:
       enabled: true   # Include the TLS section; HTTPS enforcement is controller-specific.
-      hosts: []       # Empty defaults to ingress.admin.hostname.
+      hosts: []       # Empty defaults to ingress.admin.hostname; include aliases explicitly.
       secret: ""      # Falls back to global.ingress.tlsSecret; otherwise secretName is omitted.
     # Overrides matching global.ingress.annotations; NGINX examples follow.
     # Apply admin access restrictions here using annotations supported by your controller.
